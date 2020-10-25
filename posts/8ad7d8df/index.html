@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://wylu.me').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: {"enable":true,"caption":false},
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":{"valine":{"text":"Valine","order":-2},"disqus":{"text":"Disqus","order":-1}},"activeClass":"valine"},
+    algolia: {
+      appID: 'QPQVX9MYX9',
+      apiKey: '9f2738c0cc6f107c67eba29565c2d007',
+      indexName: 'dev_PASSAGE',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="应用密码学学习总结，涉及密码学基本概念、古典密码、PGP安全电子邮件解决方案、对称加密、非对称加密、ElGamal密码体制、Diffie-Hellman密钥交换、数字签名等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应用密码学总结">
+<meta property="og:url" content="https://wylu.me/posts/8ad7d8df/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="应用密码学学习总结，涉及密码学基本概念、古典密码、PGP安全电子邮件解决方案、对称加密、非对称加密、ElGamal密码体制、Diffie-Hellman密钥交换、数字签名等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/Euclid.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/congruence.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/multiply.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/affine.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/PGP-encrypt.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/PGP-decrypt.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/PGP-digital-signature.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/pyramid-model.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/direct-trust-model.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/trust-network.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/padding.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/no-padding.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/PKCS5-padding.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/mode.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/group-work-mode.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ECB-mode.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/CBC-mode.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/CFB-mode.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/OFB-mode.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/vernam.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/linear-feedback-shift-register.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/check-integrity-by-hash.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/PGP-public-key-verify.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/hash-collision.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/birthday-attack.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/Euler-function.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/Euler-theorem.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/RSA-key-pair-generation.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/RSA-key-pair-generation-example.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/RSA-encrypt-and-decrypt-example.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/decomposition-attack-1.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/decomposition-attack-2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/select-plaintext-attack.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ElGamal-key-pair-gen.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ElGamal-encrypt-and-decrypt.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ElGamal-key-pair-gen-example.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ElGamal-encrypt-and-decrypt-example.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/DH-key-exchange.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/DH-key-exchange-example.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/DH-third-party-attack.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/DH-key-exchange-with-identity-auth.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/RSA-signature.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/RSA-signature-example.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ELG-signature.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/ELG-signature-example.png">
+<meta property="article:published_time" content="2020-04-12T02:19:41.000Z">
+<meta property="article:modified_time" content="2020-10-24T16:08:31.961Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="应用密码学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93/Euclid.png">
+
+<link rel="canonical" href="https://wylu.me/posts/8ad7d8df/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>应用密码学总结 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-155154294-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wylu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">76</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">81</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-fw fa-commenting"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-sitelog">
+
+    <a href="/sitelog/" rel="section"><i class="fa fa-fw fa-list-alt"></i>站点日志</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/8ad7d8df/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          应用密码学总结
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-12 10:19:41" itemprop="dateCreated datePublished" datetime="2020-04-12T10:19:41+08:00">2020-04-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-25 00:08:31" itemprop="dateModified" datetime="2020-10-25T00:08:31+08:00">2020-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CS/" itemprop="url" rel="index">
+                    <span itemprop="name">CS</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CS/%E5%AF%86%E7%A0%81%E5%AD%A6/" itemprop="url" rel="index">
+                    <span itemprop="name">密码学</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/8ad7d8df/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/8ad7d8df/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>应用密码学学习总结，涉及密码学基本概念、古典密码、PGP安全电子邮件解决方案、对称加密、非对称加密、ElGamal密码体制、Diffie-Hellman密钥交换、数字签名等。</p>
+<a id="more"></a>
+<h1 id="概述">概述</h1>
+<h2 id="信息安全的三个基本的目标">信息安全的三个基本的目标</h2>
+<ul>
+<li>保密性 Confidentiality 消息能够被安全的传送，即窃听者不能阅读发送的消息。</li>
+<li>完整性 Integrity 消息的接收者应该能够验证在传递的过程中消息没有被修改；入侵者不能用假消息代替合法的消息。</li>
+<li>可用性 Availability 即保证信息和信息系统随时为授权者提供服务，而不要出现非授权者滥用却对授权者拒绝服务的情况。</li>
+</ul>
+<h2 id="数据的安全基于密钥的保密而不是算法的保密">数据的安全基于密钥的保密，而不是算法的保密</h2>
+<h2 id="公钥密码使得无密钥传输的保密通信成为可能">公钥密码使得无密钥传输的保密通信成为可能</h2>
+<h2 id="密码学的基本概念">密码学的基本概念</h2>
+<p>密码学(Cryptology)：研究信息系统安全技术的科学。它包含两个分支：</p>
+<ul>
+<li>密码编码学(Cryptography)，对信息进行编码实现隐蔽信息的一门学问</li>
+<li>密码分析学(Cryptanalysis)，研究分析破译密码或伪造的学问。 两者相互对立，而又互相促进地向前发展。</li>
+</ul>
+<h2 id="密码算法分类-i">密码算法分类-I</h2>
+<p>按照保密性依赖的基础分为:</p>
+<ul>
+<li>受限制的（Restricted)算法: 算法的保密性基于保持算法的秘密。</li>
+<li>基于密钥（Key-based)的算法: 算法的保密性基于对密钥的保密。</li>
+</ul>
+<h2 id="密码算法分类-ii">密码算法分类-II</h2>
+<p>按照密钥的特点分为：</p>
+<ul>
+<li>对称密码算法（Symmetric Cipher)：就是加密密钥和解密密钥相同，或实质上等同，即从一个易于推出另一个。又称秘密密钥算法或单密钥算法。 对称密钥密码又可分为流密码和分组密码
+<ul>
+<li>分组密码每次对一块数据(Block)加密例子：DES, IDEA, RC6, Rijndael</li>
+<li>流密码每次对一位或一字节加密例子：One-time padding, Vigenére, Vernam</li>
+</ul></li>
+<li>非对称密钥算法（Asymmetric Cipher)：加密密钥和解密密钥不相同，从一个很难推出另一个。又称公钥密钥算法（Public-key Cipher) 。</li>
+</ul>
+<h1 id="数论基础">数论基础</h1>
+<h2 id="互素">互素</h2>
+<p>如果a,b的最大公约数为1，则称a,b互素。(注. (a,b)表示a,b的最大公约数)<br>
+(3,5)=1<br>
+a,b互素，a,b不一定是素数，例如(9,4)=1</p>
+<h2 id="模运算">模运算</h2>
+<h3 id="模加法">模加法</h3>
+<p>(a + b) mod m = ((a mod m) + (b mod m)) mod m<br>
+例: (11 + 15) mod 8 = ((11 mod 8) + (15 mod 8)) mod 8 = (3 + 7) mod 8 = 10 mod 8 = 2</p>
+<h3 id="模减法">模减法</h3>
+<p>(a - b) mod m = ((a mod m) - (b mod m)) mod m<br>
+例: (15 - 1) mod 7 = ((15 mod 7) - (1 mod 7)) mod 7 = (1 - 1) mod 7 = 0 mod 7 = 0</p>
+<h3 id="模乘法">模乘法</h3>
+<p>(a × b) mod m = ((a mod m) × (b mod m)) mod m<br>
+例: (7 × 9) mod 8 = ((7 mod 8) × (9 mod 8)) mod 8 = (7 × 1) mod 8 = 7 mod 8 = 7</p>
+<h2 id="逆元">逆元</h2>
+<h3 id="加法逆元">加法逆元</h3>
+<p>x的加法逆元y是满足x + y ≡ 0 mod m的数<br>
+例: 2 + 6 ≡ 0 mod 8, 6和2互为模8的加法逆元</p>
+<h3 id="乘法逆元">乘法逆元</h3>
+<p>x的乘法逆元y是满足x × y ≡ 1 mod m 数。<br>
+例：2 × 4 ≡ 1 mod 7，2和4互为模7的乘法逆元</p>
+<h3 id="如果m是一个素数则对每一个0xm-都存在乘法逆元">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</h3>
+<p>例：<br>
+1 × 1 ≡1 mod 7<br>
+2 × 4 ≡1 mod 7<br>
+3 × 5 ≡1 mod 7<br>
+4 × 2 ≡1 mod 7<br>
+5 × 3 ≡1 mod 7<br>
+6 × 6 ≡1 mod 7<br>
+​ …</p>
+<h3 id="一个定理">一个定理</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">设a, b, c是任意三个不全为零的整数,且</span><br><span class="line">                     a&#x3D; bq + r                      (1)</span><br><span class="line">其中q是整数, 则(a, b)&#x3D;(b, r).</span><br><span class="line">对(1)进一步地约束，令b&gt;0,将a除以b所得的商记为q, 余数为r , 则(1)成为</span><br><span class="line">                     a&#x3D; bq + r, 0&lt;&#x3D;r&lt;b              (2)</span><br><span class="line">r是a对模b的非负最小剩余。</span><br><span class="line">进一步 (a, b)&#x3D;(|a|, |b|)&#x3D;(b, a)</span><br><span class="line">由此我们得到求(a, b)的Euclid辗转相除法</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/Euclid.png" alt="Euclid"></p>
+<h3 id="解一次同余式">解一次同余式</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">一个定理:</span><br><span class="line">若 (a, m) &#x3D; 1, 则一次同余式</span><br><span class="line">                 ax ≡ b (mod m)</span><br><span class="line">有唯一解</span><br><span class="line">例：19x ≡ 1(mod 48)  </span><br><span class="line">因为(19, 48) &#x3D; 1, 所以一次同余式有唯一解，即19对于模48的有唯一逆元。</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/congruence.png" alt="Solve a congruence"></p>
+<h1 id="古典密码">古典密码</h1>
+<h2 id="单表密码体制">单表密码体制</h2>
+<p>如果明文中不同的位置的同一明文字母在密文中对应的密文字母相同,则称其为单表密码体制。</p>
+<ul>
+<li>乘法密码算法</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/multiply.png" alt="Multiplication cryptographic algorithm"></p>
+<ul>
+<li>仿射密码算法</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/affine.png" alt="Affine cryptographic algorithm"></p>
+<ul>
+<li>语言的统计特性：频率特征；连接特征；重复特征</li>
+</ul>
+<h2 id="多表密码体制">多表密码体制</h2>
+<p>如果明文中不同的位置的同一明文字母在密文中对应的密文字母不同,则称其为多表密码体制。</p>
+<h1 id="安全电子邮件方案">安全电子邮件方案</h1>
+<h2 id="pgp产生的背景">PGP产生的背景</h2>
+<p>你的电子邮件不安全，电子邮件在传输中使用的SMTP协议。</p>
+<ul>
+<li>无法保证邮件在传输过程中不被人偷看。</li>
+<li>无法确认来源。</li>
+<li>无法确定邮件是否在传输过程中被篡改</li>
+<li>当邮件被发到错误地址，可能造成信息泄露</li>
+</ul>
+<h2 id="pgp提供了一个安全电子邮件解决方案">PGP提供了一个安全电子邮件解决方案</h2>
+<p>PGP (Pretty Good Privacy) 具有以下的功能</p>
+<ul>
+<li>消息加密</li>
+<li>数字签名</li>
+<li>完整性确认</li>
+<li>数据压缩</li>
+</ul>
+<h3 id="pgp加密流程">PGP加密流程</h3>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/PGP-encrypt.png" alt="PGP encrypt"></p>
+<h3 id="pgp解密流程">PGP解密流程</h3>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/PGP-decrypt.png" alt="PGP decrypt"></p>
+<h3 id="pgp整合了对称加密和公钥加密的方案">PGP整合了对称加密和公钥加密的方案</h3>
+<ul>
+<li>保持了对称加密算法速度快的特点</li>
+<li>具有公钥算法密钥分配方便的特点</li>
+</ul>
+<h2 id="pgp数字签名和hash函数">PGP数字签名和Hash函数</h2>
+<p>直接对明文进行数字签名一些问题</p>
+<ul>
+<li>速度非常慢</li>
+<li>生成大量的数据</li>
+</ul>
+<p>PGP的解决方案</p>
+<ul>
+<li>对明文使用一种Hash函数, 产生定长的数据, 称为消息摘要</li>
+<li>PGP使用签名算法对摘要签名</li>
+<li>PGP将签名和明文一同传输</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/PGP-digital-signature.png" alt="PGP digital signature"></p>
+<h2 id="公共密钥分发和证明模型">公共密钥分发和证明模型</h2>
+<h3 id="金字塔模型">金字塔模型</h3>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/pyramid-model.png" alt="pyramid model"></p>
+<h3 id="直接信任模型">直接信任模型</h3>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/direct-trust-model.png" alt="direct trust model"></p>
+<h3 id="信任网络">信任网络</h3>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/trust-network.png" alt="trust network"></p>
+<h1 id="对称密码">对称密码</h1>
+<h2 id="aes的若干要求和评估准则">AES的若干要求和评估准则</h2>
+<ul>
+<li>AES的基本要求：比DES快而且比DES安全，分组长度为128比特，密钥长度为128／192（超56比特）。</li>
+<li>安全性评估：算法输出的随机性好，抗密码分析能力强，并且有可靠的数学基础。</li>
+<li>成本估计准则：许可成本低，在各种平台上的计算高效率和较小的内存空间需求。</li>
+<li>算法和实现特性准则：灵活性、硬件和软件适用性、算法的简明性。</li>
+</ul>
+<p>具体体现为：</p>
+<ul>
+<li>算法处理的密钥和分组长度必须具备灵活的支持范围；</li>
+<li>算法在许多不同类型的环境下能够安全和有效地实现；</li>
+<li>可以作为序列密码、哈希算法实现；</li>
+<li>算法必须能够用软件和硬件两种方法实现，并且有利于有效的固件实现；</li>
+<li>算法设计相对简单。</li>
+</ul>
+<h2 id="分组密码的填充与模式">分组密码的填充与模式</h2>
+<p>（1）什么是填充，为什么需要填充</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/padding.png" alt="padding"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/no-padding.png" alt="no padding"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/PKCS5-padding.png" alt="PKCS#5 padding"></p>
+<p>（2）什么是模式，为什么需要模式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/mode.png" alt="mode"></p>
+<p><strong>分组密码工作模式的应用背景</strong>：多次使用相同的密钥对多个分组加密，会引发许多安全问题。为了应对不同场合，因而需要开发出不同的工作模式来增强密码算法的安全性。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/group-work-mode.png" alt="group work mode"></p>
+<ul>
+<li><p>ECB模式</p>
+<p>特别适合数据较少的情况，对于很长的信息或者具有特定结构的信息（对ECB模式分组重放攻击），其大量重复的信息或固定的字符开头将给密码分析者提供大量的已知明密文对。若明文不是完整的分组，ECB需要进行填充。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ECB-mode.png" alt="ECB"></p>
+<p>ECB模式的特点</p>
+<ul>
+<li>简单</li>
+<li>有利于并行</li>
+<li>计算误差不会被传递</li>
+<li>不能隐藏明文的模式</li>
+<li>可能对明文进行主动攻击</li>
+</ul></li>
+<li><p>CBC模式</p>
+<p>由于加密算法的每次输入和本明文组没有固定的关系，因此就算有重复的明文组，加密后也看不出来了。为了配合算法的需要，有一个初始向量（IV）。与ECB一样有填充机制以保证完整的分组。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/CBC-mode.png" alt="CBC"></p>
+<p>CBC的特点</p>
+<ul>
+<li>不容易主动攻击</li>
+<li>不利于并行</li>
+<li>计算误差传递</li>
+<li>需要初始向量IV</li>
+</ul>
+<p>安全性好于ECB, 适合传输长度长的报文,是SSL, IPSec的标准</p></li>
+<li><p>CFB模式</p>
+<p>和OFB，CTR模式一样，均可将分组密码当做流密码（实际是将分组大小任意缩减）使用。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/CFB-mode.png" alt="CFB"></p>
+<p>CFB模式的特点</p>
+<ul>
+<li>隐藏了明文模式</li>
+<li>分组密码转化为流模式</li>
+<li>可以及时加密传输小于分组的数据</li>
+<li>不利于并行计算</li>
+<li>误差传递：一个明文单元损坏影响多个单元唯一的ＩＶ</li>
+</ul></li>
+<li><p>OFB模式</p>
+<p>OFB的结构与CFB很相似，它用加密函数的输出填充移位寄存器，而CFB是用密文单元来填充移位寄存器。其他的不同是，OFB模式是对整个明文和密文分组进行运算，而不是仅对s位的子集运算，因而不至于浪费运算能力。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/OFB-mode.png" alt="OFB"></p>
+<p>OFB模式的特点</p>
+<ul>
+<li>隐藏了明文模式</li>
+<li>分组密码转化为流模式</li>
+<li>可以及时加密传输小于分组的数据</li>
+<li>不利于并行计算</li>
+<li>对明文的主动攻击是可能的</li>
+<li>误差传递：一个单元损坏只损坏对应单元</li>
+<li>唯一的ＩＶ</li>
+</ul>
+<p>安全性于不如CFB</p></li>
+</ul>
+<h2 id="流密码">流密码</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/vernam.png" alt="vernam"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/linear-feedback-shift-register.png" alt="linear feedback shift register"></p>
+<h2 id="随机位的测试">随机位的测试</h2>
+<ul>
+<li>单个位测试(monobit test) 目的：校验1和0的个数是否大致相等。</li>
+<li>扑克牌测试(poker test) 目的： 测试0至15的分布的随机随机性</li>
+<li>连续串测试 目的：测试连续串长度分布的随机性</li>
+</ul>
+<h1 id="单向散列函数">单向散列函数</h1>
+<h2 id="性质">性质</h2>
+<ul>
+<li>h(x)的输入x为任意长度</li>
+<li>h(x)的输出长度固定</li>
+<li>h(x)的计算方便快捷</li>
+<li>h(x)的计算具有单向性</li>
+<li>对于给定 x, 找到 y != x, 且 h(y) = h(x) 在计算不可行</li>
+</ul>
+<h2 id="应用">应用</h2>
+<p>（1）使用Hash函数进行完整性验证的模型</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/check-integrity-by-hash.png" alt="check integrity by hash"></p>
+<p>（2）PGP的公钥真实性验证</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/PGP-public-key-verify.png" alt="PGP public key verify"></p>
+<h2 id="碰撞">碰撞</h2>
+<p>如果 y != x, 且 h(x) = h(y), 则称为碰撞<br>
+对给定的 x, 要找到一个 y 满足 y != x, h(x) = h(y) 在计算上不可行, 则称为弱无碰撞<br>
+要找到任意一对数 x,y, y != x, 满足 h(x) = h(y), 在计算上不可行, 则称为强无碰撞(包含弱无撞)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/hash-collision.png" alt="hash collision"></p>
+<h2 id="对数字签名的生日攻击">对数字签名的生日攻击</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/birthday-attack.png" alt="birthday attack"></p>
+<h1 id="不对称密码">不对称密码</h1>
+<h2 id="公钥密码的特性">公钥密码的特性</h2>
+<ul>
+<li>特性一：加密和解密使用不同的钥匙</li>
+<li>特性二：从一个钥匙推出另一个钥匙在计算上不可行</li>
+<li>特性三：每个钥匙都可以做加密和解密</li>
+</ul>
+<h2 id="rsa算法">RSA算法</h2>
+<p>RSA算法可用于加密、又可用于数字签字，易懂且易于实现，是目前仍然安全并且逐步被广泛应用的一种体制。</p>
+<h2 id="euler函数">Euler函数</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/Euler-function.png" alt="Euler function"></p>
+<h2 id="euler定理">Euler定理</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/Euler-theorem.png" alt="Euler theorem"></p>
+<h2 id="rsa密钥对生成步骤">RSA密钥对生成步骤</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/RSA-key-pair-generation.png" alt="RSA key pair generation"></p>
+<h2 id="rsa加密和解密步骤">RSA加密和解密步骤</h2>
+<p>加密消息前，首先将它分成比n小的数据分组，再对每个分组加密</p>
+<ul>
+<li>加密： <span class="math inline">\(C=M^e(mod\ n)\)</span></li>
+<li>解密： <span class="math inline">\(M=C^d(mod\ n)\)</span></li>
+</ul>
+<h2 id="rsa密钥对生成实例">RSA密钥对生成实例</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/RSA-key-pair-generation-example.png" alt="RSA key pair generation example"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/RSA-encrypt-and-decrypt-example.png" alt="RSA encrypt and decrypt example"></p>
+<h2 id="rsa的缺点">RSA的缺点</h2>
+<p>受到素数产生技术的限制，产生密钥很麻烦。<br>
+分组长度太大，为保证安全性，n 至少也要 600比特以上，使运算代价很高，尤其是速度较慢；且随着大数分解技术的发展，这个长度还在增加，不利于数据格式的标准化</p>
+<h2 id="当pq比较接近的数分解攻击">当p,q比较接近的数分解攻击</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/decomposition-attack-1.png" alt="decomposition attack 1"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/decomposition-attack-2.png" alt="decomposition attack 2"></p>
+<h2 id="选择明文攻击">选择明文攻击</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/select-plaintext-attack.png" alt="select plaintext attack"></p>
+<p>从算法上无法解决这一问题，主要措施是采用好的公钥协议：</p>
+<ul>
+<li>工作过程中实体不轻易对其他实体任意产生的信息加解密，不对自己一无所知的信息签名</li>
+<li>对其他实体送来的随机文档签名时首先对文档作HASH处理</li>
+</ul>
+<h1 id="elgamal密码体制">ElGamal密码体制</h1>
+<p>由ElGamal[1984,1985]提出，是一种基于离散对数问题的双钥密码体制，既可用于加密，又可用于签字。</p>
+<h2 id="elgamal密钥对生成步骤">ElGamal密钥对生成步骤</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ElGamal-key-pair-gen.png" alt="ElGamal key pair gen"></p>
+<h2 id="elgamal加密和解密步骤">ElGamal加密和解密步骤</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ElGamal-encrypt-and-decrypt.png" alt="ElGamal encrypt and decrypt"></p>
+<h2 id="elgamal密钥对生成例子">ElGamal密钥对生成例子</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ElGamal-key-pair-gen-example.png" alt="ElGamal key pair gen example"></p>
+<h2 id="elgamal加密和解密例子">ElGamal加密和解密例子</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ElGamal-encrypt-and-decrypt-example.png" alt="ElGamal encrypt and decrypt example"></p>
+<h1 id="diffie-hellman密钥交换">Diffie-Hellman密钥交换</h1>
+<p>密钥交换方案:允许两个用户可以安全地建立一个秘密信息，用于后续的通讯过程<br>
+算法的安全性依赖于:有限域上计算离散对数的难度</p>
+<h2 id="dh密钥匙方案实现步骤">DH密钥匙方案实现步骤</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/DH-key-exchange.png" alt="DH key exchange"></p>
+<h2 id="dh密钥匙交换方案实现例子">DH密钥匙交换方案实现例子</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/DH-key-exchange-example.png" alt="DH key exchange example"></p>
+<h2 id="dh密钥匙方案的第三者攻击方法">DH密钥匙方案的第三者攻击方法</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/DH-third-party-attack.png" alt="DH third party attack"></p>
+<p>第三者攻击的方法的为什么可以成功呢?<br>
+问题在于：A和B在不安全的信道上通信, 那么双方如何能够知道通信的另一方的到底是谁呢?<br>
+是否能设计一种可以确认通信双方身份的DH密钥交换方案呢?</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/DH-key-exchange-with-identity-auth.png" alt="DH key exchange with identity auth"></p>
+<h1 id="数字签名">数字签名</h1>
+<h2 id="rsa签名方案">RSA签名方案</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/RSA-signature.png" alt="RSA signature"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/RSA-signature-example.png" alt="RSA signature example"></p>
+<h2 id="elg签名方案">ELG签名方案</h2>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ELG-signature.png" alt="ELG signature"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/CS/密码学/应用密码学总结/ELG-signature-example.png" alt="ELG signature example"></p>
+<h1 id="实验02">实验02</h1>
+<p>（1）使用PGP软件，产生一对新的公钥/私钥，并在PGP服务器上注册</p>
+<p>思考：为什么不是由服务器统一产生公钥/私钥对呢，而是由客户端产生钥匙对呢？注册完成后，公钥/私钥存放在什么地方呢？私钥需要什么样的保护措施吗？</p>
+<ul>
+<li>公钥/私钥对不由任一政府或标准化组织所控制，使得PGP得到广泛信任，能够满足商业化的需求。</li>
+<li>在服务器上注册后，公钥存放在服务器上，私钥则由使用者自己保存。</li>
+<li>使用口令密码对私钥加密存储，口令密码方便记忆，也可以保护私钥。</li>
+</ul>
+<p>（2）邀请其他使用者互相签署对方的公钥</p>
+<p>思考：此步骤的意义是什么？在签署他人的公钥前，应该注意什么？</p>
+<ul>
+<li>相互签署公钥用于建立信任体系，信任对方公钥是指定实体的合法公钥。</li>
+<li>需要确认所签署公钥是指定实体的合法公钥，可行的方法有：物理上得到对方的公钥，这种方式最可靠，但有一定局限性；通过电话验证公钥；从双方都信任的第三方处获得对方公钥。</li>
+</ul>
+<p>（3）使用ASCII编码格式将自己的公钥发给其他使用者</p>
+<p>思考：这样在整个PGP信任体系中的意义是什么？</p>
+<ul>
+<li>向信任的朋友发送公钥和接收信任朋友传送来的公钥，一般这些公钥都带有签名，在这种方式下，用户可以自行决定对周围的联系人是否信任，建立以个人为中心的信任模型。</li>
+</ul>
+<p>（4）发送加密及签名的电子邮件</p>
+<p>思考: 加密时使用了谁的、哪一把钥匙；签名时又使用了谁的、哪一把钥匙？邮件是否一定要同时加密和签名呢？邮件的长度是可变的，但数字签名的数据长度似乎是定长，这是为什么？</p>
+<ul>
+<li>加密时使用了接收者的公钥</li>
+<li>签名时使用了发送者的私钥</li>
+<li>邮件不一定要同时加密和签名</li>
+<li>实际上，sign &amp; verify 是利用 hash function 及非对称加密的技术来达到确认文件来源及文件内容是没被更改过的，而hash value的长度是由不同的hash function决定的，常见的hash function有MD2, MD5, SHA-1, SHA-128, SHA-256, SHA-512</li>
+</ul>
+<p>（5）收到他人的加密及签名的电子邮件后，解密并验证其签名的正确性</p>
+<p>思考：解密时使用了谁的、哪一把钥匙；验证签名时又使用了谁的、哪一把钥匙？</p>
+<ul>
+<li>解密时使用了接收者的私钥</li>
+<li>验证签名时使用了发送者的公钥</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wylu.me/posts/8ad7d8df/" title="应用密码学总结">https://wylu.me/posts/8ad7d8df/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag"> <i class="fa fa-tag"></i> 应用密码学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/ec244fdf/" rel="prev" title="Nginx configuration for CodeIgniter">
+      <i class="fa fa-chevron-left"></i> Nginx configuration for CodeIgniter
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/f6bd2bb1/" rel="next" title="wylu blog">
+      wylu blog <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-valine">Valine</a></li>
+            <li class="tab"><a href="#comment-disqus">Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息安全的三个基本的目标"><span class="nav-number">1.1.</span> <span class="nav-text">信息安全的三个基本的目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的安全基于密钥的保密而不是算法的保密"><span class="nav-number">1.2.</span> <span class="nav-text">数据的安全基于密钥的保密，而不是算法的保密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公钥密码使得无密钥传输的保密通信成为可能"><span class="nav-number">1.3.</span> <span class="nav-text">公钥密码使得无密钥传输的保密通信成为可能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码学的基本概念"><span class="nav-number">1.4.</span> <span class="nav-text">密码学的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码算法分类-i"><span class="nav-number">1.5.</span> <span class="nav-text">密码算法分类-I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码算法分类-ii"><span class="nav-number">1.6.</span> <span class="nav-text">密码算法分类-II</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数论基础"><span class="nav-number">2.</span> <span class="nav-text">数论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#互素"><span class="nav-number">2.1.</span> <span class="nav-text">互素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模运算"><span class="nav-number">2.2.</span> <span class="nav-text">模运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模加法"><span class="nav-number">2.2.1.</span> <span class="nav-text">模加法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模减法"><span class="nav-number">2.2.2.</span> <span class="nav-text">模减法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模乘法"><span class="nav-number">2.2.3.</span> <span class="nav-text">模乘法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆元"><span class="nav-number">2.3.</span> <span class="nav-text">逆元</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加法逆元"><span class="nav-number">2.3.1.</span> <span class="nav-text">加法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#乘法逆元"><span class="nav-number">2.3.2.</span> <span class="nav-text">乘法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果m是一个素数则对每一个0xm-都存在乘法逆元"><span class="nav-number">2.3.3.</span> <span class="nav-text">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个定理"><span class="nav-number">2.3.4.</span> <span class="nav-text">一个定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解一次同余式"><span class="nav-number">2.3.5.</span> <span class="nav-text">解一次同余式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#古典密码"><span class="nav-number">3.</span> <span class="nav-text">古典密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单表密码体制"><span class="nav-number">3.1.</span> <span class="nav-text">单表密码体制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多表密码体制"><span class="nav-number">3.2.</span> <span class="nav-text">多表密码体制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安全电子邮件方案"><span class="nav-number">4.</span> <span class="nav-text">安全电子邮件方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pgp产生的背景"><span class="nav-number">4.1.</span> <span class="nav-text">PGP产生的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pgp提供了一个安全电子邮件解决方案"><span class="nav-number">4.2.</span> <span class="nav-text">PGP提供了一个安全电子邮件解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp加密流程"><span class="nav-number">4.2.1.</span> <span class="nav-text">PGP加密流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp解密流程"><span class="nav-number">4.2.2.</span> <span class="nav-text">PGP解密流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp整合了对称加密和公钥加密的方案"><span class="nav-number">4.2.3.</span> <span class="nav-text">PGP整合了对称加密和公钥加密的方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pgp数字签名和hash函数"><span class="nav-number">4.3.</span> <span class="nav-text">PGP数字签名和Hash函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公共密钥分发和证明模型"><span class="nav-number">4.4.</span> <span class="nav-text">公共密钥分发和证明模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#金字塔模型"><span class="nav-number">4.4.1.</span> <span class="nav-text">金字塔模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#直接信任模型"><span class="nav-number">4.4.2.</span> <span class="nav-text">直接信任模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信任网络"><span class="nav-number">4.4.3.</span> <span class="nav-text">信任网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对称密码"><span class="nav-number">5.</span> <span class="nav-text">对称密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aes的若干要求和评估准则"><span class="nav-number">5.1.</span> <span class="nav-text">AES的若干要求和评估准则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分组密码的填充与模式"><span class="nav-number">5.2.</span> <span class="nav-text">分组密码的填充与模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流密码"><span class="nav-number">5.3.</span> <span class="nav-text">流密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机位的测试"><span class="nav-number">5.4.</span> <span class="nav-text">随机位的测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单向散列函数"><span class="nav-number">6.</span> <span class="nav-text">单向散列函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性质"><span class="nav-number">6.1.</span> <span class="nav-text">性质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">6.2.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#碰撞"><span class="nav-number">6.3.</span> <span class="nav-text">碰撞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对数字签名的生日攻击"><span class="nav-number">6.4.</span> <span class="nav-text">对数字签名的生日攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不对称密码"><span class="nav-number">7.</span> <span class="nav-text">不对称密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#公钥密码的特性"><span class="nav-number">7.1.</span> <span class="nav-text">公钥密码的特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa算法"><span class="nav-number">7.2.</span> <span class="nav-text">RSA算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#euler函数"><span class="nav-number">7.3.</span> <span class="nav-text">Euler函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#euler定理"><span class="nav-number">7.4.</span> <span class="nav-text">Euler定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa密钥对生成步骤"><span class="nav-number">7.5.</span> <span class="nav-text">RSA密钥对生成步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa加密和解密步骤"><span class="nav-number">7.6.</span> <span class="nav-text">RSA加密和解密步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa密钥对生成实例"><span class="nav-number">7.7.</span> <span class="nav-text">RSA密钥对生成实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa的缺点"><span class="nav-number">7.8.</span> <span class="nav-text">RSA的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当pq比较接近的数分解攻击"><span class="nav-number">7.9.</span> <span class="nav-text">当p,q比较接近的数分解攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择明文攻击"><span class="nav-number">7.10.</span> <span class="nav-text">选择明文攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#elgamal密码体制"><span class="nav-number">8.</span> <span class="nav-text">ElGamal密码体制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal密钥对生成步骤"><span class="nav-number">8.1.</span> <span class="nav-text">ElGamal密钥对生成步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal加密和解密步骤"><span class="nav-number">8.2.</span> <span class="nav-text">ElGamal加密和解密步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal密钥对生成例子"><span class="nav-number">8.3.</span> <span class="nav-text">ElGamal密钥对生成例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal加密和解密例子"><span class="nav-number">8.4.</span> <span class="nav-text">ElGamal加密和解密例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#diffie-hellman密钥交换"><span class="nav-number">9.</span> <span class="nav-text">Diffie-Hellman密钥交换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dh密钥匙方案实现步骤"><span class="nav-number">9.1.</span> <span class="nav-text">DH密钥匙方案实现步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dh密钥匙交换方案实现例子"><span class="nav-number">9.2.</span> <span class="nav-text">DH密钥匙交换方案实现例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dh密钥匙方案的第三者攻击方法"><span class="nav-number">9.3.</span> <span class="nav-text">DH密钥匙方案的第三者攻击方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字签名"><span class="nav-number">10.</span> <span class="nav-text">数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa签名方案"><span class="nav-number">10.1.</span> <span class="nav-text">RSA签名方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elg签名方案"><span class="nav-number">10.2.</span> <span class="nav-text">ELG签名方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验02"><span class="nav-number">11.</span> <span class="nav-text">实验02</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wylu@gmail.com" title="E-Mail → mailto:wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-book"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">190k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:53</span>
+</div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+
+    
+      start = new Date("2019-03-05 12:00:00 +0800");
+    
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://wylu.me/posts/8ad7d8df/",
+            identifier: "posts/8ad7d8df/",
+            title: "应用密码学总结"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wylu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: '4Os8XbkKeaT7dIzoFACxrjuD-MdYXbMMI',
+      appKey: 'qu4Fc1HqehV5k53SAAeVVuHP',
+      placeholder: "ヾﾉ≧∀≦)o Just go go",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: false,
+      lang: '' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

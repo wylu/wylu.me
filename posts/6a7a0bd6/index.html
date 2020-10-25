@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://wylu.me').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: {"enable":true,"caption":false},
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":{"valine":{"text":"Valine","order":-2},"disqus":{"text":"Disqus","order":-1}},"activeClass":"valine"},
+    algolia: {
+      appID: 'QPQVX9MYX9',
+      apiKey: '9f2738c0cc6f107c67eba29565c2d007',
+      indexName: 'dev_PASSAGE',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="防火墙 firewalld 守护服务引入了一个信任级别的概念来管理与之相关联的连接与接口。它支持 ipv4 与 ipv6，并支持网桥，采用 firewall-cmd (command) 或 firewall-config (gui) 来动态的管理 kernel netfilter 的临时或永久的接口规则，并实时生效而无需重启服务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7下Firewall的设置与使用">
+<meta property="og:url" content="https://wylu.me/posts/6a7a0bd6/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="防火墙 firewalld 守护服务引入了一个信任级别的概念来管理与之相关联的连接与接口。它支持 ipv4 与 ipv6，并支持网桥，采用 firewall-cmd (command) 或 firewall-config (gui) 来动态的管理 kernel netfilter 的临时或永久的接口规则，并实时生效而无需重启服务。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-16T10:53:39.000Z">
+<meta property="article:modified_time" content="2020-10-24T16:08:31.994Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="CentOS">
+<meta property="article:tag" content="Firewall">
+<meta property="article:tag" content="防火墙">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wylu.me/posts/6a7a0bd6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>CentOS7下Firewall的设置与使用 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-155154294-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wylu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">76</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">81</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-fw fa-commenting"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-sitelog">
+
+    <a href="/sitelog/" rel="section"><i class="fa fa-fw fa-list-alt"></i>站点日志</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/6a7a0bd6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS7下Firewall的设置与使用
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-16 18:53:39" itemprop="dateCreated datePublished" datetime="2020-05-16T18:53:39+08:00">2020-05-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-25 00:08:31" itemprop="dateModified" datetime="2020-10-25T00:08:31+08:00">2020-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OS/" itemprop="url" rel="index">
+                    <span itemprop="name">OS</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OS/CentOS/" itemprop="url" rel="index">
+                    <span itemprop="name">CentOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/6a7a0bd6/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/6a7a0bd6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>防火墙 firewalld 守护服务引入了一个信任级别的概念来管理与之相关联的连接与接口。它支持 ipv4 与 ipv6，并支持网桥，采用 firewall-cmd (command) 或 firewall-config (gui) 来动态的管理 kernel netfilter 的临时或永久的接口规则，并实时生效而无需重启服务。</p>
+<a id="more"></a>
+<div class="note info">
+            <p><strong>[译]CentOS7下Firewall的设置与使用</strong><br>原文出处：<a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7" target="_blank" rel="external nofollow noopener noreferrer">How To Set Up a Firewall Using FirewallD on CentOS 7</a><br>原本作者：Justin Ellingwood<br>译者：wylu</p>
+          </div>
+<h1 id="如何在centos7上使用firewalld设置防火墙">如何在CentOS7上使用FirewallD设置防火墙</h1>
+<h2 id="简介">简介</h2>
+<p>Firewalld 是可用于许多 Linux 发行版的防火墙管理解决方案，它充当 Linux 内核提供的 iptables 数据包过滤系统的前端。在本指南中，我们将介绍如何为服务器设置防火墙，并向您展示使用 <code>firewall-cmd</code> 管理工具管理防火墙的基本知识（如果您希望在 CentOS中 使用 <code>iptables</code>，请遵循<a href="https://www.digitalocean.com/community/tutorials/how-to-migrate-from-firewalld-to-iptables-on-centos-7" target="_blank" rel="external nofollow noopener noreferrer">本指南</a>）。</p>
+<p>注意：有可能您正在使用比撰写本文时可用的新版本的 firewalld，或者您的服务器设置与本指南中使用的示例服务器略有不同。因此，本指南中说明的某些命令的行为可能会因您的特定配置而异。</p>
+<h2 id="firewalld中的基本概念">Firewalld中的基本概念</h2>
+<p>在开始讨论如何实际使用 <code>firewall-cmd</code> 实用程序来管理防火墙配置之前，我们应该熟悉该工具引入的一些基本概念。</p>
+<h3 id="zones">Zones</h3>
+<p><code>firewalld</code> 守护程序使用称为 "zones" 的实体管理规则组。区域基本上是一组规则，它们决定了允许哪些流量，具体取决于您对计算机所连接的网络的信任程度。为网络接口分配了一个区域，以指示防火墙应允许的行为。</p>
+<p>对于可能经常在网络之间移动的计算机（例如笔记本电脑），这种灵活性提供了一种根据环境更改规则的好方法。在公共WiFi网络上运行时，您可能有严格的规则禁止大多数流量，而在连接到家庭网络时允许放宽限制。对于服务器来说，这些区域并不是那么重要，因为网络环境很少更改（如果有的话）。</p>
+<p>无论您的网络环境有多动态，熟悉防火墙的每个预定义区域背后的一般概念仍然很有用。按从 <strong>最不信任</strong> 到 <strong>最受信任</strong> 的顺序，<code>firewalld</code> 中的预定义区域为：</p>
+<ul>
+<li>drop：最低级别的信任。所有传入的连接都将被丢弃而不会回复，并且只能进行传出连接。</li>
+<li>block：与上述类似，但不仅仅是丢弃连接，而是使用 <code>icmp-host-prohibited</code> 或 <code>icmp6-adm-prohibited</code> 消息拒绝传入的请求。</li>
+<li>public：代表公共的，不受信任的网络。您不信任其他计算机，但可能会视情况允许选择的传入连接。</li>
+<li>external：如果您使用防火墙作为网关，则为外部网络。将其配置为伪装NAT，以便您的内部网络保持私有但可访问。</li>
+<li>internal：外部区域的另一侧，用于网关的内部。这些计算机相当值得信赖，并且可以使用一些其他服务。</li>
+<li>dmz：用于DMZ中的计算机（将无法访问网络其余部分的隔离计算机）。仅允许某些传入连接。</li>
+<li>work：用于工作机。信任网络中的大多数计算机。可能还允许其他一些服务。</li>
+<li>home：家庭环境。通常，这意味着您信任其他大多数计算机，并且将接受其他一些服务。</li>
+<li>trusted：信任网络中的所有计算机。可用选项中最开放的，应谨慎使用。</li>
+</ul>
+<p>要使用防火墙，我们可以创建规则并更改区域的属性，然后将网络接口分配给最合适的区域。</p>
+<h3 id="规则永久性">规则永久性</h3>
+<p>在 firewalld 中，可以将规则指定为 <strong>永久规则</strong> 或 <strong>立即规则</strong>。如果添加或修改规则，则默认情况下，将修改当前运行的防火墙的行为。在下次启动时，旧规则将恢复。</p>
+<p>大多数 <code>firewall-cmd</code> 操作都可以使用 <code>--permanent</code> 标志来指示应将非临时防火墙作为目标。这将影响在引导时重新加载的规则集。这种分离意味着您可以在活动的防火墙实例中测试规则，然后在出现问题时重新加载。您还可以使用 <code>--permanent</code> 标志随着时间的推移建立一套完整的规则，这些规则将在发出 reload 命令时立即应用。</p>
+<h2 id="安装并启用防火墙以在启动时启动">安装并启用防火墙以在启动时启动</h2>
+<p>默认情况下，firewalld 是在某些 Linux 发行版上安装的，包括许多 CentOS 7 映像。但是，您可能需要自己安装 firewalld：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo yum install firewalld</span></span><br></pre></td></tr></table></figure>
+<p>安装 firewalld 之后，您可以启用该服务并重新启动服务器。请记住，启用 firewalld 将导致该服务在服务器启动时启动。最佳实践是在配置此行为之前创建防火墙规则并借此机会对其进行测试，以避免潜在的问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo systemctl <span class="built_in">enable</span> firewalld</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo reboot</span></span><br></pre></td></tr></table></figure>
+<p>服务器重新启动时，防火墙会随之启动，然后将网络接口放入配置的区域（或退回到配置的默认区域），并且与该区域关联的所有规则都将应用于关联的接口。</p>
+<p>我们可以通过键入以下内容来验证该服务正在运行并且可以访问：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --state</span></span><br><span class="line">running</span><br></pre></td></tr></table></figure>
+<p>这表明我们的防火墙已启动并以默认配置运行。</p>
+<h2 id="熟悉当前的防火墙规则">熟悉当前的防火墙规则</h2>
+<p>在开始进行修改之前，我们应该熟悉守护程序提供的默认环境和规则。</p>
+<h3 id="探索默认值">探索默认值</h3>
+<p>通过键入以下内容，可以看到当前选择哪个区域作为默认区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-default-zone</span></span><br><span class="line">public</span><br></pre></td></tr></table></figure>
+<p>由于我们没有给 firewalld 提供任何偏离默认区域的命令，并且我们的接口都没有配置为绑定到另一个区域，因此该区域（public 区域）也将是唯一的“活动”（active）区域（该区域正在控制我们接口的流量）。我们可以通过输入以下内容进行验证：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-active-zones</span></span><br><span class="line">public</span><br><span class="line">  interfaces: eth0 eth1</span><br></pre></td></tr></table></figure>
+<p>在这里，我们可以看到示例服务器具有两个受防火墙控制的网络接口（ <code>eth0</code> 和 <code>eth1</code> ）。目前，它们都根据为 public 区域定义的规则进行管理。</p>
+<p>我们如何知道与 public 区域相关的规则？ 我们可以通过输入以下内容来打印默认区域的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --list-all</span></span><br><span class="line">public (default, active)</span><br><span class="line">  target: default</span><br><span class="line">  icmp-block-inversion: no</span><br><span class="line">  interfaces: eth0 eth1</span><br><span class="line">  sources: </span><br><span class="line">  services: ssh dhcpv6-client</span><br><span class="line">  ports: </span><br><span class="line">  protocols: </span><br><span class="line">  masquerade: no</span><br><span class="line">  forward-ports: </span><br><span class="line">  source-ports: </span><br><span class="line">  icmp-blocks: </span><br><span class="line">  rich rules:</span><br></pre></td></tr></table></figure>
+<p>从输出中可以看出，该区域既是默认区域（default zone）又是活动区域（active zone），并且 <code>eth0</code> 和 <code>eth1</code> 接口与此区域相关联（我们已经从之前的查询中了解了所有这些信息）。但是，我们还可以看到，该区域允许与 DHCP 客户端（用于 IP 地址分配）和 SSH（用于远程管理）相关的正常操作。</p>
+<h3 id="探索可选区域">探索可选区域</h3>
+<p>现在，我们对默认区域和活动区域的配置有了一个好主意。我们还可以找到有关其他区域的信息。</p>
+<p>要获取可用区域的列表，请输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-zones</span></span><br><span class="line">block dmz drop external home internal public trusted work</span><br></pre></td></tr></table></figure>
+<p>通过在 <code>--list-all</code> 命令中指定 <code>--zone</code> 参数，可以看到与指定区域关联的特定配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=home --list-all</span></span><br><span class="line">home</span><br><span class="line">  interfaces: </span><br><span class="line">  sources: </span><br><span class="line">  services: dhcpv6-client ipp-client mdns samba-client ssh</span><br><span class="line">  ports: </span><br><span class="line">  masquerade: no</span><br><span class="line">  forward-ports: </span><br><span class="line">  icmp-blocks: </span><br><span class="line">  rich rules:</span><br></pre></td></tr></table></figure>
+<p>您可以使用 <code>--list-all-zones</code> 选项输出所有区域定义。您可能希望将输出通过管道传到 pager 中以便于查看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --list-all-zones | less</span></span><br></pre></td></tr></table></figure>
+<h2 id="为接口选定区域">为接口选定区域</h2>
+<p>除非另外配置了网络接口，否则在启动防火墙时，每个接口都将置于默认区域中。</p>
+<h3 id="更改接口区域">更改接口区域</h3>
+<p>通过将 <code>--zone</code> 参数与 <code>--change-interface</code> 参数结合使用，可以在会话期间在区域之间转换接口。与所有修改防火墙的命令一样，您将需要使用 sudo。</p>
+<p>例如，我们可以通过输入以下命令将 eth0 接口转换为 "home" 区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=home --change-interface=eth0</span></span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+<p>注意：每当将接口转换到新区域时，请注意您可能正在修改将要运行的服务。例如，在这里，我们将移至具有 SSH 可用的 "home" 区域。这意味着我们的连接不应断开。其他一些区域默认情况下未启用 SSH，如果在使用这些区域之一时断开连接，您可能会发现自己无法重新登录。</p>
+<p>我们可以通过再次请求活动区域来验证此操作是否成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-active-zones</span></span><br><span class="line">home</span><br><span class="line">  interfaces: eth0</span><br><span class="line">public</span><br><span class="line">  interfaces: eth1</span><br></pre></td></tr></table></figure>
+<h3 id="调整默认区域">调整默认区域</h3>
+<p>您最好用一个区域来处理所有接口，这样选择最佳的默认区域然后将其用于配置可能会更容易。</p>
+<p>您可以使用 <code>--set-default-zone</code> 参数更改默认区域。这将立即将所有使用默认值的接口更改为新区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --<span class="built_in">set</span>-default-zone=home</span></span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+<h2 id="为您的应用程序设置规则">为您的应用程序设置规则</h2>
+<p>为希望提供的服务定义防火墙例外的基本方法很容易。我们将在此处介绍基本概念。</p>
+<h3 id="将服务添加到您的区域">将服务添加到您的区域</h3>
+<p>最简单的方法是将所需的服务或端口添加到正在使用的区域。同样，您可以使用 <code>--get-services</code> 选项获取可用服务的列表：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-services</span></span><br><span class="line">RH-Satellite-6 amanda-client amanda-k5-client bacula bacula-client bitcoin bitcoin-rpc bitcoin-testnet bitcoin-testnet-rpc ceph ceph-mon cfengine condor-collector ctdb dhcp dhcpv6 dhcpv6-client dns docker-registry dropbox-lansync elasticsearch freeipa-ldap freeipa-ldaps freeipa-replication freeipa-trust ftp ganglia-client ganglia-master high-availability http https imap imaps ipp ipp-client ipsec iscsi-target kadmin kerberos kibana klogin kpasswd kshell ldap ldaps libvirt libvirt-tls managesieve mdns mosh mountd ms-wbt mssql mysql nfs nrpe ntp openvpn ovirt-imageio ovirt-storageconsole ovirt-vmconsole pmcd pmproxy pmwebapi pmwebapis pop3 pop3s postgresql privoxy proxy-dhcp ptp pulseaudio puppetmaster quassel radius rpc-bind rsh rsyncd samba samba-client sane sip sips smtp smtp-submission smtps snmp snmptrap spideroak-lansync squid ssh synergy syslog syslog-tls telnet tftp tftp-client tinc tor-socks transmission-client vdsm vnc-server wbem-https xmpp-bosh xmpp-client xmpp-local xmpp-server</span><br></pre></td></tr></table></figure>
+<p>注意：您可以通过查看 <code>/usr/lib/firewalld/services</code> 目录中与它们相关的 <code>.xml</code> 文件来获得有关每个服务的更多详细信息。例如，SSH 服务（/usr/lib/firewalld/services/ssh.xml）的定义如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">service</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>SSH<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>Secure Shell (SSH) is a protocol for logging into and executing commands on remote machines. It provides secure encrypted communications. If you plan on accessing your machine remotely via SSH over a firewalled interface, enable this option. You need the openssh-server package installed for this option to be useful.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">port</span> <span class="attr">protocol</span>=<span class="string">"tcp"</span> <span class="attr">port</span>=<span class="string">"22"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>您可以使用 <code>--add-service</code> 参数为区域启用服务。该操作将针对默认区域或 <code>--zone</code> 参数指定的任何区域。默认情况下，这只会调整当前的防火墙会话。您可以通过包括 <code>--permanent</code> 标志来调整永久防火墙配置。</p>
+<p>例如，如果我们运行的是提供常规 HTTP 流量的 Web 服务器，则可以通过键入以下内容在此会话的 "public" 区域中为接口允许此流量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --add-service=http</span></span><br></pre></td></tr></table></figure>
+<p>如果要修改默认区域，可以省略 <code>--zone</code>。我们可以使用 <code>--list-all</code> 或 <code>--list-services</code> 操作来验证操作是否成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --list-services</span></span><br><span class="line">dhcpv6-client http ssh</span><br></pre></td></tr></table></figure>
+<p>测试完所有功能后，您可能需要修改永久防火墙规则，以便重新启动后您的服务仍然可用。我们可以通过输入以下内容使 "public" 区域更改永久生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --permanent --add-service=http</span></span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+<p>您可以通过在 <code>--list-services</code> 操作中添加 <code>--permanent</code> 标志来验证此操作是否成功。您需要对任何 <code>--permanent</code> 操作使用sudo：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --permanent --list-services</span></span><br><span class="line">dhcpv6-client http ssh</span><br></pre></td></tr></table></figure>
+<p>您的 "public" 区域现在将允许端口 80 上的 HTTP Web 通信。如果您的 Web 服务器配置为使用 SSL/TLS，则还需要添加 https 服务。我们可以通过输入以下内容将其添加到当前会话和永久规则集中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --add-service=https</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --permanent --add-service=https</span></span><br></pre></td></tr></table></figure>
+<h3 id="如果没有适当的服务可用怎么办">如果没有适当的服务可用怎么办</h3>
+<p>防火墙安装中包含的防火墙服务代表了您可能希望允许访问的应用程序的许多最常见要求。但是，在某些情况下，这些服务可能无法满足您的要求。</p>
+<p>在这种情况下，您有两个选择。</p>
+<h4 id="为您的区域打开端口">为您的区域打开端口</h4>
+<p>为您的特定应用程序添加支持的最简单方法是打开它在相应区域中使用的端口。这就像指定端口或端口范围以及需要打开的端口的关联协议一样容易。</p>
+<p>例如，如果我们的应用程序在端口 5000 上运行并使用 TCP，则可以使用 <code>--add-port</code> 参数将其添加到此会话的 "public" 区域中。协议可以是 tcp 或 udp：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --add-port=5000/tcp</span></span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+<p>我们可以使用 <code>--list-ports</code> 操作验证此操作是否成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --list-ports</span></span><br><span class="line">5000/tcp</span><br></pre></td></tr></table></figure>
+<p>也可以通过用 <code>-</code> 分隔范围内的开始和结束端口来指定顺序的端口范围。例如，如果我们的应用程序使用 UDP 端口 4990 至 4999，则可以通过键入以下内容在 "public" 端口上打开这些端口：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --add-port=4990-4999/udp</span></span><br></pre></td></tr></table></figure>
+<p>经过测试后，我们可能希望将它们添加到永久防火墙中。您可以通过键入以下内容进行操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --permanent --add-port=5000/tcp</span></span><br><span class="line">success</span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --permanent --add-port=4990-4999/udp</span></span><br><span class="line">success</span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=public --permanent --list-ports</span></span><br><span class="line">5000/tcp 4990-4999/udp</span><br></pre></td></tr></table></figure>
+<h4 id="定义服务">定义服务</h4>
+<p>为您的区域打开端口很容易，但是很难跟踪每个区域的用途。如果您曾经停用服务器上的服务，则可能很难记住仍需要打开哪些端口。为了避免这种情况，可以定义服务。</p>
+<p>服务只是带有相关名称和描述的端口的简单集合。使用服务比端口更易于管理，但是需要一些前期工作。最简单的开始方法是将现有脚本（在 /usr/lib/firewalld/services 中找到）复制到 /etc/firewalld/services 目录中，防火墙在该目录中查找非标准定义。</p>
+<p>例如，我们可以复制 SSH 服务定义以用于我们的 "example" 服务定义，如下所示。文件名减去 <code>.xml</code> 后缀将指示防火墙服务列表中的服务名称：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo cp /usr/lib/firewalld/services/ssh.xml /etc/firewalld/services/example.xml</span></span><br></pre></td></tr></table></figure>
+<p>现在，您可以调整在复制的文件中找到的定义：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo vi /etc/firewalld/services/example.xml</span></span><br></pre></td></tr></table></figure>
+<p>首先，文件将包含您复制的 SSH 定义：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">service</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>SSH<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>Secure Shell (SSH) is a protocol for logging into and executing commands on remote machines. It provides secure encrypted communications. If you plan on accessing your machine remotely via SSH over a firewalled interface, enable this option. You need the openssh-server package installed for this option to be useful.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">port</span> <span class="attr">protocol</span>=<span class="string">"tcp"</span> <span class="attr">port</span>=<span class="string">"22"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>该定义的大部分实际上是元数据。您将要在 <code>&lt;short&gt;</code> 标记内更改服务的简称。这是您的服务的易读名称。您还应该添加描述，以便在需要审核服务时获得更多信息。您需要进行的实际上会影响服务功能的唯一配置可能是端口定义，您可以在其中定义要打开的端口号和协议。可以多次指定。</p>
+<p>对于我们的 "example" 服务，假设我们需要为 TCP 打开端口 7777，为 UDP 打开端口 8888。通过按 <code>i</code> 进入 INSERT 模式，我们可以使用以下内容修改现有定义：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">service</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">short</span>&gt;</span>Example Service<span class="tag">&lt;/<span class="name">short</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>This is just an example service.  It probably shouldn't be used on a real system.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">port</span> <span class="attr">protocol</span>=<span class="string">"tcp"</span> <span class="attr">port</span>=<span class="string">"7777"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">port</span> <span class="attr">protocol</span>=<span class="string">"udp"</span> <span class="attr">port</span>=<span class="string">"8888"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>按 ESC，然后输入 <code>:x</code> 保存并关闭文件。</p>
+<p>重新加载防火墙以访问新服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --reload</span></span><br></pre></td></tr></table></figure>
+<p>您可以看到它现在在可用服务列表中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-services</span></span><br><span class="line">RH-Satellite-6 amanda-client amanda-k5-client bacula bacula-client bitcoin bitcoin-rpc bitcoin-testnet bitcoin-testnet-rpc ceph ceph-mon cfengine condor-collector ctdb dhcp dhcpv6 dhcpv6-client dns docker-registry dropbox-lansync elasticsearch example freeipa-ldap freeipa-ldaps freeipa-replication freeipa-trust ftp ganglia-client ganglia-master high-availability http https imap imaps ipp ipp-client ipsec iscsi-target kadmin kerberos kibana klogin kpasswd kshell ldap ldaps libvirt libvirt-tls managesieve mdns mosh mountd ms-wbt mssql mysql nfs nrpe ntp openvpn ovirt-imageio ovirt-storageconsole ovirt-vmconsole pmcd pmproxy pmwebapi pmwebapis pop3 pop3s postgresql privoxy proxy-dhcp ptp pulseaudio puppetmaster quassel radius rpc-bind rsh rsyncd samba samba-client sane sip sips smtp smtp-submission smtps snmp snmptrap spideroak-lansync squid ssh synergy syslog syslog-tls telnet tftp tftp-client tinc tor-socks transmission-client vdsm vnc-server wbem-https xmpp-bosh xmpp-client xmpp-local xmpp-server</span><br></pre></td></tr></table></figure>
+<p>现在，您可以像往常一样在您的区域中使用此服务。</p>
+<h2 id="创建自己的区域">创建自己的区域</h2>
+<p>尽管预定义的区域对于大多数用户来说可能绰绰有余，但是定义自己的区域来描述其功能可能会有所帮助。</p>
+<p>例如，您可能要为 Web 服务器创建一个名为 "publicweb" 的区域。或者，您可能希望为您在专用网络上提供的 DNS 服务配置另一个区域，您可能需要一个名为 "privateDNS" 的区域。</p>
+<p>添加区域时，必须将其添加到永久防火墙配置中。然后，您可以重新加载以将配置带入正在运行的会话。例如，我们可以通过键入以下内容来创建我们上面讨论的两个区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --permanent --new-zone=publicweb</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --permanent --new-zone=privateDNS</span></span><br></pre></td></tr></table></figure>
+<p>您可以通过键入以下内容来验证这些内容是否存在于您的永久配置中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --permanent --get-zones</span></span><br><span class="line">block dmz drop external home internal privateDNS public publicweb trusted work</span><br></pre></td></tr></table></figure>
+<p>如前所述，这些功能在当前的防火墙实例中尚不可用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-zones</span></span><br><span class="line">block dmz drop external home internal public trusted work</span><br></pre></td></tr></table></figure>
+<p>重新加载防火墙以使这些新区域进入活动配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --reload</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-zones</span></span><br><span class="line">block dmz drop external home internal privateDNS public publicweb trusted work</span><br></pre></td></tr></table></figure>
+<p>现在，您可以开始为您的区域分配适当的服务和端口。通常，最好先调整活动实例，然后在测试后将这些更改转移到永久配置中。例如，对于 "publicweb" 区域，您可能想要添加 SSH，HTTP 和 HTTPS 服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --add-service=ssh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --add-service=http</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --add-service=https</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --list-all</span></span><br><span class="line">publicweb</span><br><span class="line">  target: default</span><br><span class="line">  icmp-block-inversion: no</span><br><span class="line">  interfaces: </span><br><span class="line">  sources: </span><br><span class="line">  services: ssh http https</span><br><span class="line">  ports: </span><br><span class="line">  protocols: </span><br><span class="line">  masquerade: no</span><br><span class="line">  forward-ports: </span><br><span class="line">  source-ports: </span><br><span class="line">  icmp-blocks: </span><br><span class="line">  rich rules:</span><br></pre></td></tr></table></figure>
+<p>同样地，我们可以将 DNS 服务添加到我们的 "privateDNS" 区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=privateDNS --add-service=dns</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=privateDNS --list-all</span></span><br><span class="line">privateDNS</span><br><span class="line">  interfaces: </span><br><span class="line">  sources: </span><br><span class="line">  services: dns</span><br><span class="line">  ports: </span><br><span class="line">  masquerade: no</span><br><span class="line">  forward-ports: </span><br><span class="line">  icmp-blocks: </span><br><span class="line">  rich rules:</span><br></pre></td></tr></table></figure>
+<p>然后，我们可以将网络接口更改为这些新区域以对其进行测试：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --change-interface=eth0</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=privateDNS --change-interface=eth1</span></span><br></pre></td></tr></table></figure>
+<p>此时，您将有机会测试您的配置。如果这些值对您有用，您将要向永久配置添加相同的规则。您可以通过使用 <code>--permanent</code> 标志重新应用规则来做到这一点：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --permanent --add-service=ssh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --permanent --add-service=http</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --permanent --add-service=https</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=privateDNS --permanent --add-service=dns</span></span><br></pre></td></tr></table></figure>
+<p>在永久应用了这些规则之后，您可以重新启动网络并重新加载防火墙服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo systemctl restart network</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo systemctl reload firewalld</span></span><br></pre></td></tr></table></figure>
+<p>验证是否分配了正确的区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> firewall-cmd --get-active-zones</span></span><br><span class="line">privateDNS</span><br><span class="line">  interfaces: eth1</span><br><span class="line">publicweb</span><br><span class="line">  interfaces: eth0</span><br></pre></td></tr></table></figure>
+<p>并验证相应的服务可用于两个区域：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=publicweb --list-services</span></span><br><span class="line">http https ssh</span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --zone=privateDNS --list-services</span></span><br><span class="line">dns</span><br></pre></td></tr></table></figure>
+<p>您已经成功设置了自己的区域！ 如果要将这些区域之一设为其他接口的默认区域，请记住使用 <code>--set-default-zone</code> 参数配置该行为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo firewall-cmd --<span class="built_in">set</span>-default-zone=publicweb</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<p>您现在应该对如何在 CentOS 系统上日常使用的防火墙服务进行充分的了解。</p>
+<p>Firewalld 服务允许您配置考虑网络环境的可维护规则和规则集。它使您可以通过使用区域在不同的防火墙策略之间无缝过渡，并使管理员能够将端口管理抽象为更友好的服务定义。掌握该系统的使用知识将使您能够利用此工具提供的灵活性和强大功能。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wylu.me/posts/6a7a0bd6/" title="CentOS7下Firewall的设置与使用">https://wylu.me/posts/6a7a0bd6/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CentOS/" rel="tag"> <i class="fa fa-tag"></i> CentOS</a>
+              <a href="/tags/Firewall/" rel="tag"> <i class="fa fa-tag"></i> Firewall</a>
+              <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag"> <i class="fa fa-tag"></i> 防火墙</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/9fb7f5b4/" rel="prev" title="进程间通信机制">
+      <i class="fa fa-chevron-left"></i> 进程间通信机制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/3274548c/" rel="next" title="算法设计与分析">
+      算法设计与分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-valine">Valine</a></li>
+            <li class="tab"><a href="#comment-disqus">Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何在centos7上使用firewalld设置防火墙"><span class="nav-number">1.</span> <span class="nav-text">如何在CentOS7上使用FirewallD设置防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#firewalld中的基本概念"><span class="nav-number">1.2.</span> <span class="nav-text">Firewalld中的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zones"><span class="nav-number">1.2.1.</span> <span class="nav-text">Zones</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规则永久性"><span class="nav-number">1.2.2.</span> <span class="nav-text">规则永久性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装并启用防火墙以在启动时启动"><span class="nav-number">1.3.</span> <span class="nav-text">安装并启用防火墙以在启动时启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#熟悉当前的防火墙规则"><span class="nav-number">1.4.</span> <span class="nav-text">熟悉当前的防火墙规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#探索默认值"><span class="nav-number">1.4.1.</span> <span class="nav-text">探索默认值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#探索可选区域"><span class="nav-number">1.4.2.</span> <span class="nav-text">探索可选区域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为接口选定区域"><span class="nav-number">1.5.</span> <span class="nav-text">为接口选定区域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更改接口区域"><span class="nav-number">1.5.1.</span> <span class="nav-text">更改接口区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调整默认区域"><span class="nav-number">1.5.2.</span> <span class="nav-text">调整默认区域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为您的应用程序设置规则"><span class="nav-number">1.6.</span> <span class="nav-text">为您的应用程序设置规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#将服务添加到您的区域"><span class="nav-number">1.6.1.</span> <span class="nav-text">将服务添加到您的区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果没有适当的服务可用怎么办"><span class="nav-number">1.6.2.</span> <span class="nav-text">如果没有适当的服务可用怎么办</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为您的区域打开端口"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">为您的区域打开端口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义服务"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">定义服务</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建自己的区域"><span class="nav-number">1.7.</span> <span class="nav-text">创建自己的区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wylu@gmail.com" title="E-Mail → mailto:wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-book"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">190k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:53</span>
+</div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+
+    
+      start = new Date("2019-03-05 12:00:00 +0800");
+    
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://wylu.me/posts/6a7a0bd6/",
+            identifier: "posts/6a7a0bd6/",
+            title: "CentOS7下Firewall的设置与使用"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wylu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: '4Os8XbkKeaT7dIzoFACxrjuD-MdYXbMMI',
+      appKey: 'qu4Fc1HqehV5k53SAAeVVuHP',
+      placeholder: "ヾﾉ≧∀≦)o Just go go",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: false,
+      lang: '' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

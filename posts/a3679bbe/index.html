@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://wylu.me').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: {"enable":true,"caption":false},
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":{"valine":{"text":"Valine","order":-2},"disqus":{"text":"Disqus","order":-1}},"activeClass":"valine"},
+    algolia: {
+      appID: 'QPQVX9MYX9',
+      apiKey: '9f2738c0cc6f107c67eba29565c2d007',
+      indexName: 'dev_PASSAGE',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="请求分页虚存管理在地址映射过程中，若页表中发现所要访问的页不在主存，则产生缺页异常，操作系统接到此信号后，就调出缺页异常处理程序，根据页表中给出的磁盘地址，将该页面调入主存，是作业继续运行下去。如果主存中有空闲块，则分配一个页框，将新调入页面装入，并修改页表中相应页表项的驻留位及相应的主存块号；若此时主存中没有空闲块，则要淘汰某页面，若该页在此期间被修改过，要将其先写回磁盘，这个过程就是页面替换。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模拟实现请求分页虚存页面替换算法">
+<meta property="og:url" content="https://wylu.me/posts/a3679bbe/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="请求分页虚存管理在地址映射过程中，若页表中发现所要访问的页不在主存，则产生缺页异常，操作系统接到此信号后，就调出缺页异常处理程序，根据页表中给出的磁盘地址，将该页面调入主存，是作业继续运行下去。如果主存中有空闲块，则分配一个页框，将新调入页面装入，并修改页表中相应页表项的驻留位及相应的主存块号；若此时主存中没有空闲块，则要淘汰某页面，若该页在此期间被修改过，要将其先写回磁盘，这个过程就是页面替换。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/main.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/OPT-run-res.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/OPT-accurate-res.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/FIFO-run-res.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/FIFO-accurate-res.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/LRU-run-res.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/LRU-accurate-res.png">
+<meta property="article:published_time" content="2019-06-08T12:09:54.000Z">
+<meta property="article:modified_time" content="2020-10-24T16:08:31.994Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0%E8%AF%B7%E6%B1%82%E5%88%86%E9%A1%B5%E8%99%9A%E5%AD%98%E9%A1%B5%E9%9D%A2%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95/main.png">
+
+<link rel="canonical" href="https://wylu.me/posts/a3679bbe/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>模拟实现请求分页虚存页面替换算法 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-155154294-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wylu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">76</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">81</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-fw fa-commenting"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-sitelog">
+
+    <a href="/sitelog/" rel="section"><i class="fa fa-fw fa-list-alt"></i>站点日志</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/a3679bbe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          模拟实现请求分页虚存页面替换算法
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-08 20:09:54" itemprop="dateCreated datePublished" datetime="2019-06-08T20:09:54+08:00">2019-06-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-25 00:08:31" itemprop="dateModified" datetime="2020-10-25T00:08:31+08:00">2020-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OS/" itemprop="url" rel="index">
+                    <span itemprop="name">OS</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OS/Kernel/" itemprop="url" rel="index">
+                    <span itemprop="name">Kernel</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/a3679bbe/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/a3679bbe/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>请求分页虚存管理在地址映射过程中，若页表中发现所要访问的页不在主存，则产生缺页异常，操作系统接到此信号后，就调出缺页异常处理程序，根据页表中给出的磁盘地址，将该页面调入主存，是作业继续运行下去。如果主存中有空闲块，则分配一个页框，将新调入页面装入，并修改页表中相应页表项的驻留位及相应的主存块号；若此时主存中没有空闲块，则要淘汰某页面，若该页在此期间被修改过，要将其先写回磁盘，这个过程就是页面替换。</p>
+<p>页面替换算法是虚拟存储管理实现的关键，好的算法能够减少和避免“颠簸”现象，本文在模拟实现 FIFO，LRU 和 OPT 几种经典页面替换算法的基础上，比较各种替换算法的效率及优缺点，从而了解虚拟存储实现的过程，理解内存页面调度的机制。</p>
+<a id="more"></a>
+<h1 id="数据结构设计">数据结构设计</h1>
+<ol type="1">
+<li>在请求分页虚存页面替换算法中，为实现从请求页到主存块的替换，需要在模拟程序中维护两个数据结构，即请求页面队列和主存块队列。</li>
+<li>请求页面队列为进程所用，记录当前进程请求的页面块信息。</li>
+<li>主存队列由系统维护，该队列保存当前系统中各主存块的状态（包括最后访问时间、闲忙状态等）。</li>
+<li>以这两个数据结构为基础，实现各种替换算法，在系统中为用户请求寻找物理块。</li>
+<li>本项目设计含有以下功能：
+<ul>
+<li>接收用户输入参数，包括程序长度（页面数）、页框个数及页面访问序列。</li>
+<li>程序结果采用不同的标志区分命中、替换及直接加入空闲块。</li>
+<li>实现 OPT、FIFO、LRU 等替换算法，并显示算法对应替换页面的过程。</li>
+<li>计算各种页面替换算法的缺页中断率。</li>
+</ul></li>
+</ol>
+<h1 id="程序设计">程序设计</h1>
+<h2 id="页面替换算法基本思路">页面替换算法基本思路</h2>
+<p>本程序并没有进入系统空间对实际进程页面进行控制，而是在用户空间用线性表的连续存储方式对进程页面替换进行模拟。</p>
+<ol type="1">
+<li><p>最佳页面替换算法（OPT）</p>
+<p>淘汰以后不再需要的或者最远的将来才会用到的页面。</p></li>
+<li><p>先进先出页面替换算法（FIFO）</p>
+<p>淘汰最先调入主存的页面，或者说在主存中驻留时间最长的那一页。</p></li>
+<li><p>最近最少使用页面替换算法（LRU）</p>
+<p>淘汰在最近一段时间里较久未被访问的页面。它是根据程序执行时所具有的局部性来考虑的，即那些刚被使用过的页面可能马上还要被使用，而那些在较长时间里未被使用的页面一般可能不会马上使用。</p></li>
+</ol>
+<h2 id="请求页面队列">请求页面队列</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Page</span> &#123;</span> <span class="comment">// 页面</span></span><br><span class="line">    <span class="keyword">int</span> pageID;     <span class="comment">//页号</span></span><br><span class="line">&#125; Page;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">PageQueue</span> &#123;</span> <span class="comment">//页面队列</span></span><br><span class="line">    Page page;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">PageQueue</span> *<span class="title">next</span>;</span> <span class="comment">//下一页面</span></span><br><span class="line">&#125; PageQueue;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">process</span> &#123;</span> <span class="comment">// 进程结构</span></span><br><span class="line">    PageQueue pages; <span class="comment">//页面</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> pageLength; <span class="comment">// 页面数</span></span><br><span class="line">&#125; <span class="built_in">process</span>;<span class="comment">//进程</span></span><br></pre></td></tr></table></figure>
+<h2 id="主存块队列">主存块队列</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Block</span> &#123;</span> <span class="comment">//块记录结构</span></span><br><span class="line">    Page *page; <span class="comment">//页面</span></span><br><span class="line">    <span class="keyword">long</span> time; <span class="comment">//最后访问时间</span></span><br><span class="line">    <span class="keyword">int</span> state; <span class="comment">//页块是否空闲</span></span><br><span class="line">&#125; Block;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">BlockQueue</span> &#123;</span> <span class="comment">//块队列</span></span><br><span class="line">    Block block;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">BlockQueue</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125; BlockQueue;</span><br></pre></td></tr></table></figure>
+<h2 id="进程">进程</h2>
+<p>初始化进程以及进程需要访问的页面的序列，这里仅仅展示了进程接收输入序列作为页面访问序列的代码，本程序还提供了由系统自动生成的页面访问序列，可以指定访问页面的最大序号。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">PageQueue *<span class="title">InitializePageQueueWithInput</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> pageLength)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化页面，把首地址返回。如果分配失败，返回NULL</span></span><br><span class="line">    PageQueue *head = <span class="literal">NULL</span>, *p = <span class="literal">NULL</span>, *q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pageLength; i++) &#123;</span><br><span class="line">        p = (PageQueue *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PageQueue));</span><br><span class="line">        p-&gt;page.pageID = pages[i];</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, p-&gt;page.pageID);</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span>) head = p;</span><br><span class="line">        <span class="keyword">else</span> q-&gt;next = p;</span><br><span class="line">        q = p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitializeProcessWithInput</span><span class="params">(<span class="built_in">process</span> *proc, <span class="keyword">unsigned</span> <span class="keyword">int</span> pageSize)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化进程，接收手动输入的页面访问序列</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"进程初始化：\n"</span>);</span><br><span class="line">    proc-&gt;pageLength = pageSize;</span><br><span class="line">    proc-&gt;pages.next = InitializePageQueueWithInput(pageSize);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>随机生成页面访问序列</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">PageQueue *<span class="title">InitializePageQueue</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> pageLength, <span class="keyword">int</span> maxPageID)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化页面，把首地址返回。如果分配失败，返回NULL</span></span><br><span class="line">    srand(<span class="number">100</span>);</span><br><span class="line">    PageQueue *head = <span class="literal">NULL</span>, *p = <span class="literal">NULL</span>, *q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pageLength; i++) &#123;</span><br><span class="line">        p = (PageQueue *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PageQueue));</span><br><span class="line">        p-&gt;page.pageID = rand() % (maxPageID + <span class="number">1</span>);</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, p-&gt;page.pageID);</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span>) head = p;</span><br><span class="line">        <span class="keyword">else</span> q-&gt;next = p;</span><br><span class="line">        q = p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="主存">主存</h2>
+<p>接收用户输入参数，作为初始化主存的块数，也即页框数，使用一个单向链表模拟实现主存。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BlockQueue *<span class="title">InitializeBlockQueue</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="built_in">size</span>)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化主存块，把首地址返回，如果分配失败返回NULL</span></span><br><span class="line">    BlockQueue *block = <span class="literal">NULL</span>, *p = <span class="literal">NULL</span>, *q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">size</span>; i++) &#123;</span><br><span class="line">        p = (BlockQueue *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BlockQueue));</span><br><span class="line">        p-&gt;block.time = <span class="number">0</span>;</span><br><span class="line">        p-&gt;block.state = <span class="number">0</span>;</span><br><span class="line">        p-&gt;block.page = <span class="literal">NULL</span>;</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">if</span> (block == <span class="literal">NULL</span>) block = p;</span><br><span class="line">        <span class="keyword">else</span> q-&gt;next = p;</span><br><span class="line">        q = p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> block;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="主存队列的维护">主存队列的维护</h2>
+<p>这里只展示主存队列一些重要操作的代码。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BlockQueue *<span class="title">SearchPage</span><span class="params">(BlockQueue *blockQueue, Page page)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//搜索特定页面,根据页面ID进行匹配</span></span><br><span class="line">    BlockQueue *p = blockQueue;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;block.page != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;block.page-&gt;pageID == page.pageID)</span><br><span class="line">                <span class="keyword">return</span> p;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BlockQueue *<span class="title">SearchIdleBlock</span><span class="params">(BlockQueue *blockQueue)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//搜索空闲块</span></span><br><span class="line">    BlockQueue *p = blockQueue;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;block.state == IDLE) <span class="keyword">return</span> p;</span><br><span class="line">        <span class="keyword">else</span> p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BlockQueue *<span class="title">GetOldestBlock</span><span class="params">(BlockQueue *blockQueue)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//取得主存中停留最久的页面，返回它的地址</span></span><br><span class="line">    BlockQueue *p = blockQueue, *oldestAddr;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="literal">NULL</span>) <span class="keyword">return</span> p;</span><br><span class="line">    <span class="keyword">long</span> oldest = p-&gt;block.time;</span><br><span class="line">    oldestAddr = p;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;block.time &lt; oldest) &#123;</span><br><span class="line">            oldest = p-&gt;block.time;</span><br><span class="line">            oldestAddr = p;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> oldestAddr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BlockQueue *<span class="title">GetLongestWithoutAccess</span><span class="params">(BlockQueue *blockQueue, PageQueue *currentPage)</span></span>&#123;</span><br><span class="line">    <span class="comment">//获取主存中最长时间将不会被访问的页面，返回其地址</span></span><br><span class="line">    BlockQueue *p = blockQueue, *longestAddr;</span><br><span class="line">    PageQueue *q = currentPage-&gt;next;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="literal">NULL</span>) <span class="keyword">return</span> p;</span><br><span class="line">    longestAddr = p;</span><br><span class="line">    <span class="keyword">int</span> max_count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(q != <span class="literal">NULL</span>)&#123;</span><br><span class="line">            count++;</span><br><span class="line">            <span class="keyword">if</span>(p-&gt;block.page-&gt;pageID == q-&gt;page.pageID) <span class="keyword">break</span>;</span><br><span class="line">            q = q-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(count &gt; max_count)&#123;</span><br><span class="line">            max_count = count;</span><br><span class="line">            longestAddr = p;</span><br><span class="line">        &#125;</span><br><span class="line">        q = currentPage-&gt;next;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> longestAddr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="opt">OPT</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OPT</span><span class="params">(BlockQueue *blockQueue,<span class="built_in">process</span> *proc)</span></span>&#123;</span><br><span class="line">    <span class="comment">//最佳页面替换算法</span></span><br><span class="line">    PageQueue *currentPage = proc-&gt;pages.next;</span><br><span class="line">    <span class="keyword">while</span> (currentPage != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (SearchPage(blockQueue, currentPage-&gt;page) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            PrintBlockList(blockQueue, currentPage-&gt;page.pageID, COLOR_Exist);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            BlockQueue *idleBlock = SearchIdleBlock(blockQueue);</span><br><span class="line">            <span class="keyword">if</span> (idleBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                idleBlock-&gt;block.state = BUSY;</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page = (Page *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Page));</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_IDLE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idleBlock = GetLongestWithoutAccess(blockQueue,currentPage);</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_NoIDLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        currentPage = currentPage-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="fifo">FIFO</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FIFO</span><span class="params">(BlockQueue *blockQueue, <span class="built_in">process</span> *proc)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//先进先出算法</span></span><br><span class="line">    PageQueue *currentPage = proc-&gt;pages.next;</span><br><span class="line">    <span class="keyword">while</span> (currentPage != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (SearchPage(blockQueue, currentPage-&gt;page) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            PrintBlockList(blockQueue, currentPage-&gt;page.pageID, COLOR_Exist);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            BlockQueue *idleBlock = SearchIdleBlock(blockQueue);</span><br><span class="line">            <span class="keyword">if</span> (idleBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                idleBlock-&gt;block.state = BUSY;</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page = (Page *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Page));</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_IDLE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idleBlock = GetOldestBlock(blockQueue);</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_NoIDLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        currentPage = currentPage-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="lru">LRU</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LRU</span><span class="params">(BlockQueue *blockQueue, <span class="built_in">process</span> *proc)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//最近最少使用</span></span><br><span class="line">    PageQueue *currentPage = proc-&gt;pages.next;</span><br><span class="line">    <span class="keyword">while</span> (currentPage != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        BlockQueue *searchedBlock = SearchPage(blockQueue, currentPage-&gt;page);</span><br><span class="line">        <span class="keyword">if</span> (searchedBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            searchedBlock-&gt;block.time = Time++;</span><br><span class="line">            PrintBlockList(blockQueue, currentPage-&gt;page.pageID, COLOR_Exist);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            BlockQueue *idleBlock = SearchIdleBlock(blockQueue);</span><br><span class="line">            <span class="keyword">if</span> (idleBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                idleBlock-&gt;block.state = BUSY;</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page = (Page *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Page));</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_IDLE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idleBlock = GetOldestBlock(blockQueue);</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_NoIDLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        currentPage = currentPage-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="页面替换算法测试">页面替换算法测试</h1>
+<p>测试页面访问序列（页框数为3）</p>
+<p><code>7  0  1  2  0  3  0  4  2  3  0  3  2  1  2  0  1  7  0  1</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/main.png" alt="main"></p>
+<h2 id="opt-1">OPT</h2>
+<p>运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |  缺页! 主存不存在该页面，载入空闲页框1</span><br><span class="line">页框2 |     |</span><br><span class="line">页框3 |     |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |  缺页! 主存不存在该页面，载入空闲页框2</span><br><span class="line">页框3 |     |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  缺页! 主存不存在该页面，载入空闲页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  3  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  4  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |  命中! 主存已存在该页面，位于页框1</span><br><span class="line">页框2 |  4  |</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  4  |</span><br><span class="line">页框3 |  3  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  3  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |  命中! 主存已存在该页面，位于页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |  命中! 主存已存在该页面，位于页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">缺页中断率为：45.00%</span><br></pre></td></tr></table></figure>
+<p>运行结果部分截图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/OPT-run-res.png" alt="OPT-run-res"></p>
+<p>对比准确数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/OPT-accurate-res.png" alt="OPT-accurate-res"></p>
+<h2 id="fifo-1">FIFO</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |  缺页! 主存不存在该页面，载入空闲页框1</span><br><span class="line">页框2 |     |</span><br><span class="line">页框3 |     |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |  缺页! 主存不存在该页面，载入空闲页框2</span><br><span class="line">页框3 |     |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  缺页! 主存不存在该页面，载入空闲页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  3  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  3  |</span><br><span class="line">页框3 |  0  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  4  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  3  |</span><br><span class="line">页框3 |  0  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  4  |</span><br><span class="line">页框2 |  2  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  0  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  4  |</span><br><span class="line">页框2 |  2  |</span><br><span class="line">页框3 |  3  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  2  |</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  2  |</span><br><span class="line">页框3 |  3  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  2  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  1  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  1  |</span><br><span class="line">页框3 |  2  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |  命中! 主存已存在该页面，位于页框1</span><br><span class="line">页框2 |  1  |</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  1  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  1  |</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">缺页中断率为：75.00%</span><br></pre></td></tr></table></figure>
+<p>运行结果部分截图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/FIFO-run-res.png" alt="FIFO-run-res"></p>
+<p>对比准确数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/FIFO-accurate-res.png" alt="FIFO-accurate-res"></p>
+<h2 id="lru-1">LRU</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |  缺页! 主存不存在该页面，载入空闲页框1</span><br><span class="line">页框2 |     |</span><br><span class="line">页框3 |     |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |  缺页! 主存不存在该页面，载入空闲页框2</span><br><span class="line">页框3 |     |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  7  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |  缺页! 主存不存在该页面，载入空闲页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  1  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  3  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  2  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  4  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  3  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  4  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  2  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  4  |</span><br><span class="line">页框2 |  3  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  3  |</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  3  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  0  |</span><br><span class="line">页框2 |  3  |</span><br><span class="line">页框3 |  2  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |  缺页! 主存不存在该页面，替换页框1</span><br><span class="line">页框2 |  3  |</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |</span><br><span class="line">页框2 |  3  |</span><br><span class="line">页框3 |  2  |  命中! 主存已存在该页面，位于页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |</span><br><span class="line">页框2 |  0  |  缺页! 主存不存在该页面，替换页框2</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |  命中! 主存已存在该页面，位于页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  2  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  7  |  缺页! 主存不存在该页面，替换页框3</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |</span><br><span class="line">页框2 |  0  |  命中! 主存已存在该页面，位于页框2</span><br><span class="line">页框3 |  7  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">页框1 |  1  |  命中! 主存已存在该页面，位于页框1</span><br><span class="line">页框2 |  0  |</span><br><span class="line">页框3 |  7  |</span><br><span class="line">---------------------------------------------------------</span><br><span class="line">缺页中断率为：60.00%</span><br></pre></td></tr></table></figure>
+<p>运行结果部分截图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/LRU-run-res.png" alt="LRU-run-res"></p>
+<p>对比准确数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/cdn/post/OS/Kernel/模拟实现请求分页虚存页面替换算法/LRU-accurate-res.png" alt="LRU-accurate-res"></p>
+<h1 id="总结">总结</h1>
+<p>分页虚拟存储管理既有优点又有缺点，优点是作业的程序和数据可按页分散存放在主存中，有效解决了碎片问题； 既有利于改进主存利用率，又有利于多道程序运行。缺点是要有硬件支持，要进行缺页中断处理，机器成本增加，系统开销加大。缺页中断率小是虚拟存储管理目标之一，而影响缺页中断率的因素主要有：主存页框数、页面大小、页面分配机制，替换算法、程序的局部性。好的页面替换算法能够降低缺页中断率。</p>
+<h1 id="完整源码">完整源码</h1>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Created by wylu on 2018/1/6.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUSY 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IDLE 0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> COLOR_Exist 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> COLOR_NotExist_IDLE 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> COLOR_NotExist_NoIDLE 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> hitCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> pages[<span class="number">100</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Page</span> &#123;</span> <span class="comment">// 页面</span></span><br><span class="line">    <span class="keyword">int</span> pageID;     <span class="comment">//页号</span></span><br><span class="line">&#125; Page;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">PageQueue</span> &#123;</span> <span class="comment">//页面队列</span></span><br><span class="line">    Page page;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">PageQueue</span> *<span class="title">next</span>;</span> <span class="comment">//下一页面</span></span><br><span class="line">&#125; PageQueue;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Block</span> &#123;</span> <span class="comment">//块记录结构</span></span><br><span class="line">    Page *page; <span class="comment">//页面</span></span><br><span class="line">    <span class="keyword">long</span> time; <span class="comment">//最后访问时间</span></span><br><span class="line">    <span class="keyword">int</span> state; <span class="comment">//页块是否空闲</span></span><br><span class="line">&#125; Block;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">BlockQueue</span> &#123;</span> <span class="comment">//块队列</span></span><br><span class="line">    Block block;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">BlockQueue</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125; BlockQueue;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">process</span> &#123;</span> <span class="comment">// 进程结构</span></span><br><span class="line">    PageQueue pages; <span class="comment">//页面</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> pageLength; <span class="comment">// 页面数</span></span><br><span class="line">&#125; <span class="built_in">process</span>;<span class="comment">//进程</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> Time = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">GetSystemUtime</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//获取系统当前时间的微秒数</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">nowit</span>;</span></span><br><span class="line">    gettimeofday(&amp;nowit, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1000000</span> * nowit.tv_sec + nowit.tv_usec;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">BlockQueue *<span class="title">InitializeBlockQueue</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="built_in">size</span>)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化主存块，把首地址返回，如果分配失败返回NULL</span></span><br><span class="line">    BlockQueue *block = <span class="literal">NULL</span>, *p = <span class="literal">NULL</span>, *q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">size</span>; i++) &#123;</span><br><span class="line">        p = (BlockQueue *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BlockQueue));</span><br><span class="line">        p-&gt;block.time = <span class="number">0</span>;</span><br><span class="line">        p-&gt;block.state = <span class="number">0</span>;</span><br><span class="line">        p-&gt;block.page = <span class="literal">NULL</span>;</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">if</span> (block == <span class="literal">NULL</span>) block = p;</span><br><span class="line">        <span class="keyword">else</span> q-&gt;next = p;</span><br><span class="line">        q = p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> block;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetBlockQueueSize</span><span class="params">(BlockQueue *blockQueue)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//获取块长度</span></span><br><span class="line">    BlockQueue *presentBlock = blockQueue;</span><br><span class="line">    <span class="keyword">int</span> blockQueueSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (presentBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        blockQueueSize++;</span><br><span class="line">        presentBlock = presentBlock-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> blockQueueSize;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ResetBlockQueue</span><span class="params">(BlockQueue *blockQueue)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//清空块内容</span></span><br><span class="line">    BlockQueue *presentBlock = blockQueue;</span><br><span class="line">    <span class="keyword">while</span> (presentBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        presentBlock-&gt;block.page = <span class="literal">NULL</span>;</span><br><span class="line">        presentBlock-&gt;block.state = IDLE;</span><br><span class="line">        presentBlock-&gt;block.time = <span class="number">0</span>;</span><br><span class="line">        presentBlock = presentBlock-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">PageQueue *<span class="title">InitializePageQueue</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> pageLength, <span class="keyword">int</span> maxPageID)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化页面，把首地址返回。如果分配失败，返回NULL</span></span><br><span class="line">    srand(<span class="number">100</span>);</span><br><span class="line">    PageQueue *head = <span class="literal">NULL</span>, *p = <span class="literal">NULL</span>, *q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pageLength; i++) &#123;</span><br><span class="line">        p = (PageQueue *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PageQueue));</span><br><span class="line">        p-&gt;page.pageID = rand() % (maxPageID + <span class="number">1</span>);</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, p-&gt;page.pageID);</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span>) head = p;</span><br><span class="line">        <span class="keyword">else</span> q-&gt;next = p;</span><br><span class="line">        q = p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">PageQueue *<span class="title">InitializePageQueueWithInput</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> pageLength)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化页面，把首地址返回。如果分配失败，返回NULL</span></span><br><span class="line">    PageQueue *head = <span class="literal">NULL</span>, *p = <span class="literal">NULL</span>, *q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pageLength; i++) &#123;</span><br><span class="line">        p = (PageQueue *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PageQueue));</span><br><span class="line">        p-&gt;page.pageID = pages[i];</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, p-&gt;page.pageID);</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">NULL</span>) head = p;</span><br><span class="line">        <span class="keyword">else</span> q-&gt;next = p;</span><br><span class="line">        q = p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitializeProcess</span><span class="params">(<span class="built_in">process</span> *proc, <span class="keyword">unsigned</span> <span class="keyword">int</span> pageSize, <span class="keyword">unsigned</span> <span class="keyword">int</span> maxPageID)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化进程，随机生成进程页面访问序列</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"进程初始化：\n"</span>);</span><br><span class="line">    proc-&gt;pageLength = pageSize;</span><br><span class="line">    proc-&gt;pages.next = InitializePageQueue(pageSize, maxPageID);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitializeProcessWithInput</span><span class="params">(<span class="built_in">process</span> *proc, <span class="keyword">unsigned</span> <span class="keyword">int</span> pageSize)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化进程，接收手动输入的页面访问序列</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"进程初始化：\n"</span>);</span><br><span class="line">    proc-&gt;pageLength = pageSize;</span><br><span class="line">    proc-&gt;pages.next = InitializePageQueueWithInput(pageSize);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">BlockQueue *<span class="title">SearchPage</span><span class="params">(BlockQueue *blockQueue, Page page)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//搜索特定页面</span></span><br><span class="line">    BlockQueue *p = blockQueue;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;block.page != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;block.page-&gt;pageID == page.pageID)</span><br><span class="line">                <span class="keyword">return</span> p;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">BlockQueue *<span class="title">SearchIdleBlock</span><span class="params">(BlockQueue *blockQueue)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//搜索空闲块</span></span><br><span class="line">    BlockQueue *p = blockQueue;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;block.state == IDLE) <span class="keyword">return</span> p;</span><br><span class="line">        <span class="keyword">else</span> p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetBlockLable</span><span class="params">(BlockQueue *blockQueue, BlockQueue *goalBlock)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//返回块号，编号从1开始</span></span><br><span class="line">    BlockQueue *p = blockQueue;</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (p != goalBlock) &#123;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">BlockQueue *<span class="title">GetOldestBlock</span><span class="params">(BlockQueue *blockQueue)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//取得主存中停留最久的页面，返回它的地址</span></span><br><span class="line">    BlockQueue *p = blockQueue, *oldestAddr;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="literal">NULL</span>) <span class="keyword">return</span> p;</span><br><span class="line">    <span class="keyword">long</span> oldest = p-&gt;block.time;</span><br><span class="line">    oldestAddr = p;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;block.time &lt; oldest) &#123;</span><br><span class="line">            oldest = p-&gt;block.time;</span><br><span class="line">            oldestAddr = p;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> oldestAddr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">BlockQueue *<span class="title">GetLongestWithoutAccess</span><span class="params">(BlockQueue *blockQueue, PageQueue *currentPage)</span></span>&#123;</span><br><span class="line">    <span class="comment">//获取主存中最长时间将不会被访问的页面，返回其地址</span></span><br><span class="line">    BlockQueue *p = blockQueue, *longestAddr;</span><br><span class="line">    PageQueue *q = currentPage-&gt;next;</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="literal">NULL</span>) <span class="keyword">return</span> p;</span><br><span class="line">    longestAddr = p;</span><br><span class="line">    <span class="keyword">int</span> max_count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(q != <span class="literal">NULL</span>)&#123;</span><br><span class="line">            count++;</span><br><span class="line">            <span class="keyword">if</span>(p-&gt;block.page-&gt;pageID == q-&gt;page.pageID) <span class="keyword">break</span>;</span><br><span class="line">            q = q-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(count &gt; max_count)&#123;</span><br><span class="line">            max_count = count;</span><br><span class="line">            longestAddr = p;</span><br><span class="line">        &#125;</span><br><span class="line">        q = currentPage-&gt;next;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> longestAddr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintBlockList</span><span class="params">(BlockQueue *blockQueue, <span class="keyword">int</span> pageID, <span class="keyword">int</span> color)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//打印块信息</span></span><br><span class="line">    BlockQueue *presentBlock = blockQueue;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; GetBlockQueueSize(blockQueue); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (presentBlock == <span class="literal">NULL</span>) <span class="keyword">break</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"页框%d "</span>, i + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (presentBlock-&gt;block.state == IDLE) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"|     |\n"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (presentBlock-&gt;block.page-&gt;pageID != pageID) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"|  %d  |\n"</span>, presentBlock-&gt;block.page-&gt;pageID);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">switch</span> (color) &#123;</span><br><span class="line">                    <span class="keyword">case</span> COLOR_Exist:</span><br><span class="line">                        <span class="built_in">printf</span>(<span class="string">"|  %d  |  命中! 主存已存在该页面，位于页框%d\n"</span>, </span><br><span class="line">                               pageID, GetBlockLable(blockQueue, presentBlock));</span><br><span class="line">                        hitCount++;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">case</span> COLOR_NotExist_IDLE:</span><br><span class="line">                        <span class="built_in">printf</span>(<span class="string">"|  %d  |  缺页! 主存不存在该页面，载入空闲页框%d\n"</span>, </span><br><span class="line">                               pageID, GetBlockLable(blockQueue, presentBlock));</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">case</span> COLOR_NotExist_NoIDLE:</span><br><span class="line">                        <span class="built_in">printf</span>(<span class="string">"|  %d  |  缺页! 主存不存在该页面，替换页框%d\n"</span>, </span><br><span class="line">                               pageID, GetBlockLable(blockQueue, presentBlock));</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">default</span>:</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        presentBlock = presentBlock-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"---------------------------------------------------------\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FIFO</span><span class="params">(BlockQueue *blockQueue, <span class="built_in">process</span> *proc)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//先进先出算法</span></span><br><span class="line">    PageQueue *currentPage = proc-&gt;pages.next;</span><br><span class="line">    <span class="keyword">while</span> (currentPage != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (SearchPage(blockQueue, currentPage-&gt;page) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            PrintBlockList(blockQueue, currentPage-&gt;page.pageID, COLOR_Exist);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            BlockQueue *idleBlock = SearchIdleBlock(blockQueue);</span><br><span class="line">            <span class="keyword">if</span> (idleBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                idleBlock-&gt;block.state = BUSY;</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page = (Page *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Page));</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_IDLE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idleBlock = GetOldestBlock(blockQueue);</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_NoIDLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        currentPage = currentPage-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LRU</span><span class="params">(BlockQueue *blockQueue, <span class="built_in">process</span> *proc)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//最近最少使用</span></span><br><span class="line">    PageQueue *currentPage = proc-&gt;pages.next;</span><br><span class="line">    <span class="keyword">while</span> (currentPage != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        BlockQueue *searchedBlock = SearchPage(blockQueue, currentPage-&gt;page);</span><br><span class="line">        <span class="keyword">if</span> (searchedBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            searchedBlock-&gt;block.time = Time++;</span><br><span class="line">            PrintBlockList(blockQueue, currentPage-&gt;page.pageID, COLOR_Exist);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            BlockQueue *idleBlock = SearchIdleBlock(blockQueue);</span><br><span class="line">            <span class="keyword">if</span> (idleBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                idleBlock-&gt;block.state = BUSY;</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page = (Page *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Page));</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_IDLE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idleBlock = GetOldestBlock(blockQueue);</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_NoIDLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        currentPage = currentPage-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OPT</span><span class="params">(BlockQueue *blockQueue, <span class="built_in">process</span> *proc)</span></span>&#123;</span><br><span class="line">    <span class="comment">//最佳页面替换算法</span></span><br><span class="line">    PageQueue *currentPage = proc-&gt;pages.next;</span><br><span class="line">    <span class="keyword">while</span> (currentPage != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (SearchPage(blockQueue, currentPage-&gt;page) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            PrintBlockList(blockQueue, currentPage-&gt;page.pageID, COLOR_Exist);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            BlockQueue *idleBlock = SearchIdleBlock(blockQueue);</span><br><span class="line">            <span class="keyword">if</span> (idleBlock != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                idleBlock-&gt;block.state = BUSY;</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page = (Page *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Page));</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_IDLE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                idleBlock = GetLongestWithoutAccess(blockQueue,currentPage);</span><br><span class="line">                idleBlock-&gt;block.time = Time++;</span><br><span class="line">                idleBlock-&gt;block.page-&gt;pageID = currentPage-&gt;page.pageID;</span><br><span class="line">                PrintBlockList(blockQueue, </span><br><span class="line">                               currentPage-&gt;page.pageID, COLOR_NotExist_NoIDLE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        currentPage = currentPage-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SelectAlgorithm</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n========================================================\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\t1.OPT\t2.FIFO\t3.LRU\t0.exit\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"========================================================\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">bool</span> isGoOn = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span> (isGoOn)&#123;</span><br><span class="line">        <span class="comment">//主存块数，即页框数</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> blockNumber;</span><br><span class="line">        <span class="comment">//进程页面数</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> pageNumber;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"请输入主存块数(即页框数)："</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%u"</span>, &amp;blockNumber);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"请输入进程页面数："</span>);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%u"</span>, &amp;pageNumber);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"========================================================\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\t主存页框数: %u, 进程页面数: %u\n"</span>, blockNumber, pageNumber);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"========================================================\n"</span>);</span><br><span class="line"></span><br><span class="line">        BlockQueue *blocks;</span><br><span class="line">        <span class="built_in">process</span> proc;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"是否手动输入访问序列? y/n\n"</span>);</span><br><span class="line">        getchar();</span><br><span class="line">        <span class="keyword">if</span> (getchar() == <span class="string">'y'</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"请输入访问序列："</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pageNumber; ++i) &#123;</span><br><span class="line">                <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;pages[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            InitializeProcessWithInput(&amp;proc,pageNumber);</span><br><span class="line">        &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">            InitializeProcess(&amp;proc, pageNumber, <span class="number">10</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        blocks = InitializeBlockQueue(blockNumber);</span><br><span class="line"></span><br><span class="line">        SelectAlgorithm();</span><br><span class="line">        <span class="keyword">int</span> oper;</span><br><span class="line">        <span class="keyword">while</span> (<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;oper))&#123;</span><br><span class="line">            <span class="keyword">int</span> flag = <span class="number">0</span>;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"\n---------------------------------------------------------\n"</span>);</span><br><span class="line">            hitCount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">switch</span> (oper)&#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                    OPT(blocks, &amp;proc);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                    FIFO(blocks, &amp;proc);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                    LRU(blocks, &amp;proc);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                    flag = <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    SelectAlgorithm();</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">"非法输入!请重新输入："</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (flag == <span class="number">1</span>) <span class="keyword">break</span>;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"缺页中断率为：%.2lf%%\n"</span>,(<span class="number">1</span>-(hitCount/pageNumber))*<span class="number">100</span>);</span><br><span class="line">            ResetBlockQueue(blocks);</span><br><span class="line">            SelectAlgorithm();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"是否重新输入访问序列? y/n\n"</span>);</span><br><span class="line">        getchar();</span><br><span class="line">        <span class="keyword">if</span>(getchar() != <span class="string">'y'</span>) isGoOn = <span class="literal">false</span>;</span><br><span class="line">        system(<span class="string">"cls"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wylu.me/posts/a3679bbe/" title="模拟实现请求分页虚存页面替换算法">https://wylu.me/posts/a3679bbe/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/OS/" rel="tag"> <i class="fa fa-tag"></i> OS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/1915f42e/" rel="prev" title="Linux文件权限">
+      <i class="fa fa-chevron-left"></i> Linux文件权限
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/2f907c09/" rel="next" title="UML类关系">
+      UML类关系 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-valine">Valine</a></li>
+            <li class="tab"><a href="#comment-disqus">Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据结构设计"><span class="nav-number">1.</span> <span class="nav-text">数据结构设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序设计"><span class="nav-number">2.</span> <span class="nav-text">程序设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#页面替换算法基本思路"><span class="nav-number">2.1.</span> <span class="nav-text">页面替换算法基本思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求页面队列"><span class="nav-number">2.2.</span> <span class="nav-text">请求页面队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主存块队列"><span class="nav-number">2.3.</span> <span class="nav-text">主存块队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-number">2.4.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主存"><span class="nav-number">2.5.</span> <span class="nav-text">主存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主存队列的维护"><span class="nav-number">2.6.</span> <span class="nav-text">主存队列的维护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#opt"><span class="nav-number">2.7.</span> <span class="nav-text">OPT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fifo"><span class="nav-number">2.8.</span> <span class="nav-text">FIFO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lru"><span class="nav-number">2.9.</span> <span class="nav-text">LRU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#页面替换算法测试"><span class="nav-number">3.</span> <span class="nav-text">页面替换算法测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#opt-1"><span class="nav-number">3.1.</span> <span class="nav-text">OPT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fifo-1"><span class="nav-number">3.2.</span> <span class="nav-text">FIFO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lru-1"><span class="nav-number">3.3.</span> <span class="nav-text">LRU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完整源码"><span class="nav-number">5.</span> <span class="nav-text">完整源码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wylu@gmail.com" title="E-Mail → mailto:wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-book"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">190k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:53</span>
+</div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+
+    
+      start = new Date("2019-03-05 12:00:00 +0800");
+    
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://wylu.me/posts/a3679bbe/",
+            identifier: "posts/a3679bbe/",
+            title: "模拟实现请求分页虚存页面替换算法"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wylu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: '4Os8XbkKeaT7dIzoFACxrjuD-MdYXbMMI',
+      appKey: 'qu4Fc1HqehV5k53SAAeVVuHP',
+      placeholder: "ヾﾉ≧∀≦)o Just go go",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: false,
+      lang: '' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://wylu.me').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: {"enable":true,"caption":false},
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":{"valine":{"text":"Valine","order":-2},"disqus":{"text":"Disqus","order":-1}},"activeClass":"valine"},
+    algolia: {
+      appID: 'QPQVX9MYX9',
+      apiKey: '9f2738c0cc6f107c67eba29565c2d007',
+      indexName: 'dev_PASSAGE',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="大多数人有时会需要在同一台机器上管理多个 github 账号，本文以管理两个 github 账号为例，记录了配置 git 的过程，方便下次遇到相同问题时，能节省处理时间。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git在同一机器下配置多个github账号">
+<meta property="og:url" content="https://wylu.me/posts/e186bfe8/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="大多数人有时会需要在同一台机器上管理多个 github 账号，本文以管理两个 github 账号为例，记录了配置 git 的过程，方便下次遇到相同问题时，能节省处理时间。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-06T15:42:03.000Z">
+<meta property="article:modified_time" content="2020-10-24T16:08:32.024Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="git多用户">
+<meta property="article:tag" content="git多账号">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wylu.me/posts/e186bfe8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Git在同一机器下配置多个github账号 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-155154294-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wylu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">76</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">36</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">81</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-fw fa-commenting"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-sitelog">
+
+    <a href="/sitelog/" rel="section"><i class="fa fa-fw fa-list-alt"></i>站点日志</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/e186bfe8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git在同一机器下配置多个github账号
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-06 23:42:03" itemprop="dateCreated datePublished" datetime="2020-01-06T23:42:03+08:00">2020-01-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-25 00:08:32" itemprop="dateModified" datetime="2020-10-25T00:08:32+08:00">2020-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tool/" itemprop="url" rel="index">
+                    <span itemprop="name">Tool</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tool/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/e186bfe8/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/e186bfe8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>大多数人有时会需要在同一台机器上管理多个 github 账号，本文以管理两个 github 账号为例，记录了配置 git 的过程，方便下次遇到相同问题时，能节省处理时间。</p>
+<a id="more"></a>
+<h1 id="约定">约定</h1>
+<ul>
+<li>github 账号 1： wylu, 对应邮箱为 wylu@gmail.com</li>
+<li>github 账号 2： 15wylu, 对应邮箱为 15wylu@gmail.com</li>
+</ul>
+<h1 id="生成第一对-ssh-key">生成第一对 SSH key</h1>
+<p>第一个密钥对以 wylu 账号为例，在生成之前，我们可以通过 <code>ls -al ~/.ssh</code> 查看是否已有 SSH key。</p>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls -al ~/.ssh</span></span><br><span class="line">total 24</span><br><span class="line">drwx------  2 wylu wylu 4096 Nov 24  2018 .</span><br><span class="line">drwxr-xr-x 66 wylu wylu 4096 Jan  7 00:00 ..</span><br><span class="line">-rw-------  1 wylu wylu 1675 Nov 24  2018 id_rsa</span><br><span class="line">-rw-r--r--  1 wylu wylu  398 Nov 24  2018 id_rsa.pub</span><br><span class="line">-rw-r--r--  1 wylu wylu 4841 Dec 22 21:46 known_hosts</span><br></pre></td></tr></table></figure>
+<p>如果 <code>~/.ssh</code> 下有 "id_rsa"（私钥） 和 "id_rsa.pub"（公钥），说明之前已生成过 SSH key 了，我们可以直接复用这个密钥对（SSH key）。</p>
+<p>如果你没有 SSH key 或者你想要重新生成一个 SSH key，可以执行以下命令生成：</p>
+<ul>
+<li>不存在 SSH Key 时。</li>
+</ul>
+<p>遇到输入一路回车使用默认配置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa -C <span class="string">"wylu@gmail.com"</span></span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/pi/.ssh/id_rsa): </span><br><span class="line">Created directory '/home/pi/.ssh'.</span><br><span class="line">Enter passphrase (empty for no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved in /home/pi/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/pi/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:nGAMmHYEKfJ3/iEDLxOsg1xinfg/IzuYTQVggEnVSWQ wylu@gmail.com</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|==+B*E.          |</span><br><span class="line">|* =.o=           |</span><br><span class="line">|.+ooo +          |</span><br><span class="line">| +.+=o.o .       |</span><br><span class="line">|o.+o.*  S        |</span><br><span class="line">|..ooo = .        |</span><br><span class="line">|  =..o + .       |</span><br><span class="line">| o + +  .        |</span><br><span class="line">|   .+ o          |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+<ul>
+<li>已存在 SSH Key 时。</li>
+</ul>
+<p>当询问是否 <code>Overwrite (y/n)?</code> 已存在的 <code>id_rsa</code> 时，直接输入 <code>y</code> 然后回车，其余的一路回车使用默认配置就好。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa -C <span class="string">"wylu@gmail.com"</span></span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/pi/.ssh/id_rsa): </span><br><span class="line">/home/pi/.ssh/id_rsa already exists.</span><br><span class="line">Overwrite (y/n)? y</span><br><span class="line">Enter passphrase (empty for no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved in /home/pi/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/pi/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:rPh6Y081aG7URerEmd6aA5FVYi+1w0KPHR59KggFwLk wylu@gmail.com</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|     ..o.o*.*.   |</span><br><span class="line">|      o .* # +. .|</span><br><span class="line">|       .o.X.X  o |</span><br><span class="line">|      E. B.=...  |</span><br><span class="line">|        S * ..   |</span><br><span class="line">|     . = o +     |</span><br><span class="line">|    . . + +      |</span><br><span class="line">|     .+o   .     |</span><br><span class="line">|    .+.o.        |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+<p>我们以此 SSH Key 作为默认的密钥对。</p>
+<h1 id="生成第二对-ssh-key">生成第二对 SSH Key</h1>
+<p>假设我们已经拥有了一对 SSH Key 对应于管理 wylu 的 github 账号，现在需要生成另外一对 SSH Key 用于管理 15wylu 的 github 账号。</p>
+<p>执行下面的命令生成另一对 SSH Key：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/.ssh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa -C <span class="string">"15wylu@gmail.com"</span> -f <span class="string">"15wylu_id_rsa"</span></span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter passphrase (empty for no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved in 15wylu_id_rsa.</span><br><span class="line">Your public key has been saved in 15wylu_id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:6cQHRLvxRovTNQgPh1JiMCe4U1tFgkxe541ZGN+NiHA 15wylu@gmail.com</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|   +=oB=E+o      |</span><br><span class="line">|  ..+*oOo&amp; + o   |</span><br><span class="line">|   o.o .O B = .  |</span><br><span class="line">|  o .  . X o .   |</span><br><span class="line">|   .    S *      |</span><br><span class="line">|       o +       |</span><br><span class="line">|        .        |</span><br><span class="line">|                 |</span><br><span class="line">|                 |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+<p>方法与上面生成第一对 SSH Key 一样，一路回车，这里使用 <code>-f</code> 选项的作用是指定生成的密钥对文件的名称，以避免覆盖之前的密钥对文件。从输出信息中可以看到，此次生成的私钥文件名为 <code>15wylu_id_rsa</code>，公钥文件名为 <code>15wylu_id_rsa.pub</code>。这样同一台机器下，wylu 和 15wylu 都拥有了各自的 SSH Keys：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls -al ~/.ssh</span></span><br><span class="line">total 24</span><br><span class="line">drwx------ 2 pi pi 4096 Jan  6 17:00 .</span><br><span class="line">drwxr-xr-x 7 pi pi 4096 Jan  6 16:55 ..</span><br><span class="line">-rw------- 1 pi pi 1823 Jan  6 17:00 15wylu_id_rsa</span><br><span class="line">-rw-r--r-- 1 pi pi  396 Jan  6 17:00 15wylu_id_rsa.pub</span><br><span class="line">-rw------- 1 pi pi 1823 Jan  6 16:38 id_rsa</span><br><span class="line">-rw-r--r-- 1 pi pi  396 Jan  6 16:38 id_rsa.pub</span><br></pre></td></tr></table></figure>
+<h1 id="在对应的-github-账号中添加-ssh-key">在对应的 github 账号中添加 SSH key</h1>
+<p>参考文章 <a href="https://wylu.github.io/posts/5b767b23/" target="_blank" rel="external nofollow noopener noreferrer">Git配置SSH Key</a> 中的 <strong>添加 SSH Key 到 Github</strong> 部分，分别将 <code>id_rsa.pub</code> 文件中的公钥添加到 wylu 账号，将 <code>15wylu_id_rsa.pub</code> 文件中的公钥添加到 15wylu 账号。</p>
+<h1 id="使用-ssh-agent-注册新的-ssh-密钥">使用 ssh-agent 注册新的 SSH 密钥</h1>
+<p>ssh-agent：是一个可以控制和保存公钥身份验证所使用的私钥的程序，可以理解为一个密钥管理器，ssh-agent 是一个守护进程（daemon），设计它的唯一目的就是对解密的专用私钥进行高速缓存。</p>
+<p><strong>如果没有正在运行的 ssh-agent，则执行 <code>eval "$(ssh-agent -s)"</code> 以确保 ssh-agent 运行。</strong></p>
+<p>然后使用 ssh-add 添加私钥：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-add ~/.ssh/id_rsa</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-add ~/.ssh/15wylu_id_rsa</span></span><br></pre></td></tr></table></figure>
+<p>使用 ssh-add 将私钥交给 ssh-agent 保管，其他程序需要身份验证时，ssh 将直接从 ssh-agent 获取私钥，而不会提示你输入密码口令以获取私钥，这样就不需要经常输入密码了。可以使用 <code>ssh-add -l</code> 查看已添加到 ssh-agent 中的密钥。</p>
+<p>接下来，<strong>需要使 ssh-agent 对不同的 SSH 主机使用各自的 SSH 密钥</strong>，这是关键部分，我们有两种不同的方法（使用其中一种即可）：</p>
+<ul>
+<li>使用 SSH 配置文件</li>
+<li>在 ssh-agent 中只有一个活动的 SSH 密钥</li>
+</ul>
+<h1 id="使用-ssh-配置文件推荐">使用 SSH 配置文件（推荐）</h1>
+<p>使用 <code>~/.ssh/config</code> 作为我们的配置文件，如果文件不存在，我们就创建它。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/.ssh/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> touch config</span></span><br></pre></td></tr></table></figure>
+<p>编辑 <code>~/.ssh/config</code>，使相关 GitHub 帐户的配置类似于以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># github: wylu, email: wylu@gmail.com</span><br><span class="line"># the default config</span><br><span class="line">Host github.com</span><br><span class="line">   HostName github.com</span><br><span class="line">   User git</span><br><span class="line">   IdentityFile ~&#x2F;.ssh&#x2F;id_rsa</span><br><span class="line">   </span><br><span class="line"># github: 15wylu, email: 15wylu@gmail.com</span><br><span class="line">Host 15wylu.github.com</span><br><span class="line">   HostName github.com</span><br><span class="line">   User git</span><br><span class="line">   IdentityFile ~&#x2F;.ssh&#x2F;15wylu_id_rsa</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Host: 别名，用于区分多个 git 账号，可随意</li>
+<li>HostName: 要连接的服务器的主机名</li>
+<li>IdentityFile: ssh 连接使用的私钥</li>
+</ul>
+<p>上面的配置要求 ssh-agent：</p>
+<ul>
+<li>使用 <code>id_rsa</code> 作为使用 <span class="citation" data-cites="github.com">@github.com</span> 的任何 Git URL 的密钥</li>
+<li>对于使用 <span class="citation" data-cites="15wylu.github.com">@15wylu.github.com</span> 的任何 Git URL，则使用 <code>15wylu_id_rsa</code> 密钥</li>
+</ul>
+<p>其规则就是：从上至下读取 config 的内容，在每个 Host 下寻找对应的私钥，你可以根据需要添加更多的 Host。</p>
+<h2 id="clone-新仓库">clone 新仓库</h2>
+<p><strong>注意：如果使用 SSH 配置文件前，仓库已存在，参考下方 "对于已存在的仓库" 的内容。</strong></p>
+<p>这里以上面的配置为例，假设要克隆 15wylu 账号的一个项目，原来使用的命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git@github.com:15wylu/15wylu.github.io.git</span></span><br></pre></td></tr></table></figure>
+<p>但是经过配置，我们已经将 15wylu 的 Host 设为了 <code>15wylu.github.com</code>，而不再是原来的 <code>github.com</code>，所以相应地 clone 的命令也变成如下：</p>
+<p>（请注意克隆时我们使用了 SSH 配置中使用的主机名）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git@15wylu.github.com:15wylu/15wylu.github.io.git</span></span><br></pre></td></tr></table></figure>
+<h2 id="对于已存在的仓库">对于已存在的仓库</h2>
+<p>假设在配置之前，我们就已经 clone 了仓库。</p>
+<p>首先使用 <code>git remote -v</code> 列出本地仓库对应的远程库，检查该 URL 是否与要使用的 GitHub 主机匹配，否则更新远程原始 URL：</p>
+<p>以 15wylu 账号的仓库为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote <span class="built_in">set</span>-url origin git@15wylu.github.com:15wylu/15wylu.github.io.git</span></span><br></pre></td></tr></table></figure>
+<p>确保 <code>@</code> 和 <code>:</code> 之间的字符串与我们在 SSH 配置中指定的主机（Host）匹配。</p>
+<h2 id="对于本地创建新的仓库">对于本地创建新的仓库</h2>
+<p>在项目文件夹中使用 <code>git init</code> 中初始化目录为一个 Git 仓库。然后在 GitHub 帐户中创建新的仓库，将其作为远程库添加到本地仓库中：</p>
+<p>同样以 15wylu 账号为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote add origin git@15wylu.github.com:15wylu/remote_repo_name.git</span></span><br></pre></td></tr></table></figure>
+<p>确保 <code>@</code> 和 <code>:</code> 之间的字符串与我们在 SSH 配置中指定的主机（Host）匹配。将初始提交推送到 GitHub 仓库：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"initial commit"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push -u origin master</span></span><br></pre></td></tr></table></figure>
+<h2 id="小结">小结</h2>
+<p><strong>在这里，我们实际上是在为不同的主机（Host）添加 SSH 配置规则，说明要在哪个域中使用哪个身份文件（SSH key）。</strong></p>
+<h2 id="测试">测试</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@github.com</span></span><br><span class="line">The authenticity of host 'github.com (13.250.177.223)' can't be established.</span><br><span class="line">RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">Warning: Permanently added 'github.com,13.250.177.223' (RSA) to the list of known hosts.</span><br><span class="line">Hi wylu! You've successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@15wylu.github.com</span></span><br><span class="line">Hi 15wylu! You've successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+<p>第一次执行 <code>ssh -T git@github.com</code> 时会有一段警告，直接输入 yes 回车既可。从输出的信息可以看到，wylu 和 15wylu 都认证成功了。</p>
+<h1 id="在-ssh-agent-中只有一个活动的-ssh-密钥">在 ssh-agent 中只有一个活动的 SSH 密钥</h1>
+<p>这种方法不需要 SSH 配置规则，而是我们手动确保 ssh-agent 在执行任何 Git 操作时仅附加了相关的密钥。</p>
+<p><code>ssh-add -l</code> 将列出附加到 ssh-agent 的所有 SSH 密钥，删除所有这些密钥后，添加你将要使用的一个密钥，以确保 ssh-agent 中只有一个活动的密钥。</p>
+<p>例如，假设你要使用 git 操作 15wylu 账号，首先使用下面的命令删除 ssh-agent 中的所有密钥：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-add -D</span></span><br></pre></td></tr></table></figure>
+<p>然后添加 15wylu 账号对应的密钥：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-add ~/.ssh/15wylu_id_rsa</span></span><br></pre></td></tr></table></figure>
+<p>此时，ssh-agent 已将密钥映射到 15wylu GitHub 帐户，当我们使用 git 推送、克隆等操作时都是对 15wylu 账号的仓库进行操作。</p>
+<p>类似地，假如要使用 git 操作 wylu 账号，则：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh-add -D</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-add ~/.ssh/id_rsa</span></span><br></pre></td></tr></table></figure>
+<h1 id="为本地仓库设置-git-remote-url">为本地仓库设置 git remote url</h1>
+<p>clone 或创建本地 Git 仓库后，请确保 Git 配置的用户名和电子邮件正是你想要的。GitHub 通过 commit 描述附随的电子邮件 ID 来标识任何提交的作者。</p>
+<p>要在本地 Git 目录（本地 Git 仓库下）中列出配置名称和电子邮件，请执行 <code>git config user.name</code> 和 <code>git config user.email</code>。如果找不到，则需要进行相应的更新，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config user.name <span class="string">"wylu"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config user.email <span class="string">"wylu@gmail.com"</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="references">References</h1>
+<p><a href="https://www.freecodecamp.org/news/manage-multiple-github-accounts-the-ssh-way-2dadc30ccaca/" target="_blank" rel="external nofollow noopener noreferrer">How to manage multiple GitHub accounts on a single machine with SSH keys</a></p>
+<p><a href="https://www.jianshu.com/p/89cb26e5c3e8" target="_blank" rel="external nofollow noopener noreferrer">同一客户端下使用多个git账号</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wylu.me/posts/e186bfe8/" title="Git在同一机器下配置多个github账号">https://wylu.me/posts/e186bfe8/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/git/" rel="tag"> <i class="fa fa-tag"></i> git</a>
+              <a href="/tags/github/" rel="tag"> <i class="fa fa-tag"></i> github</a>
+              <a href="/tags/git%E5%A4%9A%E7%94%A8%E6%88%B7/" rel="tag"> <i class="fa fa-tag"></i> git多用户</a>
+              <a href="/tags/git%E5%A4%9A%E8%B4%A6%E5%8F%B7/" rel="tag"> <i class="fa fa-tag"></i> git多账号</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/996c49c/" rel="prev" title="tmux 简介与使用指南">
+      <i class="fa fa-chevron-left"></i> tmux 简介与使用指南
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/3504e7d9/" rel="next" title="Git子模块">
+      Git子模块 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-valine">Valine</a></li>
+            <li class="tab"><a href="#comment-disqus">Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#约定"><span class="nav-number">1.</span> <span class="nav-text">约定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成第一对-ssh-key"><span class="nav-number">2.</span> <span class="nav-text">生成第一对 SSH key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成第二对-ssh-key"><span class="nav-number">3.</span> <span class="nav-text">生成第二对 SSH Key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在对应的-github-账号中添加-ssh-key"><span class="nav-number">4.</span> <span class="nav-text">在对应的 github 账号中添加 SSH key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-ssh-agent-注册新的-ssh-密钥"><span class="nav-number">5.</span> <span class="nav-text">使用 ssh-agent 注册新的 SSH 密钥</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-ssh-配置文件推荐"><span class="nav-number">6.</span> <span class="nav-text">使用 SSH 配置文件（推荐）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#clone-新仓库"><span class="nav-number">6.1.</span> <span class="nav-text">clone 新仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于已存在的仓库"><span class="nav-number">6.2.</span> <span class="nav-text">对于已存在的仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于本地创建新的仓库"><span class="nav-number">6.3.</span> <span class="nav-text">对于本地创建新的仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">6.4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">6.5.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在-ssh-agent-中只有一个活动的-ssh-密钥"><span class="nav-number">7.</span> <span class="nav-text">在 ssh-agent 中只有一个活动的 SSH 密钥</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为本地仓库设置-git-remote-url"><span class="nav-number">8.</span> <span class="nav-text">为本地仓库设置 git remote url</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-number">9.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wylu@gmail.com" title="E-Mail → mailto:wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-book"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">190k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:53</span>
+</div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+
+    
+      start = new Date("2019-03-05 12:00:00 +0800");
+    
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "https://wylu.me/posts/e186bfe8/",
+            identifier: "posts/e186bfe8/",
+            title: "Git在同一机器下配置多个github账号"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wylu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: '4Os8XbkKeaT7dIzoFACxrjuD-MdYXbMMI',
+      appKey: 'qu4Fc1HqehV5k53SAAeVVuHP',
+      placeholder: "ヾﾉ≧∀≦)o Just go go",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: false,
+      lang: '' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
