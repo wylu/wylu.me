@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在前面的部分中，我们介绍了如何递归解决树遍历问题。递归是解决树问题的最强大，最常用的技术之一。 众所周知，树可以递归定义为一个节点（根节点），该节点包含一个值和对子节点的引用列表。递归是树的自然特征之一。因此，许多树问题可以递归解决。对于每个递归函数调用，我们仅关注当前节点的问题，然后递归调用函数以解决其子级。 通常，我们可以使用 自上而下 的方法或 自下而上 的方法递归地解决树问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="递归地解决树问题">
+<meta property="og:url" content="https://wylu.me/posts/657c0b00/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="在前面的部分中，我们介绍了如何递归解决树遍历问题。递归是解决树问题的最强大，最常用的技术之一。 众所周知，树可以递归定义为一个节点（根节点），该节点包含一个值和对子节点的引用列表。递归是树的自然特征之一。因此，许多树问题可以递归解决。对于每个递归函数调用，我们仅关注当前节点的问题，然后递归调用函数以解决其子级。 通常，我们可以使用 自上而下 的方法或 自下而上 的方法递归地解决树问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/abb8f5a44b799f9a77f817c9ddeffcf7.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/d6ab88624ed4fe88ff2021306861e38a.gif">
+<meta property="article:published_time" content="2020-05-02T08:38:48.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:41:22.713Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="binary-tree">
+<meta property="article:tag" content="树">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="Recursion">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/abb8f5a44b799f9a77f817c9ddeffcf7.gif">
+
+
+<link rel="canonical" href="https://wylu.me/posts/657c0b00/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/657c0b00/","path":"posts/657c0b00/","title":"递归地解决树问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>递归地解决树问题 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">自上而下的解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E4%B8%8B%E8%80%8C%E4%B8%8A%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">自下而上的解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="nav-text">二叉树节点定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E9%80%92%E5%BD%92%E7%BB%83%E4%B9%A0"><span class="nav-text">二叉树递归练习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6"><span class="nav-text">二叉树的最大深度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">对称二叉树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E6%80%BB%E5%92%8C"><span class="nav-text">路径总和</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/657c0b00/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="递归地解决树问题 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          递归地解决树问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-02 16:38:48" itemprop="dateCreated datePublished" datetime="2020-05-02T16:38:48+08:00">2020-05-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:41:22" itemprop="dateModified" datetime="2022-11-23T23:41:22+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/algorithm/tree/" itemprop="url" rel="index"><span itemprop="name">tree</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在前面的部分中，我们介绍了如何递归解决<a href="https://wylu.me/posts/e85d694a">树遍历</a>问题。<strong>递归</strong>是解决树问题的最强大，最常用的技术之一。</p>
+<p>众所周知，树可以递归定义为一个节点（根节点），该节点包含一个值和对子节点的引用列表。递归是树的自然特征之一。因此，许多树问题可以递归解决。对于每个递归函数调用，我们仅关注当前节点的问题，然后递归调用函数以解决其子级。</p>
+<p>通常，我们可以使用 <strong>自上而下</strong> 的方法或 <strong>自下而上</strong> 的方法递归地解决树问题。</p>
+<span id="more"></span>
+<h1 id="自上而下的解决方案">自上而下的解决方案</h1>
+<p>“自顶向下”表示在每个递归调用中，我们将首先访问该节点以提供一些值，并在递归调用该函数时将这些值传递给其子级。因此，“自上而下”的解决方案可以看作是一种前序遍历（preorder traversal）。具体来说，递归函数 <code>top_down(root, params)</code> 的工作方式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. return specific value for null node</span><br><span class="line">2. update the answer if needed                      // answer &lt;-- params</span><br><span class="line">3. left_ans = top_down(root.left, left_params)      // left_params &lt;-- root.val, params</span><br><span class="line">4. right_ans = top_down(root.right, right_params)   // right_params &lt;-- root.val, params</span><br><span class="line">5. return the answer if needed                      // answer &lt;-- left_ans, right_ans</span><br></pre></td></tr></table></figure>
+<p>例如，考虑以下问题：给定一棵二叉树，找到其最大深度。</p>
+<p>我们知道根节点的深度为1。对于每个节点，如果我们知道其深度，我们将知道其子节点的深度。因此，如果在递归调用函数时将节点的深度作为参数传递，则所有节点都将知道其深度。对于叶节点，我们可以使用深度来更新最终答案。这是递归函数 <code>maximum_depth(root, depth)</code> 的伪代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. return if root is null</span><br><span class="line">2. if root is a leaf node:</span><br><span class="line">3.      answer = max(answer, depth)         // update the answer if needed</span><br><span class="line">4. maximum_depth(root.left, depth + 1)      // call the function recursively for left child</span><br><span class="line">5. maximum_depth(root.right, depth + 1)     // call the function recursively for right child</span><br></pre></td></tr></table></figure>
+<p>以下示例可帮助您了解其工作原理：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/abb8f5a44b799f9a77f817c9ddeffcf7.gif" alt="top-down-solution"></p>
+<p>Java 参考代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> answer;  <span class="comment">// don&#x27;t forget to initialize answer before call maximum_depth</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">maximum_depth</span><span class="params">(TreeNode root, <span class="type">int</span> depth)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (root.left == <span class="literal">null</span> &amp;&amp; root.right == <span class="literal">null</span>) &#123;</span><br><span class="line">        answer = Math.max(answer, depth);</span><br><span class="line">    &#125;</span><br><span class="line">    maximum_depth(root.left, depth + <span class="number">1</span>);</span><br><span class="line">    maximum_depth(root.right, depth + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="自下而上的解决方案">自下而上的解决方案</h1>
+<p>“自底而上”是另一种递归解决方案。在每个递归调用中，我们将首先对所有子节点递归调用该函数，然后根据返回的值和当前节点本身的值得出答案。此过程可以视为一种后序遍历（postorder traversal）。通常，“自下而上”的递归函数 <code>bottom_up(root)</code> 将是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. return specific value for null node</span><br><span class="line">2. left_ans = bottom_up(root.left)          // call function recursively for left child</span><br><span class="line">3. right_ans = bottom_up(root.right)        // call function recursively for right child</span><br><span class="line">4. return answers                           // answer &lt;-- left_ans, right_ans, root.val</span><br></pre></td></tr></table></figure>
+<p>让我们继续讨论有关最大深度的问题，但使用另一种思考方式：对于树的单个节点，以自身为根的子树的最大深度 <code>x</code> 将是多少？</p>
+<p>如果我们知道以其左孩子为根的子树的最大深度 <code>l</code> 和以其右孩子为根的子树的最大深度 <code>r</code>，我们可以回答前面的问题吗？当然可以，我们可以选择它们之间的最大值，然后加1以获取根于当前节点的子树的最大深度。即 <code>x = max(l, r) + 1</code>。</p>
+<p>这意味着对于每个节点，我们都可以在为其子节点解决问题后得到答案。因此，我们可以使用“自下而上”的解决方案来解决此问题。这是递归函数 <code>maximum_depth(root)</code> 的伪代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. return 0 if root is null                 // return 0 for null node</span><br><span class="line">2. left_depth = maximum_depth(root.left)</span><br><span class="line">3. right_depth = maximum_depth(root.right)</span><br><span class="line">4. return max(left_depth, right_depth) + 1  // return depth of the subtree rooted at root</span><br></pre></td></tr></table></figure>
+<p>以下示例可帮助您了解其工作原理：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d6ab88624ed4fe88ff2021306861e38a.gif" alt="bottom-up-solution"></p>
+<p>Java 参考代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maximum_depth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// return 0 for null node</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">left_depth</span> <span class="operator">=</span> maximum_depth(root.left);</span><br><span class="line">    <span class="type">int</span> <span class="variable">right_depth</span> <span class="operator">=</span> maximum_depth(root.right);</span><br><span class="line">    <span class="keyword">return</span> Math.max(left_depth, right_depth) + <span class="number">1</span>;  <span class="comment">// return depth of the subtree rooted at root</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="总结">总结</h1>
+<p>理解递归并找到该问题的递归解决方案并不容易。它需要练习。</p>
+<p>遇到树型问题时，请问自己两个问题：是否可以确定一些参数来帮助节点知道其答案？您可以使用这些参数和节点本身的值来确定将什么参数传递给它的子节点吗？如果答案都是肯定的，请尝试使用“自顶向下”递归解决方案来解决此问题。</p>
+<p>或者，您可以通过这种方式思考问题：对于树中的某个节点，如果您知道其子节点的答案，可以计算该节点的答案吗？如果答案是肯定的，那么使用自下而上的方法递归解决问题可能是一个好主意。</p>
+<p>在下面，我们为您提供了几个经典问题，以帮助您更好地理解树的结构和递归。</p>
+<h1 id="二叉树节点定义">二叉树节点定义</h1>
+<ul>
+<li>java</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Definition for a binary tree node.</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="type">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>python</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x</span>):</span><br><span class="line">        self.val = x</span><br><span class="line">        self.left = <span class="literal">None</span></span><br><span class="line">        self.right = <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h1 id="二叉树递归练习">二叉树递归练习</h1>
+<h2 id="二叉树的最大深度">二叉树的最大深度</h2>
+<p>给定二叉树，找到其最大深度。</p>
+<p>最大深度是沿着从根节点到最远叶节点的最长路径的节点数。</p>
+<p>注意：叶是没有子节点的节点。</p>
+<p>例：给定二叉树[3,9,20,null,null,15,7]，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">9  20</span><br><span class="line">  /  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
+<p>返回其深度 = 3</p>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> + Math.max(maxDepth(root.left), maxDepth(root.right));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxDepth</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> + <span class="built_in">max</span>(self.maxDepth(root.left), self.maxDepth(root.right))</span><br></pre></td></tr></table></figure>
+<h2 id="对称二叉树">对称二叉树</h2>
+<p>给定一棵二叉树，检查它是否是其自身的镜像（即，围绕其中心对称）。</p>
+<p>例如，此二叉树[1,2,2,3,4,4,3]是对称的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    1</span><br><span class="line">   / \</span><br><span class="line">  2   2</span><br><span class="line"> / \ / \</span><br><span class="line">3  4 4  3</span><br></pre></td></tr></table></figure>
+<p>但[1,2,2,null,3,null,3]不是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  1</span><br><span class="line"> / \</span><br><span class="line">2   2</span><br><span class="line"> \   \</span><br><span class="line"> 3    3</span><br></pre></td></tr></table></figure>
+<p>递归和迭代地解决它。</p>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归地判断左右子树是否对称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> r1 左子树根结点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> r2 右子树根结点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> bool</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">recursive</span><span class="params">(TreeNode r1, TreeNode r2)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (r1 == <span class="literal">null</span> &amp;&amp; r2 == <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (r1 == <span class="literal">null</span> || r2 == <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> (r1.val == r2.val) &amp;&amp; recursive(r1.left, r2.right) &amp;&amp; recursive(r1.right, r2.left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 迭代地判断树是否对称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> root 树的根结点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> bool</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">iterate</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        LinkedList&lt;TreeNode&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        queue.offer(root);</span><br><span class="line">        queue.offer(root);</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">r1</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">r2</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (r1 == <span class="literal">null</span> &amp;&amp; r2 == <span class="literal">null</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (r1 == <span class="literal">null</span> || r2 == <span class="literal">null</span> || r1.val != r2.val) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            queue.offer(r1.left);</span><br><span class="line">            queue.offer(r2.right);</span><br><span class="line">            queue.offer(r1.right);</span><br><span class="line">            queue.offer(r2.left);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isSymmetric</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line"><span class="comment">//        if (root == null) return true;</span></span><br><span class="line"><span class="comment">//        return recursive(root.left, root.right);</span></span><br><span class="line">        <span class="keyword">return</span> iterate(root);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isSymmetric</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">return</span> self.isSym(root, root)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isSym</span>(<span class="params">self, r1: TreeNode, r2: TreeNode</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> r1 <span class="keyword">and</span> <span class="keyword">not</span> r2:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> r1 <span class="keyword">or</span> <span class="keyword">not</span> r2:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (r1.val == r2.val <span class="keyword">and</span> self.isSym(r1.left, r2.right)</span><br><span class="line">                <span class="keyword">and</span> self.isSym(r1.right, r2.left))</span><br></pre></td></tr></table></figure>
+<h2 id="路径总和">路径总和</h2>
+<p>给定一个二叉树和一个和，确定该树是否具有从根到叶的路径，以使该路径上的所有值加起来等于给定的和。</p>
+<p>注意：叶是没有子节点的节点。</p>
+<p>例：给定下面的二叉树，并且 <code>sum = 22</code>，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">      5</span><br><span class="line">     / \</span><br><span class="line">    4   8</span><br><span class="line">   /   / \</span><br><span class="line">  11  13  4</span><br><span class="line"> /  \      \</span><br><span class="line">7    2      1</span><br></pre></td></tr></table></figure>
+<p>返回true，因为存在从根到叶的路径 <code>5-&gt;4-&gt;11-&gt;2</code>，其总和为22。</p>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasPathSum</span><span class="params">(TreeNode root, <span class="type">int</span> sum)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> hasPathSum(root, sum, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">hasPathSum</span><span class="params">(TreeNode root, <span class="type">int</span> sum, <span class="type">int</span> cur)</span> &#123;</span><br><span class="line">        cur += root.val;</span><br><span class="line">        <span class="keyword">if</span> (root.left == <span class="literal">null</span> &amp;&amp; root.right == <span class="literal">null</span>) <span class="keyword">return</span> sum == cur;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (root.left != <span class="literal">null</span>) flag = hasPathSum(root.left, sum, cur);</span><br><span class="line">        <span class="keyword">if</span> (!flag &amp;&amp; root.right != <span class="literal">null</span>) flag = hasPathSum(root.right, sum, cur);</span><br><span class="line">        <span class="keyword">return</span> flag;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hasPathSum</span>(<span class="params">self, root: TreeNode, <span class="built_in">sum</span>: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">            <span class="keyword">return</span> root.val == <span class="built_in">sum</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (self.hasPathSum(root.left, <span class="built_in">sum</span> - root.val)</span><br><span class="line">                <span class="keyword">or</span> self.hasPathSum(root.right, <span class="built_in">sum</span> - root.val))</span><br></pre></td></tr></table></figure>
+<h1 id="references">References</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/534/">https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/534/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/535/">https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/535/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/536/">https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/536/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/537/">https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/537/</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-04-25</div>
+      <div class="popular-posts-title"><a href="/posts/e85d694a/" rel="bookmark">二叉树</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>了解树和二叉树的相关概念；</p>
+<p>理解不同遍历方法的工作原理，掌握相应遍历方法的递归和迭代实现；</p>
+<ul>
+<li>前序遍历</li>
+<li>中序遍历</li>
+<li>后序遍历</li>
+<li>层次遍历</li>
+</ul><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-05-02</div>
+      <div class="popular-posts-title"><a href="/posts/cb350e7d/" rel="bookmark">二叉树练习</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>一些经典的二叉树练习题，帮助理解掌握二叉树的各种遍历方法和递归地解决问题的思路。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-05-24</div>
+      <div class="popular-posts-title"><a href="/posts/89cdb724/" rel="bookmark">筛法求素数</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">埃拉托斯特尼筛法</a> 和 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Euler&#39;s_sieve">欧拉线性筛法</a> 的基本原理，并以此思路实现这两种求素数的算法。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/657c0b00/" title="递归地解决树问题">https://wylu.me/posts/657c0b00/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 二叉树</a>
+              <a href="/tags/binary-tree/" rel="tag"><i class="fa fa-tag"></i> binary-tree</a>
+              <a href="/tags/%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 树</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"><i class="fa fa-tag"></i> 递归</a>
+              <a href="/tags/Recursion/" rel="tag"><i class="fa fa-tag"></i> Recursion</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/e85d694a/" rel="prev" title="二叉树">
+                  <i class="fa fa-chevron-left"></i> 二叉树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/cb350e7d/" rel="next" title="二叉树练习">
+                  二叉树练习 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="b25a368db81e33a95235276e1b9242f3"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

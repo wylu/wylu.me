@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文将简要介绍 shadowsocks 的基本原理，并详细说明如何在 Ubuntu 18.04 下安装使用 shadowsocks 客户端，同时提供了让系统使用 PAC 模式或全局模式的配置方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 18.04 安装shadowsocks">
+<meta property="og:url" content="https://wylu.me/posts/eed37a90/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="本文将简要介绍 shadowsocks 的基本原理，并详细说明如何在 Ubuntu 18.04 下安装使用 shadowsocks 客户端，同时提供了让系统使用 PAC 模式或全局模式的配置方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/625e5581421c3b9c67e88f3eb2f99b3a.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2b6d687c30da2cde582e2581e6163dc7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/994002fab11c19f4ce43aac8faf9231a.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/6cda56daa540d379099a4c6b28bda0dc.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/408146fc6608e6dce9c6ab0e0f93cc3d.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/d36888e22f52557eaf8ec7755dd791f3.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/1f1835b407e30a88de5ee111ac3dc678.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/f72a6e75403d80030e402e44c9f5e05d.png">
+<meta property="article:published_time" content="2019-06-01T13:17:45.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:42:07.793Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="shadowsocks">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/625e5581421c3b9c67e88f3eb2f99b3a.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/eed37a90/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/eed37a90/","path":"posts/eed37a90/","title":"Ubuntu 18.04 安装shadowsocks"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Ubuntu 18.04 安装shadowsocks | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu-18.04-%E5%AE%89%E8%A3%85-shadowsocks"><span class="nav-text">Ubuntu 18.04 安装 shadowsocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-shadowsocks-%E7%9A%84%E5%89%8D%E6%8F%90"><span class="nav-text">使用 shadowsocks 的前提</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shadowsocks-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">shadowsocks 基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-shadowsocks"><span class="nav-text">安装 shadowsocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-text">查看版本号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-shadowsocks-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">配置 shadowsocks 客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-text">运行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-text">前台运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-text">后台运行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shadowsocks-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">shadowsocks 代理模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ubuntu-%E4%BD%BF%E7%94%A8-pac-%E6%A8%A1%E5%BC%8F"><span class="nav-text">配置 Ubuntu 使用 PAC 模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#autoproxy.pac-%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90"><span class="nav-text">autoproxy.pac 文件分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ubuntu-%E4%BD%BF%E7%94%A8-global-%E6%A8%A1%E5%BC%8F"><span class="nav-text">配置 Ubuntu 使用 Global 模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-privoxy"><span class="nav-text">安装配置 privoxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B3%BB%E7%BB%9F%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86"><span class="nav-text">配置系统网络代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/eed37a90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Ubuntu 18.04 安装shadowsocks | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu 18.04 安装shadowsocks
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-01 21:17:45" itemprop="dateCreated datePublished" datetime="2019-06-01T21:17:45+08:00">2019-06-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:42:07" itemprop="dateModified" datetime="2022-11-23T23:42:07+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/" itemprop="url" rel="index"><span itemprop="name">os</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/ubuntu/" itemprop="url" rel="index"><span itemprop="name">ubuntu</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文将简要介绍 shadowsocks 的基本原理，并详细说明如何在 Ubuntu 18.04 下安装使用 shadowsocks 客户端，同时提供了让系统使用 PAC 模式或全局模式的配置方法。</p>
+<span id="more"></span>
+<h1 id="ubuntu-18.04-安装-shadowsocks">Ubuntu 18.04 安装 shadowsocks</h1>
+<p><strong>本文使用的是 shadowsocks 的 python 实现版本，没有 GUI，此外只涉及客户端配置，服务端可参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks/blob/master/README.md">官方文档</a></strong></p>
+<p><strong>Github 主页：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks">shadowsocks</a></strong></p>
+<p><strong>官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://shadowsocks.org/en/index.html">https://shadowsocks.org/en/index.html</a></strong></p>
+<h1 id="使用-shadowsocks-的前提">使用 shadowsocks 的前提</h1>
+<ul>
+<li>一台在防火墙之外的服务器</li>
+<li>墙内主机需要安装 shadowsocks 本地端</li>
+<li>墙外服务器需要安装 shadowsocks 服务端</li>
+</ul>
+<h1 id="shadowsocks-基本原理">shadowsocks 基本原理</h1>
+<p>Shadowsocks 是一个基于 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://tools.ietf.org/html/rfc1928">SOCKS5</a> 的安全拆分代理，由两部分组成，客户端和服务端。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client &lt;---&gt; ss-local &lt;--[encrypted]--&gt; ss-remote &lt;---&gt; target</span><br></pre></td></tr></table></figure>
+<p>Shadowsocks 本地组件（ss-local）就像传统的 SOCKS5 服务器，为客户端提供代理服务。它将数据流和数据包从客户端加密并转发到 Shadowsocks 远程组件（ss-remote），后者解密并转发到目标。来自目标的回复同样被加密并由 ss-remote 中继回 ss-local，后者解密并最终返回到原始客户端。</p>
+<h1 id="安装-shadowsocks">安装 shadowsocks</h1>
+<p>使用的是阿里的镜像源，执行安装命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install shadowsocks</span><br></pre></td></tr></table></figure>
+<h1 id="查看版本号">查看版本号</h1>
+<p>执行以下命令查看 shadowsocks 的版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal --version</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/625e5581421c3b9c67e88f3eb2f99b3a.png" alt="sslocal-version"></p>
+<h1 id="配置-shadowsocks-客户端">配置 shadowsocks 客户端</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File">Configuration via Config File</a> 通过配置文件进行配置</p>
+<p>修改 <code>/etc/shadowsocks/config.json</code> 配置（客户端配置），例如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;my_server_ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">8388</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span><span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span><span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;mypassword&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span><span class="punctuation">:</span><span class="number">300</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-256-cfb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>字段说明：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>server</td>
+<td>the address your server listens 服务端IP</td>
+</tr>
+<tr class="even">
+<td>server_port</td>
+<td>server port 服务端端口</td>
+</tr>
+<tr class="odd">
+<td>local_address</td>
+<td>the address your local listens 本地代理监听地址</td>
+</tr>
+<tr class="even">
+<td>local_port</td>
+<td>local port 本地代理监听端口</td>
+</tr>
+<tr class="odd">
+<td>password</td>
+<td>password used for encryption 服务端设置的密码</td>
+</tr>
+<tr class="even">
+<td>timeout</td>
+<td>in seconds 超时设置 与服务端保持一致</td>
+</tr>
+<tr class="odd">
+<td>method</td>
+<td>default: "aes-256-cfb", see <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks/wiki/Encryption">Encryption</a> 加密算法， 与服务端保持一致</td>
+</tr>
+<tr class="even">
+<td>fast_open</td>
+<td>use <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open">TCP_FASTOPEN</a>, true / false</td>
+</tr>
+<tr class="odd">
+<td>workers</td>
+<td>number of workers, available on Unix/Linux</td>
+</tr>
+</tbody>
+</table>
+<h1 id="运行">运行</h1>
+<h2 id="前台运行">前台运行</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
+<h2 id="后台运行">后台运行</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json -d start</span><br><span class="line">sslocal -c /etc/shadowsocks.json -d stop</span><br></pre></td></tr></table></figure>
+<p>是否使用 sudo 权限根据具体情况而定</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2b6d687c30da2cde582e2581e6163dc7.png" alt="run-ss"></p>
+<h1 id="shadowsocks-代理模式">shadowsocks 代理模式</h1>
+<p>启动后还不能直接翻墙，因为上面只是启动了代理服务器，但是网络请求并没有经过代理服务器，所以还需要配置代理服务，代理服务可分为部分代理和全局代理。</p>
+<p><strong>特别说明：这里所说的是 shadowsocks 的 PAC 模式和全局模式，另外 shadowsocks 的全局模式并不是整个系统所有软件都进行代理，而只是针对所有浏览器进行的全局代理。</strong></p>
+<ul>
+<li><p>PAC 模式</p>
+<p>PAC 也即代理自动配置 Proxy auto-config，是一种网页浏览器技术，用于定义浏览器该如何自动选择适当的代理服务器来访问一个网址。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/994002fab11c19f4ce43aac8faf9231a.png" alt="PAC-mode"></p>
+<p>PAC 模式会在连接网站的时候读取 PAC 文件的规则，来确定所访问的网站有没有被墙，如果被墙了或者符合规则，那就会使用代理服务器连接网站，而 PAC 列表一般都是从 GFWList 更新的。GFWList 定期会更新被墙的网站，不过一般比较慢。</p></li>
+<li><p>全局模式</p>
+<p>Shadowsocks 的全局模式，是设置系统的代理服务器，使所有的 Http Proxy/Socks5 请求都由代理服务器转发。</p></li>
+<li><p>区别</p>
+<p>简单地说，在全局模式下，所有网站默认走代理。而 PAC 模式是只有被墙的才会走代理，推荐使用 PAC 模式，如果 PAC 模式无法访问一些网站，就换全局模式试试，一般是因为 PAC 更新不及时（也就是 GFWList 更新不及时）导致的。</p></li>
+</ul>
+<h1 id="配置-ubuntu-使用-pac-模式">配置 Ubuntu 使用 PAC 模式</h1>
+<p>配置 PAC 模式需要 pac 文件，这个 pac 文件可以自己编写也可以用工具生成，这里直接使用工具 GenPAC 来生成。</p>
+<p><strong>Github 主页: <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/JinnLynn/GenPAC">GenPAC</a></strong></p>
+<p>GenPAC：基于 gfwlist 的多种代理软件配置文件生成工具，支持自定义规则，目前可生成的格式有 pac, dnsmasq, wingy</p>
+<ol type="1">
+<li>安装 GenPAC</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install genpac</span><br><span class="line">sudo pip install --upgrade genpac</span><br></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>生成 autoproxy.pac</li>
+</ol>
+<p>进入终端，cd 到你希望存放配置文件的目录，例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /home/wylu/.config/GenPAC</span><br></pre></td></tr></table></figure>
+<p>执行以下命令生成 pac 配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo genpac --pac-proxy=&quot;SOCKS5 127.0.0.1:1080&quot; -o autoproxy.pac --gfwlist-url=&quot;https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt&quot;</span><br></pre></td></tr></table></figure>
+<p>关于命令参数说明，详见官方文档 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/JinnLynn/GenPAC">GenPAC</a></p>
+<ol start="3" type="1">
+<li>设置系统网络代理</li>
+</ol>
+<p>进入设置：Settings –&gt; Network –&gt; Network Proxy</p>
+<p>方法选择 <code>Automatic</code></p>
+<p>Configuration URL 填写刚刚生成的 pac 文件路径 <code>/home/wylu/.config/GenPAC/autoproxy.pac</code></p>
+<ol start="4" type="1">
+<li>测试</li>
+</ol>
+<p>浏览器访问 Google 验证代理是否配置成功</p>
+<blockquote>
+<p>一般的浏览器都是默认使用系统代理，所以这里只配置了系统代理，如果浏览器没有走 Socks5 代理服务器，需要自行设置浏览器的代理</p>
+</blockquote>
+<ol start="5" type="1">
+<li>关于 privoxy</li>
+</ol>
+<p>以上只是针对浏览器的代理，而使用 privoxy 代理能把电脑上所有 http 请求都转发给 ss，这意味着在终端下也能使用 wget、curl 等命令访问墙外资源。</p>
+<p>关于 privoxy 的安装和使用可以参考：</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jianshu.com/p/41378f4e14bc">https://www.jianshu.com/p/41378f4e14bc</a></p>
+<p>https://www.jianshu.com/p/e0b05cb7cd50</p>
+<p>配置手动代理可以参考：</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/">https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/</a></p>
+<blockquote>
+<p>shell 终端里执行的命令，发起的网络请求现在还不支持 socks5 代理，只支持 http/https 代理。使用 privoxy 代理，可以将 shell 发起的网络请求转发给 shadowsocks</p>
+</blockquote>
+<h1 id="autoproxy.pac-文件分析">autoproxy.pac 文件分析</h1>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="string">&#x27;SOCKS5 127.0.0.1:1080&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> rules = [</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    用于添加自定义规则</span></span><br><span class="line"><span class="comment">    分析以下的js代码，可以知道rules元素，越靠前的优先级越高；</span></span><br><span class="line"><span class="comment">    即如果在rules[0]中匹配成功，则不再匹配，直接返回选择&quot;直连&quot;或者&quot;走代理&quot;</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    [</span><br><span class="line">        [],</span><br><span class="line">        []</span><br><span class="line">    ],</span><br><span class="line">    [</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        以rules[1]为例进行分析，其它类似；</span></span><br><span class="line"><span class="comment">        同样，在rules[1]中的元素也是越靠前的优先级越高；</span></span><br><span class="line"><span class="comment">        如果在rules[1][0]中匹配成功，则不再匹配，直接返回；</span></span><br><span class="line"><span class="comment">        分析代码可知，当匹配成功时：</span></span><br><span class="line"><span class="comment">            --如果该元素的索引为偶数，则返回字面值&#x27;DIRECT&#x27;，即选择直连</span></span><br><span class="line"><span class="comment">            --如果该元素的索引为奇数，则返回proxy变量的值，即选择使用代理</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        [],</span><br><span class="line">        []</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    以上规则如果没有一个匹配成功，根据代码分析，最终将返回字面值&#x27;DIRECT&#x27;，</span></span><br><span class="line"><span class="comment">    也就是选择直连；这也意味着如果某些URL被墙，而又没有加入到pac规则中，</span></span><br><span class="line"><span class="comment">    最终会以直连的方式访问，因为被墙所以肯定是访问不到的, 这时应该使用全局模式，</span></span><br><span class="line"><span class="comment">    或者在pac中添加规则。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> lastRule = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FindProxyForURL</span>(<span class="params">url, host</span>) &#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    个人认为，如果这里直接返回proxy，应该就等同于全局模式了，</span></span><br><span class="line"><span class="comment">    此时，不管是什么URL，都会走代理</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; rules.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        ret = <span class="title function_">testHost</span>(host, i);</span><br><span class="line">        <span class="keyword">if</span> (ret != <span class="literal">undefined</span>)</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;DIRECT&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">testHost</span>(<span class="params">host, index</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; rules[index].<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; rules[index][i].<span class="property">length</span>; j++) &#123;</span><br><span class="line">            lastRule = rules[index][i][j];</span><br><span class="line">            <span class="keyword">if</span> (host == lastRule || host.<span class="title function_">endsWith</span>(<span class="string">&#x27;.&#x27;</span> + lastRule))</span><br><span class="line">                <span class="keyword">return</span> i % <span class="number">2</span> == <span class="number">0</span> ? <span class="string">&#x27;DIRECT&#x27;</span> : proxy;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    lastRule = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// REF: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">endsWith</span>) &#123;</span><br><span class="line">    <span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">endsWith</span> = <span class="keyword">function</span>(<span class="params">searchString, position</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> subjectString = <span class="variable language_">this</span>.<span class="title function_">toString</span>();</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> position !== <span class="string">&#x27;number&#x27;</span> || !<span class="built_in">isFinite</span>(position) || <span class="title class_">Math</span>.<span class="title function_">floor</span>(position) !== position || position &gt; subjectString.<span class="property">length</span>) &#123;</span><br><span class="line">            position = subjectString.<span class="property">length</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        position -= searchString.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">var</span> lastIndex = subjectString.<span class="title function_">indexOf</span>(searchString, position);</span><br><span class="line">        <span class="keyword">return</span> lastIndex !== -<span class="number">1</span> &amp;&amp; lastIndex === position;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>理解 pac 文件 rules 的含义后，就可以自行添加一些规则了。比如 PAC 模式下访问不了 Jetbrains 的插件网址 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://plugins.jetbrains.com">https://plugins.jetbrains.com</a>，因为在该 pac 文件中并没有与此 URL 匹配的规则，所以最后会以直连的方式访问，但是该网址已被墙，最终是无法访问的，我们可以把该域名添加到 pac 文件的规则列表中，该规则列表应是一个使用代理的列表，在添加规则后会以走代理的方式访问 Jetbrains 的插件网址。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6cda56daa540d379099a4c6b28bda0dc.png" alt="pac-file-rules"></p>
+<h1 id="配置-ubuntu-使用-global-模式">配置 Ubuntu 使用 Global 模式</h1>
+<p>要实现 Global 模式，需要使用 privoxy，并且配置系统网络代理使用手动模式。</p>
+<p>privoxy 能够实现不同代理之间的切换，使用它可以作为 SOCKS 代理和 HTTP、HTTPS 代理连接的桥梁，它能把所有的 http 请求（包括终端执行的命令，浏览器）转发给 shadowsocks，它就像是一个适配器，将 SOCKS 代理转为 HTTP 代理。</p>
+<h2 id="安装配置-privoxy">安装配置 privoxy</h2>
+<ol type="1">
+<li>安装 privoxy</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install privoxy</span><br></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>配置 privoxy</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+<p>找到 <code>#listen-address 127.0.0.1:8118</code>，取消注释，表示 privoxy 监听本机 8118 端口</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/408146fc6608e6dce9c6ab0e0f93cc3d.png" alt="privoxy-listen-address"></p>
+<p>找到 <code>#forward-socks5t / 127.0.0.1:9050 .</code>，在下方添加一行 <code>forward-socks5t / 127.0.0.1:1080 .</code>，表示转发请求到本地 1080 端口，而 1080 端口是 shadowsocks 监听的端口</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d36888e22f52557eaf8ec7755dd791f3.png" alt="privoxy-forward-socks5t"></p>
+<ol start="3" type="1">
+<li>修改完后，重启 privoxy</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart privoxy</span><br></pre></td></tr></table></figure>
+<ol start="4" type="1">
+<li>配置请求转发</li>
+</ol>
+<p>在 <code>~/.bashrc</code> 中添加如下内容，如果使用的是 zsh，则在 <code>~/.zshrc</code> 中添加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">set</span> proxy</span></span><br><span class="line">export http_proxy=&quot;127.0.0.1:8118&quot;</span><br><span class="line">export https_proxy=&quot;127.0.0.1:8118&quot;</span><br><span class="line">export ftp_proxy=&quot;127.0.0.1:8118&quot;</span><br></pre></td></tr></table></figure>
+<p>不建议在 shell 的配置文件下设置代理，这种方式下所有的 shell 命令都会走代理，如果你突然不想终端命令走代理，那么又需要修改配置文件，注释掉代理相关配置，反复修改配置文件是一件挺麻烦的事。推荐使用下面"配置系统网络代理"的方式，该配置手动模式下就能使终端命令走代理，不需要配置 <code>.bashrc</code> 或 <code>.zshrc</code>，当禁用系统网络代理时，终端命令就不会走代理了。</p>
+<ol start="5" type="1">
+<li>测试</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1f1835b407e30a88de5ee111ac3dc678.png" alt="Global-mode-shell-test"></p>
+<h2 id="配置系统网络代理">配置系统网络代理</h2>
+<p>配置完 privoxy 后，终端发起的网络请求也能走 SOCKS5 代理了，但浏览器要使用全局模式还需要配置系统网络代理。</p>
+<p>默认浏览器默认使用系统代理，所以只需配置系统网络代理即可，具体配置过程如下：</p>
+<ol type="1">
+<li><p>进入设置：Settings –&gt; Network –&gt; Network Proxy</p></li>
+<li><p>方法选择 <code>Manual</code></p></li>
+<li><p>设置 HTTP、HTTPS 请求由 privoxy 来代理</p></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f72a6e75403d80030e402e44c9f5e05d.png" alt="manual-mode-setting"></p>
+<ol start="4" type="1">
+<li>Pac 和 Global 模式切换</li>
+</ol>
+<p>系统网络代理的自动 (Automatic) 模式和手动 (Manual) 模式都配置完成后，当选用 Automatic 则使用 Pac 模式，当选用 Manual 则使用 Global 模式。</p>
+<h1 id="references">References</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://shadowsocks.org/en/spec/Protocol.html">https://shadowsocks.org/en/spec/Protocol.html</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks">https://github.com/shadowsocks/shadowsocks</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/JinnLynn/GenPAC">https://github.com/JinnLynn/GenPAC</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://segmentfault.com/a/1190000011862912">https://segmentfault.com/a/1190000011862912</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jianshu.com/p/e0b05cb7cd50">https://www.jianshu.com/p/e0b05cb7cd50</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cnblogs.com/edward2013/p/5560836.html">https://www.cnblogs.com/edward2013/p/5560836.html</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://lollogit.gitbooks.io/help/">https://lollogit.gitbooks.io/help/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/">https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-01</div>
+      <div class="popular-posts-title"><a href="/posts/202f8f32/" rel="bookmark">Ubuntu 18.04 字体显示异常</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>解决 Ubuntu 18.04 下字体显示异常的问题。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/eed37a90/" title="Ubuntu 18.04 安装shadowsocks">https://wylu.me/posts/eed37a90/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/shadowsocks/" rel="tag"><i class="fa fa-tag"></i> shadowsocks</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/202f8f32/" rel="prev" title="Ubuntu 18.04 字体显示异常">
+                  <i class="fa fa-chevron-left"></i> Ubuntu 18.04 字体显示异常
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/338d1bcc/" rel="next" title="剑指Offer总结">
+                  剑指Offer总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="e63e8df31769080b46f50b0905df83f0"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

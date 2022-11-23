@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="操作系统的重要任务之一是管理计算机的软、硬件资源。现代操作系统的主要特点在于程序的并发执行，由此引出系统的资源被共享和用户随机使用系统。因而操作系统最核心的概念就是进程：即正在运行的程序。操作系统借助于进程来管理计算机的软、硬件资源，支持多任务的并发。操作系统的其他内容都是围绕进程展开的。所以进程管理是 Linux 操作系统内核的主要内容之一，它对整个操作系统的执行效率至关重要。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux进程管理">
+<meta property="og:url" content="https://wylu.me/posts/3a046ccf/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="操作系统的重要任务之一是管理计算机的软、硬件资源。现代操作系统的主要特点在于程序的并发执行，由此引出系统的资源被共享和用户随机使用系统。因而操作系统最核心的概念就是进程：即正在运行的程序。操作系统借助于进程来管理计算机的软、硬件资源，支持多任务的并发。操作系统的其他内容都是围绕进程展开的。所以进程管理是 Linux 操作系统内核的主要内容之一，它对整个操作系统的执行效率至关重要。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/7a1b73c66d76b7082c7a94d38d352405.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/985ddc670db155defe7e30b3bcd952d8.png">
+<meta property="article:published_time" content="2020-05-10T14:50:38.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:41:49.273Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="进程管理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/7a1b73c66d76b7082c7a94d38d352405.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/3a046ccf/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/3a046ccf/","path":"posts/3a046ccf/","title":"Linux进程管理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux进程管理 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#linux-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">Linux 进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">描述进程的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%A1%E6%81%AFstate"><span class="nav-text">进程的状态信息（state）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E4%BF%A1%E6%81%AFscheduling-information"><span class="nav-text">调度信息（scheduling information）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AFidentifiers"><span class="nav-text">进程标识信息（identifiers）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E4%BF%A1%E6%81%AFinter-process-communication"><span class="nav-text">进程的通信信息（inter-process communication）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E4%BF%A1%E6%81%AFlinks"><span class="nav-text">链接信息（links）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%92%8C%E5%AE%9A%E6%97%B6%E5%99%A8%E4%BF%A1%E6%81%AFtimes-and-timers"><span class="nav-text">时间和定时器信息（times and timers）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%85%B3%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BF%A1%E6%81%AFfile-system"><span class="nav-text">有关文件系统的信息（file system）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E4%BF%A1%E6%81%AFvirtual-memory"><span class="nav-text">虚拟内存信息（virtual memory）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BF%A1%E6%81%AFprocessor-specific-context"><span class="nav-text">进程上下文信息（processor specific context）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E4%BF%A1%E6%81%AF"><span class="nav-text">其它信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-text">进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-text">进程调度的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-text">进程调度的功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">进程调度的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%9A%84%E4%BE%9D%E6%8D%AE"><span class="nav-text">进程调度的依据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%98%9F%E5%88%97%E7%9A%84%E7%BB%84%E7%BB%87%E6%96%B9%E5%BC%8F"><span class="nav-text">进程队列的组织方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-text">进程调度的工作流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B"><span class="nav-text">创建进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="nav-text">进程间通信机制</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/3a046ccf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux进程管理 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux进程管理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-10 22:50:38" itemprop="dateCreated datePublished" datetime="2020-05-10T22:50:38+08:00">2020-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:41:49" itemprop="dateModified" datetime="2022-11-23T23:41:49+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/" itemprop="url" rel="index"><span itemprop="name">os</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>操作系统的重要任务之一是管理计算机的软、硬件资源。现代操作系统的主要特点在于程序的并发执行，由此引出系统的资源被共享和用户随机使用系统。因而操作系统最核心的概念就是进程：即正在运行的程序。操作系统借助于进程来管理计算机的软、硬件资源，支持多任务的并发。操作系统的其他内容都是围绕进程展开的。所以进程管理是 Linux 操作系统内核的主要内容之一，它对整个操作系统的执行效率至关重要。</p>
+<span id="more"></span>
+<div class="note info"><p><strong>Linux 进程管理</strong> 原文出处：《操作系统实验指导-基于Linux内核》第2版 原文作者：徐虹 何嘉 张钟澍</p>
+</div>
+<h1 id="linux-进程管理">Linux 进程管理</h1>
+<p>进程是一个动态的实体，是一个可并发执行的程序在一个数据集合上的运行过程，它是一个正在执行的程序，是操作系统分片资源的基本单位。进程不仅包含指令和数据，也包含程序计数器和所有 CPU 寄存器的值，同时它的堆栈中存储着如子程序参数、返回地址以及变量之类的临时数据。</p>
+<p>Linux 的进程具有独立的权限与职责。如果系统中某个进程崩溃，它不会影响到其余的进程。每个进程运行在其各自的虚拟地址空间中，进程之间发生联系只能通过核心控制下的可靠通信机制来完成。</p>
+<p>进程在生命周期内将使用系统中的资源。它利用系统中的 CPU 来执行命令，在物理内存中放置指令和数据，使用文件系统提供的功能打开并使用文件，同时直接或间接地使用物理设备。Linux 必须跟踪系统中每个进程以及资源，以便在进程间实现资源的公平分配。</p>
+<p>Linux 支持多种类型的可执行文件格式，如 ELF、Java 等。由于这些进程必须使用系统共享库，所以对它们的管理要具有透明性。</p>
+<ul>
+<li>描述进程的数据结构</li>
+<li>进程调度</li>
+<li>创建进程</li>
+<li>进程通信机制</li>
+</ul>
+<h2 id="描述进程的数据结构">描述进程的数据结构</h2>
+<p>Linux 用 task_struct 数据结构来表示每个进程，在 Linux 中任务与进程表示的意义是一样的。系统维护一个名为 task 的数组，task 包含指向系统中所有进程的 task_struct 结构的指针。这意味着系统中的最大进程数目受 task 数组大小的限制，默认值一般为 512。创建新进程时，Linux 将从系统内存中分配一个 task_struct 结构并将其加入 task 数组。当前运行进程的结构用 current 指针来指示。</p>
+<p>Linux 还支持实时进程。这些进程必须对外部事件作出快速反应，系统将区分对待这些进程和其他进程。虽然 task_struct 数据结构庞大而复杂，但可以归纳为如下几类：</p>
+<h3 id="进程的状态信息state">进程的状态信息（state）</h3>
+<p>进程在执行过程中会根据环境来改变进程的状态，Linux 进程有以下状态。</p>
+<ul>
+<li><p>Running</p>
+<p>进程处于运行（它是系统的当前进程）或者准备运行状态（它在等待系统将 CPU 分配给它）。</p></li>
+<li><p>Waiting</p>
+<p>进程在等待一个事件或者资源。Linux 将等待进程分成两类：可中断与不可中断。可中断等待进程可以被信号中断；不可中断等待进程是由于硬件原因而等待，例如进程打开某个设备文件，在得到设备的回应前处于等待状态，因此在任何情况下都不可中断。</p></li>
+<li><p>Stopped</p>
+<p>进程被停止，通常是通过接收一个信号。正在被调试的进程可以处于停止状态。</p></li>
+<li><p>Zombie</p>
+<p>这是因为某些原因而被终止的进程，但是在 task 数组中仍然保留其 task_struct 结构。它像一个已经死亡的进程。</p></li>
+</ul>
+<h3 id="调度信息scheduling-information">调度信息（scheduling information）</h3>
+<p>Linux 调度进程所需要的信息，包括进程的类型（普通或实时）和优先级，计数器中记录允许进程执行的时间量。</p>
+<h3 id="进程标识信息identifiers">进程标识信息（identifiers）</h3>
+<p>系统中每个进程都有进程标志。进程标志并不是 task 数组的索引，它仅仅是个数字。每个进程还有一个用户与组标志，它们用来控制进程对系统中的文件和设备的存取权限。</p>
+<h3 id="进程的通信信息inter-process-communication">进程的通信信息（inter-process communication）</h3>
+<p>Linux 支持经典的 UNIX IPC 机制，如信号、管道和命名管道以及 System V 中 IPC 机制，包括共享内存、信号量和消息队列。</p>
+<h3 id="链接信息links">链接信息（links）</h3>
+<p>Linux 系统中所有进程都是相互联系的。除了初始化进程外，所有进程都有一个父进程。新进程不是被创建，而是被复制，都是从以前的进程克隆而来。每个进程对应的 task_struct 结构中包含有指向其父进程和兄弟进程（具有相同父进程的进程）以及子进程的指针。</p>
+<p>系统中所有进程都用一个双向链表连接起来，而它们的根是 init 进程的 task_struct 数据结构。这个链表被 Linux 核心用来寻找系统中所有进程，它为 ps 或者 kill 命令提供了支持。</p>
+<h3 id="时间和定时器信息times-and-timers">时间和定时器信息（times and timers）</h3>
+<p>核心需要记录进程的创建时间以及在其生命期消耗的 CPU 时间。适中每跳动一次，核心就要更新保存在 jiffies 变量中，记录进程在系统和用户模式下消耗的时间量。Linux 支持与进程相关的 interval 定时器，进程可以通过系统调用来设定定时器以便在定时器到时后向它发送信号。这些定时器可以是一次性的或者周期性的。</p>
+<h3 id="有关文件系统的信息file-system">有关文件系统的信息（file system）</h3>
+<p>进程可以自由地打开或关闭文件，进程的 task_struct 结构中包含一个指向每个打开文件描述符的指针以及指向两个 VFS inode 的指针。每个 VFS inode 唯一地标记文件中的一个目录或者文件，同时还对底层文件系统提供统一的接口。这两个指针，一个指向进程的根目录，另一个指向其当前或者 pwd 目录。pwd 从 UNIX 命令 pwd 中派生出来，用来显示当前工作目录。这两个 VFS inode 包含一个 count 域，当多个进程引用它们时，它的值将增加。这就是为什么不能删除进程当前目录或者其子目录的原因。</p>
+<h3 id="虚拟内存信息virtual-memory">虚拟内存信息（virtual memory）</h3>
+<p>多数进程都有一些虚拟内存（核心线程和后台进程没有），Linux 核心必须跟踪虚拟内存与系统物理内存的映射关系。</p>
+<h3 id="进程上下文信息processor-specific-context">进程上下文信息（processor specific context）</h3>
+<p>进程可以认为是系统当前状态的总和。进程运行时，它将使用处理器的寄存器以及堆栈等。进程被挂起时，进程的上下文中所有与 CPU 相关的状态必须保存在它的 task_struct 结构内。当调度器重新调度该进程时，所有上下文被重新设定。</p>
+<h3 id="其它信息">其它信息</h3>
+<p>Linux 支持 SMP 多 CPU 结构，在 task_struct 中有相应的描述信息。此外还包括资源使用、进程终止信号、描述可执行的文件格式的信息等。</p>
+<h2 id="进程调度">进程调度</h2>
+<p>Linux 能让多个进程并发执行，由此必然会产生资源争夺的情况，而 CPU 是系统中最重要的资源。进程调度就是进程调度程序按照一定的策略，动态地把 CPU 分配给处于就绪队列中的某一个进程，使之执行。进程调度的目的是使处理机资源得到最高效的利用。进程调度的策略要考虑“高效”、“公平”、“周转时间”、“吞吐量”、“响应时间”等原则，并且在一定的调度时机，通过合适的调度算法来完成进程的调度。</p>
+<h3 id="进程调度的时机">进程调度的时机</h3>
+<p>在 Linux 中采用的是 <strong>非剥夺调度</strong> 的机制，进程一旦运行就不能被停止，当前进程必须等待某个系统事件时，它才释放 CPU。例如进程可能需要写数据到某个文件。一般等待发生在系统调用的过程中，此时进程处于系统模式；处于等待状态的进程将被挂起而其他的进程被调度管理器选出来执行。系统为进程设置相应的时间片，当这个时间用完之后，再选择另一个进程来运行。Linux 调度时机有以下几种。</p>
+<p>（1）时间片完</p>
+<p>（2）进程状态转换</p>
+<p>（3）执行设备驱动程序</p>
+<p>（4）进程从中断、异常或系统调用返回到用户态</p>
+<h3 id="进程调度的功能">进程调度的功能</h3>
+<p>（1）允许进程建立自己的新备份</p>
+<p>（2）决定哪一个进程将占用 CPU，使得可运行进程之间进行有效的转移</p>
+<p>（3）接收中断并把它们发送到合适的内核子系统</p>
+<p>（4）发送信号给用户进程</p>
+<p>（5）管理定时器硬件</p>
+<p>（6）当进程结束后，释放进程所占用的资源</p>
+<p>（7）支持动态装入模块，这些模块代表着内核启动以后所增加的内核功能，这种可装入的模块将由虚拟文件系统和网络接口使用。</p>
+<h3 id="进程调度的数据结构">进程调度的数据结构</h3>
+<p>Linux 使用基于优先级的简单调度算法来选择下一个运行进程。当选定新进程后，系统必须将当前进程的状态、处理器中的寄存器以及上下文状态保存到 task_struct 结构中。同时它将重新设置新进程的状态并将系统控制权交给此进程。为了将 CPU 时间合理地分配给系统中每个可执行进程，调度管理器必须将这些时间信息也保存在 task_struct 中。</p>
+<p>（1）调度策略（policy）</p>
+<p>Linux 系统中存在普遍与实时两种进程。实时进程的优先级要高于其他进程。根据调度策略，Linux 将进程分为以下三种类型。</p>
+<ul>
+<li><code>SCHED_FIFO</code>：先进先出实时进程。只有当前进程执行完毕再调度下一优先级最高的进程。</li>
+<li><code>SCHED_RR</code>：循环实时进程。在此策略下，每个进程执行完一个时间片后，会被挂起，然后选择另一具有相同或更高优先级的进程执行。</li>
+<li><code>SCHED_OTHER</code>：普通进程。</li>
+</ul>
+<p>（2）优先级（priority）</p>
+<p>调度管理器分配给进程的优先级，同时也是进程允许运行的时间（jiffies）。系统调度 renice 可以改变进程的优先级。</p>
+<p>（3）实时进程的优先级（rt_priority）</p>
+<p>Linux 支持实时进程，且它们的优先级要高于非实时进程。调度器使用这个域给每个实时进程一个相对优先级。同样可以通过系统调用来改变实时进程的优先级。</p>
+<p>（4）当前执行进程剩余的时间（counter）</p>
+<p>进程首次运行时为进程优先级的数值，它随时间变化递减。普通进程的 counter 值是其优先级权值，而实时进程的则是 counter 加上 1000。</p>
+<p>（5）当前进程（current process）</p>
+<p>当调度其他进程占用 CPU 时，根据调度策略对当前进程进行一些处理，修改其状态，并插入相应的队列。</p>
+<h3 id="进程调度的依据">进程调度的依据</h3>
+<p>调度程序运行时，要在所有处于可运行状态的进程中选择最值得运行的进程投入运行。上面所介绍的 policy、priority、counter 和 rt_priority 4 项是调度程序选择的依据。</p>
+<p>Linux 操作系统用函数 <code>goodness()</code> 来衡量一个处于可运行状态的进程值得运行的程度。该函数综合了上面4项依据，给每个处于可运行状态的进程赋予一个权值（weight），调度程序以这个权值作为选择进程的唯一依据。函数流程如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7a1b73c66d76b7082c7a94d38d352405.png" alt="goodnees-flowchart"></p>
+<h3 id="进程队列的组织方式">进程队列的组织方式</h3>
+<p>（1）可运行队列（runnable queue）</p>
+<p>操作系统中所有处于可运行状态的进程链成一个队列，该队列就称作可运行队列。调度程序直接的操作对象就是可运行队列。</p>
+<p>可运行队列容纳了系统中所有可运行进程，它是一个双向循环队列，其结构如图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/985ddc670db155defe7e30b3bcd952d8.png" alt="process-runnable-queue"></p>
+<p>该队列通过 task_struct 结构中的两个指针 next_run 和 prev_run 来维持。队列的标志有两个：一个是空进程 idle_task 即 task[0]，另一个是队列的长度（即系统中处于可运行状态的进程数目，用全局整形变量 nr_running 表示）。</p>
+<p>（2）pidhash 表及链表 pidhash</p>
+<p>为了快速根据进程的 pid 找到该进程的 task_struct 结构，系统使用链式结构的 Hash 表对进程的 task_struct 结构进行管理，Hash 表的默认长度为 128。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">define</span> PIDHASH_SZ (NR_TASKS&gt;&gt;2)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">pidhash</span>[<span class="title">PIDHASH_SZ</span>];</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> pidhash(x) (((x)&gt;&gt;8)^(x))&amp;(PIDHASH_SZ-1)</span></span><br></pre></td></tr></table></figure>
+<p>新创建进程时，系统根据其 pid 值将其结构插入到 pidhash 表中，具有相同 hash 值的进程构成一个双向链表。</p>
+<p>（3）空闲 task_struct 双向循环链表 tarray_freelist</p>
+<p>Linux 操作系统将所有的空闲 task_struct 通过双向循环链表进行链接，方便对新创建的进程快速分配 task_struct 结构，以及对撤销的进程回收 task_struct 结构。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> **<span class="title">tarray_freelist</span>;</span></span><br></pre></td></tr></table></figure>
+<p>（4）等待队列</p>
+<p>进程经常要等待某个系统资源。例如某个进程可能需要描述文件系统中某个目录的 VFS inode，但是此 inode 可能不在 buffer cache 中。此时这个进程必须等到该 inode 从包含次文件系统的物理介质中取出来才可以继续运行。Linux 核心使用一个非常简单的队列：等待队列。它包含一个指向进程 task_struct 结构的指针以及等待队列中下一个元素的指针。加入到等待队列中的进程既可以是可中断也可以是不可中断的。</p>
+<h3 id="进程调度的工作流程">进程调度的工作流程</h3>
+<p>进程调度的工作流程比较简单：遍历可运行队列，从中选择一个权值最大的进程；如果可运行队列中所有进程的时间片都用完了，则要给系统中所有进程的时间片重新赋值。Linux 操作系统中的调度程序比较简单，它可以分为如下 5 个部分。</p>
+<ul>
+<li>第一部分：看是否有中断在运行。当中断运行时，是不允许调度程序执行的。</li>
+<li>第二部分：处理内核例程。</li>
+<li>第三部分：对当前进程做相关处理，为选择下一个进程做好准备。</li>
+<li>第四部分：选择下一个可运行进程，即进程调度。</li>
+<li>第五部分：进程切换，使 current 指向选定的进程，并建立新进程的运行环境。</li>
+</ul>
+<h2 id="创建进程">创建进程</h2>
+<p>Linux 启动后经过一系列的初始化操作，系统由 <code>init()</code> 函数创建系统的第一个进程 init，其标志符为 1。init 进程将完成系统的一些初始化设置任务（如打开系统控制台、安装根文件系统及启动系统的守护进程等），以及执行系统初始化程序，如 /etc/init，/bin/init 或者 /sbin/init。init 进程使用 /etc/inittab 作为脚本文件来创建系统中的新进程。这些新进程又创建各自的新进程。例如 getty 进程将在用户试图登录时创建一个 login 进程。系统中所有进程都是从 init 核心进程中派生出来。</p>
+<p>新进程通过复制老进程或当前进程来创建。系统调用 fork 或 clone 可以创建新任务，复制发生在核心状态下的核心中。系统从物理内存中分配出来一个新的 task_struct 数据结构，同时还有一个或多个包含被复制进程堆栈（用户与核心）的物理页面。然后创建唯一的标记此新任务的进程标志符。新创建的 task_struct 将被放入 task 数组中，另外将被复制进程的 task_struct 中的内容页表拷入新的 task_struct 中。</p>
+<p><strong>复制完成后，Linux 允许两个进程共享资源而不是复制各自的备份。这些资源包括文件、信号处理过程和虚拟内存。</strong> 进程对共享资源用各自的 count 来记数。在两个进程对资源的使用完毕之前，Linux 绝不会释放此资源。</p>
+<h2 id="进程间通信机制">进程间通信机制</h2>
+<p><a href="https://wylu.me/posts/9fb7f5b4">进程间通信机制</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/11259beb/" rel="bookmark">Ubuntu 16.04 清除旧版本内核</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><strong>内核清除须谨慎，建议保留两个内核版本。</strong></p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-05-10</div>
+      <div class="popular-posts-title"><a href="/posts/9fb7f5b4/" rel="bookmark">进程间通信机制</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>进程通信（Inter-Process Communication, IPC）是指进程之间的信息交换。其所交换的信息量，少则是一个状态或数值，多则是成千上万个字节。多个进程为了协调完成一项工作，相互之间必须能够进行通信。进程的互斥和同步可归结为低级通信。进程的高级通信是指用户可直接利用系统所提供的一组通信命令，高效地传送大量数据的一种通信方式。操作系统隐藏了进程通信的实现细节，即对用户来说是透明的。这样就大大简化了通信程序编程上的复杂性。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/2882d36c/" rel="bookmark">Windows下读取Linux系统文件 Paragon ExtFS for Windows</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Paragon ExtFS for Windows 拥有简洁美观的界面，能够实现 Windows 下读写 Linux 系统文件，读写 ext 文件系统的文件。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/3a046ccf/" title="Linux进程管理">https://wylu.me/posts/3a046ccf/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 进程管理</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/5e36b8b8/" rel="prev" title="Morris Traversal">
+                  <i class="fa fa-chevron-left"></i> Morris Traversal
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/9fb7f5b4/" rel="next" title="进程间通信机制">
+                  进程间通信机制 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="983c25b144aae495358bbc238cc332cf"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

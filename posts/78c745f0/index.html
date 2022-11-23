@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文记录一些 Hexo 的难点问题及其解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo相关问题和优化">
+<meta property="og:url" content="https://wylu.me/posts/78c745f0/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="本文记录一些 Hexo 的难点问题及其解决方案。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/f6ca2d672327ac83e9adf5673d4688f5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/247c69250b3a3f331204c256865d2324.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/3ddb9093059b94f1ad766a6b66fba473.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/694fae594f7b31a0d088d4b70f07b390.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/e5ae38e2560f83a73435a9f05128caec.png">
+<meta property="article:published_time" content="2019-05-18T12:24:22.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:42:55.683Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/f6ca2d672327ac83e9adf5673d4688f5.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/78c745f0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/78c745f0/","path":"posts/78c745f0/","title":"Hexo相关问题和优化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hexo相关问题和优化 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%8A%E7%89%88%E6%9C%AC%E5%A3%B0%E6%98%8E"><span class="nav-text">环境及版本声明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E7%88%AC%E8%99%AB%E8%B7%9F%E8%B8%AA%E5%A4%96%E9%93%BE"><span class="nav-text">禁止爬虫跟踪外链</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-hexo-autonofollow"><span class="nav-text">安装 hexo-autonofollow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%BE%91-%E7%AB%99%E7%82%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">编辑 站点配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%B0%B8%E4%B9%85%E9%93%BE%E6%8E%A5"><span class="nav-text">设置永久链接</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-hexo-abbrlink"><span class="nav-text">安装 hexo-abbrlink</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%BE%91-%E7%AB%99%E7%82%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-1"><span class="nav-text">编辑 站点配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E5%AD%98%E6%94%BE%E6%96%87%E7%AB%A0%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-text">分类存放文章源文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8B%B1%E6%96%87%E5%BC%95%E5%8F%B7%E5%8F%98%E6%88%90%E4%B8%AD%E6%96%87%E5%BC%95%E5%8F%B7"><span class="nav-text">英文引号变成中文引号</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hexo-next-%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%B8%B2%E6%9F%93"><span class="nav-text">Hexo NexT 数学公式渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95"><span class="nav-text">本地测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#travis-ci-%E9%85%8D%E7%BD%AE"><span class="nav-text">Travis CI 配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%9B%B4%E6%96%B0%E6%97%B6%E9%97%B4%E5%BC%82%E5%B8%B8"><span class="nav-text">文章更新时间异常</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%E4%BD%BF%E7%94%A8-updated-%E5%B1%9E%E6%80%A7"><span class="nav-text">方法一：使用 updated 属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%E4%BD%BF%E7%94%A8-git-%E6%8E%A8%E9%80%81%E6%97%B6%E9%97%B4"><span class="nav-text">方法二：使用 git 推送时间</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/78c745f0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hexo相关问题和优化 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo相关问题和优化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-05-18 20:24:22" itemprop="dateCreated datePublished" datetime="2019-05-18T20:24:22+08:00">2019-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:42:55" itemprop="dateModified" datetime="2022-11-23T23:42:55+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tool/" itemprop="url" rel="index"><span itemprop="name">tool</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tool/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文记录一些 Hexo 的难点问题及其解决方案。</p>
+<span id="more"></span>
+<h1 id="环境及版本声明">环境及版本声明</h1>
+<p>本文基于以下环境及版本：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">hexo:</span> <span class="number">3.8</span><span class="number">.0</span></span><br><span class="line"><span class="attr">hexo-cli:</span> <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">NexT:</span> <span class="number">7.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">OS:</span> <span class="string">Ubuntu</span> <span class="number">18.04</span> <span class="string">LTS</span> <span class="string">x86_64</span></span><br></pre></td></tr></table></figure>
+<h1 id="禁止爬虫跟踪外链">禁止爬虫跟踪外链</h1>
+<p>搜索引擎的蜘蛛来爬取文章内容时，如果你的文章中有外部链接，它就会到外链的站点去爬取，有可能再也不会回来了。为了告诉搜索引擎不要跟踪这些外链，需要在这些链接标签中添加属性 <code>rel="nofollow"</code> 或 <code>rel="external nofollow"</code> 。</p>
+<p><code>rel="nofollow"</code> 是通用格式，即是告诉搜索引擎不要跟踪此链接，<code>rel="external nofollow"</code> 是更具体的写法，进一步告诉搜索引擎这是一个外部的链接，不要跟踪它。</p>
+<p>我们可以 <code>hexo-autonofollow</code> 插件来给外链添加 <code>nofollow</code> 属性，这样有利于 SEO 。</p>
+<h2 id="安装-hexo-autonofollow">安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/liuzc/hexo-autonofollow">hexo-autonofollow</a></h2>
+<p>在站点根目录下执行下列命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-autonofollow --save</span><br></pre></td></tr></table></figure>
+<h2 id="编辑-站点配置文件">编辑 <code>站点配置文件</code></h2>
+<p>在 <code>站点配置文件</code> _config.yml 末尾添加如下内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Adds nofollow attribute to all external links in your hexo blog posts automatically.</span></span><br><span class="line"><span class="comment">## https://github.com/liuzc/hexo-autonofollow</span></span><br><span class="line"><span class="attr">nofollow:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">exclude:</span> <span class="comment"># 例外的链接，可将友链放在此处</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">yourname.github.io</span> <span class="comment"># 排除你的站点</span></span><br><span class="line">    <span class="comment"># - 友链地址</span></span><br></pre></td></tr></table></figure>
+<p>配置后，在生成的静态文件中，例外的链接就不会被加上 <code>nofollow</code> 属性。</p>
+<h1 id="设置永久链接">设置永久链接</h1>
+<p>链接层级过深、链接中包含中文、因为 title 变动导致链接也经常发生变动，这些都不利于 SEO 。推荐 permalink 的解决方案是使用插件 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://post.zz173.com/detail/hexo-abbrlink.html">hexo-abbrlink</a> 生成 permalink 。</p>
+<h2 id="安装-hexo-abbrlink">安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/rozbo/hexo-abbrlink">hexo-abbrlink</a></h2>
+<p>站点根目录下执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-abbrlink --save</span><br></pre></td></tr></table></figure>
+<h2 id="编辑-站点配置文件-1">编辑 <code>站点配置文件</code></h2>
+<p>修改 <code>站点配置文件</code> _config.yml 的 <code>permalink</code> 如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permalink:</span> <span class="string">posts/:abbrlink/</span></span><br></pre></td></tr></table></figure>
+<p>其中 <code>:abbrlink</code> 代表连接地址。可以在 <code>站点配置文件</code> 下添加 abbrlink 的配置（其中 alg 和 rep 分别为生成的算法和表示方式），如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># abbrlink config</span></span><br><span class="line"><span class="comment">## https://github.com/rozbo/hexo-abbrlink</span></span><br><span class="line"><span class="attr">abbrlink:</span></span><br><span class="line">  <span class="attr">alg:</span> <span class="string">crc32</span>  <span class="comment"># support crc16(default) and crc32</span></span><br><span class="line">  <span class="attr">rep:</span> <span class="string">hex</span>    <span class="comment"># support dec(default) and hex</span></span><br></pre></td></tr></table></figure>
+<p>不同配置生成的链接效果如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>算法</th>
+<th>进制</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>crc16</td>
+<td>hex</td>
+<td>https://post.zz173.com/posts/3ab2.html</td>
+</tr>
+<tr class="even">
+<td>crc16</td>
+<td>dec</td>
+<td>https://post.zz173.com/posts/12345.html</td>
+</tr>
+<tr class="odd">
+<td>crc32</td>
+<td>hex</td>
+<td>https://post.zz173.com/posts/9a8b6c4d.html</td>
+</tr>
+<tr class="even">
+<td>crc32</td>
+<td>dec</td>
+<td>https://post.zz173.com/posts/1690090958.html</td>
+</tr>
+</tbody>
+</table>
+<p><strong>执行 <code>hexo clean &amp;&amp; hexo g</code> 重新生成静态文件后，源文件 front-matter 中会包含 <code>abbrlink: xxx</code> 。</strong></p>
+<p>这样不论我们的文件名、文章的 title 、文章的内容有没有发生改变，abbrlink 都不会改变，同时对搜索引擎更加友好。</p>
+<p>CRC 全称 Cyclic Redundancy Check，又叫循环冗余校验。CRC32 跟 MD5一样都是哈希算法的一种。<strong>从 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/rozbo/hexo-abbrlink">hexo-abbrlink</a> 的源码来看，实际上它并没有利用到时间，只是利用了文章 title 来生成。</strong></p>
+<p>使用这种方法生成 permalink 时，在每次提交修改前，最好先执行 <code>hexo clean &amp;&amp; hexo g</code>，确保提交前你所有的文章的 front-matter 中都包含 abbrlink ，避免因 title 的改变导致生成 abbrlink 不一致（如果已存在 abbrlink，就不会重新生成，不论 title 是否发生变化）。</p>
+<h1 id="分类存放文章源文件">分类存放文章源文件</h1>
+<p>Hexo 默认所有的文章都会放在 <code>source/_posts</code> 文件夹下，当文章越来越多时，将很难管理文章源文件同时也不利于快速查找到想要的文章。</p>
+<p>我个人的做法就是分层分类存放，同时利用上面提到的 abbrlink 来设置 permalink，以确保不管文章源文件如何变换分类、分类层次有多深，生成的静态页面的链接始终对 SEO 友好。</p>
+<p>例如，在 <code>_posts</code> 文件夹，创建了 <code>Algorithm</code> 和 <code>Linux</code> 两个文件夹作为一级分类， <code>Linux</code> 分类下创建了 <code>command</code> 文件夹作为二级分类：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f6ca2d672327ac83e9adf5673d4688f5.png" alt="source-fold"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/247c69250b3a3f331204c256865d2324.png" alt="source-unfold"></p>
+<p>其中，文章的同名同级的文件夹是它的资源文件夹，存放文章对应的资源，如图片等。</p>
+<p>本地运行测试，查看文章 QuickSort 如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/3ddb9093059b94f1ad766a6b66fba473.png" alt="posts-classify"></p>
+<p>不管源文件如何存放，链接始终是 <code>/posts/xxxxxxx/</code> 的形式，另外需要注意 <strong>文章 front-matter 中的 <code>categories</code> 与这里的分类存放没有任何关系</strong> ，如上图中 QuickSort 文章分类于 <code>Algorithm -&gt; Sort</code>，而其 md 文件是直接放在了 Algorithm 目录下。</p>
+<p>如果你想让 URL 直接对应源文件的分类也是可以的，但不推荐这么做，编辑 <code>站点配置文件</code>，修改 permalink 配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permalink:</span> <span class="string">posts/:title/</span></span><br></pre></td></tr></table></figure>
+<p>重新生成，测试结果如下，注意 URL 与源文件存放位置的对应关系：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/694fae594f7b31a0d088d4b70f07b390.png" alt="post-quicksort"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e5ae38e2560f83a73435a9f05128caec.png" alt="post-netstat"></p>
+<h1 id="英文引号变成中文引号">英文引号变成中文引号</h1>
+<p>引号显示异常，英文单引号 ' 双引号 "，都显示成中文单引号’ 双引号”。</p>
+<h2 id="方法一">方法一</h2>
+<p><strong>因为 hexo-renderer-marked 渲染 Markdown 有很多问题，所以推荐使用方法二。</strong></p>
+<p>Hexo 默认使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hexojs/hexo-renderer-marked">hexo-renderer-marked</a> 作为 Markdown 的解析引擎，它的 <code>smartypants</code> 配置项默认为 <code>true</code>，只需将其禁用就可以解决引号显示异常的问题。</p>
+<p>编辑 <code>站点配置文件</code>，在文件末尾添加如下配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Prohibit English quotation marks from becoming Chinese quotation marks</span></span><br><span class="line"><span class="comment">## https://github.com/hexojs/hexo/issues/1981</span></span><br><span class="line"><span class="attr">marked:</span></span><br><span class="line">  <span class="attr">smartypants:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>保存修改，重新生成站点，就可以正常显示了。</p>
+<h2 id="方法二">方法二</h2>
+<p>Hexo 默认自带的 Markdown 渲染引擎 <code>hexo-renderer-marked</code> 有很多不足，例如在渲染数学公式时会有很多问题，同时因为它默认开启 <code>smartypants</code>，导致引号显示异常，所以最好的解决方案是更换 Hexo 默认的 Markdown 渲染引擎。</p>
+<p>这里推荐使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/wzpan/hexo-renderer-pandoc">hexo-renderer-pandoc</a>，这个插件依赖于 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/jgm/pandoc">Pandoc</a>，具体的操作可以参考下面 "数学公式渲染"。</p>
+<p><strong>更换渲染引擎后，无需修改任何配置，引号的显示就是正常的。</strong></p>
+<h1 id="hexo-next-数学公式渲染">Hexo NexT 数学公式渲染</h1>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/MATH.md">NexT MATH</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://theme-next.org/docs/third-party-services/math-equations">NexT Math Equations</a></li>
+<li>jdhao 博客 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://jdhao.github.io/2017/10/06/hexo-markdown-latex-equation/">Hexo 书写 LaTeX 公式时的一些问题及解决方法</a></li>
+<li>天空的城 博客 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://shomy.top/2016/10/22/hexo-markdown-mathjax/">Hexo下mathjax的转义问题</a></li>
+<li>Peter 博客 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://peterxugo.github.io/2017/05/27/hexo%E5%86%99%E5%8D%9A%E5%AE%A2/">hexo写博客</a></li>
+</ul>
+<blockquote>
+<p>为什么要替换 Hexo 的默认 Markdown 引擎?</p>
+<p>Hexo 默认使用 marked.js 去解析我们写的 markdown，比如一些符号，<code>_</code> 代表斜体，会被处理为 <code>&lt;em&gt;</code> 标签，比如 <code>x_i</code> 在开始被渲染的时候，处理为 <code>x&lt;em&gt;i&lt;/em&gt;</code>，这个时候 mathjax 就无法渲染成下标了。很多符号都有这个问题，比如粗体 <code>*</code>，也是无法在 mathjax 渲染出来的，好在有替代的乘法等，包括 <code>\\</code> 同理。</p>
+</blockquote>
+<p>目前，NexT 提供两种数学公式渲染引擎，分别为 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.mathjax.org/">MathJax</a> 和 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://khan.github.io/KaTeX/">Katex</a>，默认为 MathJax。</p>
+<p>如果你选择使用 MathJax 进行数学公式渲染，你需要使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/wzpan/hexo-renderer-pandoc">hexo-renderer-pandoc</a> 或者 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/sun11/hexo-renderer-kramed">hexo-renderer-kramed</a> 这两个渲染器的其中一个。</p>
+<p>这里推荐使用 <code>MathJax</code> + <code>hexo-renderer-pandoc</code> ，并以此为例：</p>
+<h2 id="本地测试">本地测试</h2>
+<ol type="1">
+<li><p>因为 <code>hexo-renderer-pandoc</code> 依赖 Pandoc，所以首先需要安装 Pandoc，具体安装步骤参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/jgm/pandoc/blob/master/INSTALL.md">how to install pandoc</a> 。</p></li>
+<li><p>站点根目录下执行下列命令，卸载原有的渲染器 <code>hexo-renderer-marked</code>，然后安装 <code>hexo-renderer-pandoc</code> ：</p></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-renderer-pandoc --save</span><br></pre></td></tr></table></figure>
+<ol start="3" type="1">
+<li>编辑 <code>主题配置文件</code>，修改配置如下：</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Math Equations Render Support</span></span><br><span class="line"><span class="attr">math:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Default (true) will load mathjax / katex script on demand.</span></span><br><span class="line">  <span class="comment"># That is it only render those page which has `mathjax: true` in Front Matter.</span></span><br><span class="line">  <span class="comment"># If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">engine:</span> <span class="string">mathjax</span></span><br></pre></td></tr></table></figure>
+<ol start="4" type="1">
+<li>重新生成并测试：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s -o</span><br></pre></td></tr></table></figure>
+<h2 id="travis-ci-配置">Travis CI 配置</h2>
+<p>因为 <code>hexo-renderer-pandoc</code> 依赖 Pandoc，所以 Travis CI 中也要安装 Pandoc，而且最好安装较新的版本，比较旧的版本如 <code>1.19.X</code> 可能解析出错。</p>
+<p>在 .travis.yml 中添加类似配置，参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.travis-ci.com/user/installing-dependencies/#installing-packages-without-an-apt-repository">installing-packages-without-an-apt-repository</a>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">before_install:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">wget</span> <span class="string">https://github.com/jgm/pandoc/releases/download/2.7.2/pandoc-2.7.2-1-amd64.deb</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">sudo</span> <span class="string">dpkg</span> <span class="string">-i</span> <span class="string">pandoc-2.7.2-1-amd64.deb</span></span><br></pre></td></tr></table></figure>
+<p>完整配置可参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/wylu/wylu.github.io/blob/dev/.travis.yml">wylu.github.io/.travis.yml</a></p>
+<h1 id="文章更新时间异常">文章更新时间异常</h1>
+<h2 id="方法一使用-updated-属性">方法一：使用 updated 属性</h2>
+<p><strong>推荐使用方法二，避免手动操作。</strong></p>
+<p>当使用 Travis CI 自动部署时，发现部署成功后，所有文章的更新时间都变成了此次提交修改的时间，但有些文章在上一次提交后是没有发生过任何修改的。另外，本地测试显示的更新时间是正常的。</p>
+<p>这是因为 git 在推送更新时，并不记录保存文件的访问时间、修改时间等元信息，所以每次使用 git 把项目 clone 下来时，文件的时间都是克隆时的时间。又因为如果没有在 <code>front-matter</code> 中指定 <code>updated</code>，Hexo 会默认使用文件的最后修改时间作为文章的更新时间，所以会出现所有文章的更新时间都发生变化的情况。</p>
+<p>总的来说，使用 git clone 下来的文件的时间都不是原来文件的时间，而 Travis CI 每次都需要 clone 源码才能进行后面的生成和部署操作，所以目前如果想正确显示更新时间，可以在 <code>front-matter</code> 中指定，或者改用本地手动推送部署。</p>
+<p>下面是一个 python 脚本，用来向 <code>front-matter</code> 中插入最后修改时间。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">file_encoding = <span class="string">&#x27;utf-8&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">last_modify</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="keyword">return</span> time.strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, time.localtime(os.stat(path).st_mtime))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write2file</span>(<span class="params">file_path, updated=time.strftime(<span class="params"><span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, time.localtime(<span class="params"></span>)</span>)</span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;r&#x27;</span>, encoding=file_encoding) <span class="keyword">as</span> f:</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">    updated = <span class="string">&#x27;updated: &#x27;</span> + updated + <span class="string">&#x27;\n&#x27;</span></span><br><span class="line"></span><br><span class="line">    flag = <span class="literal">False</span></span><br><span class="line">    i = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> lines[i].startswith(<span class="string">&#x27;updated: &#x27;</span>):</span><br><span class="line">            flag = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> lines[i] == <span class="string">&#x27;---\n&#x27;</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> flag:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;===&gt; Existed. &quot;</span> + file_path)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    lines = lines[:i] + [updated] + lines[i:]</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;w&#x27;</span>, encoding=file_encoding) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(<span class="string">&#x27;&#x27;</span>.join(lines))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;===&gt; Success. &quot;</span> + file_path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_paths</span>(<span class="params">path</span>):</span><br><span class="line">    paths = []</span><br><span class="line">    <span class="keyword">if</span> os.path.isfile(path) <span class="keyword">and</span> path.endswith(<span class="string">&quot;.md&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> [&#123;<span class="string">&quot;file_path&quot;</span>: path, <span class="string">&quot;updated&quot;</span>: last_modify(path)&#125;]</span><br><span class="line">    <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(os.path.join(path)):</span><br><span class="line">        <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">            <span class="keyword">if</span> file.endswith(<span class="string">&quot;.md&quot;</span>):</span><br><span class="line">                file_path = os.path.join(root, file)</span><br><span class="line">                paths.append(&#123;<span class="string">&quot;file_path&quot;</span>: file_path, <span class="string">&quot;updated&quot;</span>: last_modify(file_path)&#125;)</span><br><span class="line">    <span class="keyword">return</span> paths</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add_update_time</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(os.path.join(path)):</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    paths = get_paths(path)</span><br><span class="line">    <span class="keyword">for</span> i, item <span class="keyword">in</span> <span class="built_in">enumerate</span>(paths):</span><br><span class="line">        <span class="built_in">print</span>(i, end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        write2file(item[<span class="string">&#x27;file_path&#x27;</span>], item[<span class="string">&#x27;updated&#x27;</span>])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Done.&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="keyword">global</span> file_encoding</span><br><span class="line">    argc = <span class="built_in">len</span>(sys.argv)</span><br><span class="line">    <span class="keyword">if</span> argc &lt; <span class="number">2</span> <span class="keyword">or</span> argc &gt; <span class="number">3</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Error!\nUsage: python post_util &lt;post directory&gt; [file encoding], for example:&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;\tpython post_util.py /home/wylu/hexo/source/_post&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;\tpython post_util.py &quot;/home/wylu/hexo/source/_post&quot; utf-8&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">if</span> argc == <span class="number">3</span>:</span><br><span class="line">        file_encoding = sys.argv[<span class="number">2</span>]</span><br><span class="line">    add_update_time(path=sys.argv[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>指定 _post 文件夹路径，可批量操作，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python post_util.py /home/yourname/hexo/source/_post</span><br></pre></td></tr></table></figure>
+<p>如果 <code>front-matter</code> 中已存在 <code>updated</code>，则不会覆盖。如果想重新生成，可以删掉 <code>updated</code> 所在的行然后重新执行。</p>
+<h2 id="方法二使用-git-推送时间">方法二：使用 git 推送时间</h2>
+<p>参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://theme-next.org/docs/getting-started/deployment">NexT deployment .travis.yml</a></p>
+<p>在 Travis CI 的配置文件 .travis.yml 中添加如下配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">before_install:</span></span><br><span class="line">  <span class="comment"># Restore last modified time</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;git ls-files -z | while read -d &#x27;&#x27; path; do touch -d \&quot;$(git log -1 --format=\&quot;@%ct\&quot; \&quot;$path\&quot;)\&quot; \&quot;$path\&quot;; done&quot;</span></span><br></pre></td></tr></table></figure>
+<p>实际上，clone 下来的文件的时间还是克隆时的时间，然后通过上面的命令，它将 clone 下来的文件的时间改成了该文件最近一次变动的推送时间（也即文件最后一次修改的 push 时间）。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-01-13</div>
+      <div class="popular-posts-title"><a href="/posts/7bd83fc5/" rel="bookmark">Hexo NexT 图片caption出现多次</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>在使用 Hexo + NexT 搭建个人博客的过程中一直有个问题没有解决，直到今天才找到了解决方法。问题就是在展示同一张图片中，caption出现了两次，如图：</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-12</div>
+      <div class="popular-posts-title"><a href="/posts/cd6e4d90/" rel="bookmark">Hexo基本操作</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>介绍使用 Hexo 建站和进行本地测试的流程，以及模板的配置、自定义模板、新建文章等。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-05-07</div>
+      <div class="popular-posts-title"><a href="/posts/aa960b18/" rel="bookmark">NexT第三方服务集成</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍一些第三方服务的集成与使用，如评论、搜索、SEO、持续集成等。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-12</div>
+      <div class="popular-posts-title"><a href="/posts/8247e85f/" rel="bookmark">Hexo站点配置</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将详细介绍 Hexo 站点配置文件中的各个配置项的含义与作用。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-12</div>
+      <div class="popular-posts-title"><a href="/posts/940b8194/" rel="bookmark">Hexo资源文件夹</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍 Hexo 资源文件夹的使用，以及解决如何以相对路径的方式引用图片使其能够在主页和文章中正常显示。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/78c745f0/" title="Hexo相关问题和优化">https://wylu.me/posts/78c745f0/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/aa960b18/" rel="prev" title="NexT第三方服务集成">
+                  <i class="fa fa-chevron-left"></i> NexT第三方服务集成
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/5b767b23/" rel="next" title="Git配置SSH Key">
+                  Git配置SSH Key <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="0e7ea7abe778791936fa63bd575cecdf"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

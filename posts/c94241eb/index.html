@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Arch Linux 是通用 x86-64 GNU&#x2F;Linux 发行版。Arch采用滚动升级模式，尽全力提供最新的稳定版软件。初始安装的 Arch 只是一个基本系统，随后用户可以根据自己的喜好安装需要的软件并配置成符合自己理想的系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VMware Workstation安装Arch Linux和Deepin桌面">
+<meta property="og:url" content="https://wylu.me/posts/c94241eb/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="Arch Linux 是通用 x86-64 GNU&#x2F;Linux 发行版。Arch采用滚动升级模式，尽全力提供最新的稳定版软件。初始安装的 Arch 只是一个基本系统，随后用户可以根据自己的喜好安装需要的软件并配置成符合自己理想的系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/48e3e7b5c9c0a0dce7d94db6754789e7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/e2af09a02205187e0aa08e85c608ccb7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/82235424fa8acd26bf7468ec36daf6e5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/9b0ee22f41f6ca6a984951c1995e8e18.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2bd6dc2161181aaa1a4888fd16d1fafd.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/44969065973fd37f59305f18224ae6c3.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/0cb365645cd91e3083e28bcb4610db4e.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/19f85b0247f8baa6d011894e43a67d80.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/14d14c230966607271e6d2d58558dd36.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/7dac861f4e0108bf32f005a777ea3f9a.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/762f351d534b44178e894cc99b08a460.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/5da233fafad9c3bf4ba10610c5119efb.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/cd7d091ac1713254ecb60c6320a921eb.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/002301b73fb73403a8561a5961d3fb25.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/4767eed9bddeb945829929c25bb9e15e.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/6c250bf061c37f657d1906830710248e.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/dc4fe07da44ffc55df2f8dbc50be3916.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/3037c46716e9a2b10e3cfe85422473ec.png">
+<meta property="article:published_time" content="2019-05-31T01:56:54.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:41:45.203Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="arch-linux">
+<meta property="article:tag" content="deepin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/48e3e7b5c9c0a0dce7d94db6754789e7.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/c94241eb/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/c94241eb/","path":"posts/c94241eb/","title":"VMware Workstation安装Arch Linux和Deepin桌面"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>VMware Workstation安装Arch Linux和Deepin桌面 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%9D%A1%E4%BB%B6"><span class="nav-text">安装条件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-vmware-workstation-pro"><span class="nav-text">安装 VMware Workstation Pro</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-arch-linux-%E9%95%9C%E5%83%8F"><span class="nav-text">下载 Arch Linux 镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-text">创建虚拟机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87"><span class="nav-text">安装前的准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F"><span class="nav-text">验证启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5"><span class="nav-text">检查网络连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4"><span class="nav-text">更新系统时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-text">创建分区表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA"><span class="nav-text">建立硬盘分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%88%86%E5%8C%BA"><span class="nav-text">格式化分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA"><span class="nav-text">挂载分区</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-arch-linux"><span class="nav-text">安装 Arch Linux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E9%95%9C%E5%83%8F"><span class="nav-text">选择镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%9F%BA%E6%9C%AC%E7%B3%BB%E7%BB%9F"><span class="nav-text">安装基本系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B3%BB%E7%BB%9F"><span class="nav-text">配置系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fstab"><span class="nav-text">Fstab</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chroot"><span class="nav-text">Chroot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E5%8C%BA"><span class="nav-text">时区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96"><span class="nav-text">本地化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-text">网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#root-%E5%AF%86%E7%A0%81"><span class="nav-text">Root 密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7"><span class="nav-text">创建新用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F"><span class="nav-text">安装引导程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE-dhcpcd-%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="nav-text">设置 dhcpcd 开机自启</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%90%AF"><span class="nav-text">重启</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-deepin-%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83"><span class="nav-text">安装 Deepin 桌面环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-git"><span class="nav-text">安装 Git</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-aur-%E5%8A%A9%E6%89%8B-yay"><span class="nav-text">安装 AUR 助手 yay</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-bash-%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8%E5%B7%A5%E5%85%B7"><span class="nav-text">安装 bash 自动补全工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-xdg-user-dirs"><span class="nav-text">安装 xdg-user-dirs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-dde"><span class="nav-text">安装 dde</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-networkmanager"><span class="nav-text">安装 networkmanager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-lightdm-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">修改 lightdm 配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-open-vm-tools"><span class="nav-text">安装 open-vm-tools</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/c94241eb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="VMware Workstation安装Arch Linux和Deepin桌面 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          VMware Workstation安装Arch Linux和Deepin桌面
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-05-31 09:56:54" itemprop="dateCreated datePublished" datetime="2019-05-31T09:56:54+08:00">2019-05-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:41:45" itemprop="dateModified" datetime="2022-11-23T23:41:45+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/" itemprop="url" rel="index"><span itemprop="name">os</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/arch/" itemprop="url" rel="index"><span itemprop="name">arch</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/48e3e7b5c9c0a0dce7d94db6754789e7.png" alt="Arch Linux"></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/Arch_Linux">Arch Linux</a> 是通用 x86-64 GNU/Linux 发行版。Arch采用滚动升级模式，尽全力提供最新的稳定版软件。初始安装的 Arch 只是一个基本系统，随后用户可以根据自己的喜好安装需要的软件并配置成符合自己理想的系统。</p>
+<span id="more"></span>
+<h1 id="安装条件">安装条件</h1>
+<p>安装 Arch Linux，需要拥有一台 x64_86 兼容的 PC，其中至少有 512MB 的 RAM 和 800 MB 的可用磁盘空间。由于安装过程中需要从远程存储库获取软件包，所以还需要一个良好的网络连接。</p>
+<h1 id="安装-vmware-workstation-pro">安装 VMware Workstation Pro</h1>
+<p>到官网下载并安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://my.vmware.com/cn/web/vmware/info/slug/desktop_end_user_computing/vmware_workstation_pro/15_0">VMware Workstation Pro</a> 。</p>
+<h1 id="下载-arch-linux-镜像">下载 Arch Linux 镜像</h1>
+<p>进入 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.archlinux.org/download/">Arch Linux</a> 下载页面，然后选择一个镜像源，例如我选择了 China 的 163.com , 点击下载后缀为 <code>.iso</code> 的镜像文件。</p>
+<h1 id="创建虚拟机">创建虚拟机</h1>
+<p>创建新的虚拟机 -&gt; 典型 -&gt; 下一步</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e2af09a02205187e0aa08e85c608ccb7.png" alt="create-vm-1"></p>
+<p>选择刚刚下载的 Arch Linux iso 文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/82235424fa8acd26bf7468ec36daf6e5.png" alt="create-vm-2"></p>
+<p>选择 Linux 操作系统，选择 "其他 Linux 4.x 或更高版本内核 64 位" 内核版本</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/9b0ee22f41f6ca6a984951c1995e8e18.png" alt="create-vm-3"></p>
+<p>设置虚拟机名称，并选择虚拟机系统文件保存路径，根据实际情况设定</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2bd6dc2161181aaa1a4888fd16d1fafd.png" alt="create-vm-4"></p>
+<p>设置磁盘空间大小，这里以 20G 为例，同时选择将磁盘存储为单个文件（为了提高性能）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/44969065973fd37f59305f18224ae6c3.png" alt="create-vm-5"></p>
+<p>点击自定义硬件</p>
+<p>内存、处理器视具体情况自行设置，移除打印机，<strong>设置网络适配器为 NAT</strong> （网络连接使用 NAT 模式，开机后就能联网），设置完成后点击关闭</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0cb365645cd91e3083e28bcb4610db4e.png" alt="create-vm-6"></p>
+<blockquote>
+<p>Host-only: 虚拟机的网卡会连接到物理机的 VMnet1 上，但物理机并不会为虚拟机提供任何路由服务，因此虚拟机只能和物理机进行通信，不能连接到实际的网络上，即无法上网。</p>
+<p>NAT: 网络地址转换（Network Address Translation）模式下，虚拟机的网卡连接到物理机的 VMnet8 上，此时物理机系统的 VMWare NAT Server 服务就充当了路由器，负责将虚拟机发到 VMnet8 的包进行地址转换之后发到实际的网络上，再将实际网络上返回的包进行地址转换后通过 VMnet8 发送给虚拟机。这种模式最简单，虚拟机系统不用做任何网络设置就可以访问外部网络。</p>
+<p>Bridged: 桥接模式下，虚拟机拥有与物理主机相同网段的独立 IP，就像是局域网中的一台独立的主机，与物理机平等的存在于网络中。</p>
+</blockquote>
+<p>取消勾选创建完成后自动启动虚拟机</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/19f85b0247f8baa6d011894e43a67d80.png" alt="create-vm-7"></p>
+<p><strong>本文以 UEFI 启动模式 + GPT 分区方案 为例</strong>，因为 VMware Workstation Pro 默认是使用 BISO 启动模式的，所以我们要设置成 UEFI，选择 编辑虚拟机设置 -&gt; 选项 -&gt; 高级 -&gt; UEFI -&gt; 保存</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/14d14c230966607271e6d2d58558dd36.png" alt="create-vm-8"></p>
+<p>创建完成，启动虚拟机。</p>
+<h1 id="安装前的准备">安装前的准备</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/Installation_guide">官方安装指南</a></p>
+<p>启动虚拟机，如果出现需要选择启动的界面，则选择 "Boot Arch Linux (x86_64)" 并回车，进入命令行界面。</p>
+<h2 id="验证启动模式">验证启动模式</h2>
+<p>验证是否使用 UEFI 启动，输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/firmware/efi/efivars</span><br></pre></td></tr></table></figure>
+<p>如果目录不存在，系统可能以 BIOS 或 CSM 模式启动，需要设置虚拟机使用 UEFI （参考上面），本文以 <strong>UEFI + GPT</strong> 为例，所以需要确保虚拟机使用 UEFI 启动。</p>
+<p>如果能看到命令输出了该目录下的文件信息，说明是使用 UEFI 启动的。</p>
+<h2 id="检查网络连接">检查网络连接</h2>
+<p>用 ping 命令检查网络连接，确保系统能够正常访问网络</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping www.baidu.com -c 4</span><br></pre></td></tr></table></figure>
+<h2 id="更新系统时间">更新系统时间</h2>
+<p>使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://jlk.fjfi.cvut.cz/arch/manpages/man/timedatectl.1">timedatectl</a> 启用 ntp，确保系统时间是准确的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl set-ntp true</span><br></pre></td></tr></table></figure>
+<p>可以使用 <code>timedatectl status</code> 检查服务状态：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl status</span><br></pre></td></tr></table></figure>
+<h2 id="创建分区表">创建分区表</h2>
+<p>首先使用 <code>lsblk</code> 或者 <code>fdisk -l</code> 查看硬盘的名称，磁盘若被系统识别到，就会被分配为一个 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://zh.wikipedia.org/wiki/%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F#.E5.91.BD.E5.90.8D.E7.BA.A6.E5.AE.9A">块设备</a>，如 /dev/sda</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsblk</span><br></pre></td></tr></table></figure>
+<p>结果中以 <code>rom</code>，<code>loop</code> 或者 <code>airoot</code> 结束的可以忽略。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7dac861f4e0108bf32f005a777ea3f9a.png" alt="lsblk-fdisk"></p>
+<p>可以看到我的硬盘设备文件名称为 <code>sda</code>，它存放在 /dev 目录下，现在使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/Parted">parted</a> 命令为这块硬盘创建分区表，指定分区格式为 GPT :</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parted /dev/sda mklabel gpt</span><br></pre></td></tr></table></figure>
+<p><strong>注意： parted 命令后的设备路径名称，根据实际情况而定。</strong></p>
+<h2 id="建立硬盘分区">建立硬盘分区</h2>
+<p>本文使用的分区方案如下：</p>
+<ul>
+<li>EFI 系统分区: 256MB，UEFI 引导必需</li>
+<li>Root 分区: 8GB，根分区</li>
+<li>Home 分区: 10GB，家目录分区</li>
+<li>Swap 分区: 剩余空间，交换空间</li>
+</ul>
+<p>使用具有伪图形界面的 cfdisk 工具建立硬盘分区：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cfdisk /dev/sda</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/762f351d534b44178e894cc99b08a460.png" alt="cfdisk"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Device        Start       End   Sectors  Size Type</span><br><span class="line">/dev/sda1      2048    526335    524288  256M EFI System</span><br><span class="line">/dev/sda2    526336  17303551  16777216    8G Linux filesystem</span><br><span class="line">/dev/sda3  17303552  38275071  20971520  256M Linux filesystem</span><br><span class="line">/dev/sda4  38275072  41943006   3667935  256M Linux swap</span><br></pre></td></tr></table></figure>
+<p>创建分区后，需要将 <code>/dev/sda1</code> 的 <code>Type</code> 设置为 <code>EFI System</code>；将 <code>/dev/sda4</code> 的 <code>Type</code> 设置为 <code>Linux swap</code>；根据实际情况设置。然后将光标移动到 <code>Write</code> 回车，输入 "yes" 并回车以保存修改，将光标移动到 <code>Quit</code> 退出。</p>
+<p>此时可以使用 <code>lsblk</code> 命令查看一下分区情况。</p>
+<h2 id="格式化分区">格式化分区</h2>
+<p>当分区建立好了，这些分区都需要使用适当的文件系统进行格式化。<a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/EFI_system_partition">EFI 系统分区</a> 需要格式化成 FAT32 格式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkfs.fat -F32 /dev/sda1</span><br><span class="line">mkfs.ext4 /dev/sda2</span><br><span class="line">mkfs.ext4 /dev/sda3</span><br><span class="line">mkswap /dev/sda3</span><br><span class="line">swapon /dev/sda3</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/5da233fafad9c3bf4ba10610c5119efb.png" alt="mkfs-partition"></p>
+<h2 id="挂载分区">挂载分区</h2>
+<p>格式化完成之后，将分区挂载到 <code>/mnt</code>，先挂载根分区，然后再挂载 EFI 分区、Home 分区（挂载前建议使用 <code>lsblk</code> 命令查看一下设备分区名称，以确认分区路径）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/sda2 /mnt</span><br><span class="line">mkdir -p /mnt/boot/efi</span><br><span class="line">mount /dev/sda1 /mnt/boot/efi</span><br><span class="line">mkdir /mnt/home</span><br><span class="line">mount /dev/sda3 /mnt/home</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/cd7d091ac1713254ecb60c6320a921eb.png" alt="mount-partiton"></p>
+<h1 id="安装-arch-linux">安装 Arch Linux</h1>
+<h2 id="选择镜像">选择镜像</h2>
+<p>文件 <code>/etc/pacman.d/mirrorlist</code> 定义了软件包会从哪个 镜像源 下载。在列表中越靠前的镜像在下载软件包时有越高的优先权。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>使用 vim 修改文件 <code>/etc/pacman.d/mirrorlist</code>，查找到 ustc 的镜像源（使用国内源，速度快），将其剪切并粘贴到文件首部，保存退出。这个文件接下来还会被 pacstrap 拷贝到新系统里，所以请确保设置正确。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/002301b73fb73403a8561a5961d3fb25.png" alt="repo-mirrorlist"></p>
+<h2 id="安装基本系统">安装基本系统</h2>
+<p>此处必须联网，安装速度视具体网速和硬件情况定。</p>
+<p>使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://git.archlinux.org/arch-install-scripts.git/tree/pacstrap.in">pacstrap</a> 脚本，安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.archlinux.org/groups/x86_64/base/">base</a> 组：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacstrap /mnt base</span><br></pre></td></tr></table></figure>
+<p>安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.archlinux.org/groups/x86_64/base-devel/">base-devel</a> 包中的常用工具和 vim：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacstrap /mnt base-devel vim</span><br></pre></td></tr></table></figure>
+<h2 id="配置系统">配置系统</h2>
+<h3 id="fstab">Fstab</h3>
+<p>执行下列命令生成 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/Fstab">fstab</a> 文件 (用 <code>-U</code> 或 <code>-L</code> 选项设置 UUID 或卷标)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</span><br></pre></td></tr></table></figure>
+<p>在执行完命令后后检查一下生成的 /mnt/etc/fstab 文件是否正确：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/4767eed9bddeb945829929c25bb9e15e.png" alt="genfstab-and-check"></p>
+<h3 id="chroot">Chroot</h3>
+<p>切换到新安装的系统：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arch-chroot /mnt</span><br></pre></td></tr></table></figure>
+<h3 id="时区">时区</h3>
+<p>设置时区</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br></pre></td></tr></table></figure>
+<p>使用 hwclock 设置硬件时间：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hwclock --systohc</span><br></pre></td></tr></table></figure>
+<h3 id="本地化">本地化</h3>
+<p>本地化的程序与库若要本地化文本，都依赖 Locale，后者明确规定地域、货币、时区日期的格式、字符排列方式和其他本地化标准等等。在下面两个文件设置：locale.gen 与 locale.conf。</p>
+<p>编辑 <code>/etc/locale.gen</code> 文件，移除 <code>en_US.UTF-8 UTF-8</code> 对应行前面的注释符号 <code>＃</code>，保存退出。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/locale.gen</span><br></pre></td></tr></table></figure>
+<p>接着执行 locale-gen 以生成指定的本地化文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">locale-gen</span><br></pre></td></tr></table></figure>
+<p>创建 locale.conf 并编辑 LANG 变量:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;LANG=en_US.UTF-8&quot; &gt;&gt; /etc/locale.conf</span><br></pre></td></tr></table></figure>
+<h3 id="网络">网络</h3>
+<p>创建 hostname 文件，并设置主机名：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;Arch&quot; &gt;&gt; /etc/hostname</span><br></pre></td></tr></table></figure>
+<p>编辑 hosts 文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br></pre></td></tr></table></figure>
+<p>在 hosts 文件中添加如下内容，保存退出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 localhost</span><br><span class="line">::1 localhost</span><br><span class="line">127.0.1.1 Arch.localdomain Arch</span><br></pre></td></tr></table></figure>
+<h3 id="root-密码">Root 密码</h3>
+<p>设置 Root 密码，执行以下命令，输入两次密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd</span><br></pre></td></tr></table></figure>
+<h3 id="创建新用户">创建新用户</h3>
+<p>Linux 中不建议使用 root 用户登录，因此有必要创建一个其他用户，以用户名 wylu 为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -m -g users -G wheel -s /bin/bash wylu</span><br></pre></td></tr></table></figure>
+<p><code>-G</code> 选项同时将该用户添加到 wheel 组中，<code>-s</code> 指定该用户默认使用的 shell 为 bash 。</p>
+<p>修改新创建用户的密码，同样输入两次：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd wylu</span><br></pre></td></tr></table></figure>
+<p>使用 visudo 命令修改 /etc/sudoers 文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visudo</span><br></pre></td></tr></table></figure>
+<p>取消 wheel 组的所在行的注释，授予 wheel 组用户执行 sudo 命令的权限，保存退出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">## Uncomment to allow members of group wheel to execute any command</span><br><span class="line">%wheel ALL=(ALL) ALL</span><br></pre></td></tr></table></figure>
+<h3 id="安装引导程序">安装引导程序</h3>
+<p>如果在一个移动介质上安装 Arch Linux，需要安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/Microcode">Microcode</a> 软件包。</p>
+<ul>
+<li>对于 AMD 处理器，安装 amd-ucode。</li>
+<li>对于 Intel 处理器，安装 intel-ucode。</li>
+</ul>
+<p>这里使用的是 Intel 的处理器，安装命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S intel-ucode</span><br></pre></td></tr></table></figure>
+<p>引导的方式有很多，这里使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/GRUB">grub</a>，顺序执行下面 3 条命令生成引导文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S grub efibootmgr</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --recheck</span><br></pre></td></tr></table></figure>
+<p><code>--efi-directory</code> 指定 EFI 系统分区的挂载点，应根据实际挂载路径填写，<code>--bootloader-id</code> 是启动项中用来识别 GRUB EFI 的标记。</p>
+<p>上述命令执行完成后 GRUB 的主目录将位于 /boot/grub/，接着需要生成配置文件 grub.cfg。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<h3 id="设置-dhcpcd-开机自启">设置 dhcpcd 开机自启</h3>
+<p>设置 dhcpcd.service 开机自启，不然装完重启后无法上网：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable dhcpcd.service</span><br></pre></td></tr></table></figure>
+<h2 id="重启">重启</h2>
+<ol type="1">
+<li>执行 <code>exit</code> 退出 chroot 环境：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>执行下列命令，卸载被挂载的分区：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umount -R /mnt</span><br></pre></td></tr></table></figure>
+<ol start="3" type="1">
+<li>关闭虚拟机：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure>
+<ol start="4" type="1">
+<li>移除 CD/DVD</li>
+</ol>
+<p>编辑虚拟机设置 -&gt; CD/DVD(IDE) -&gt; Remove -&gt; Save</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6c250bf061c37f657d1906830710248e.png" alt="rm-cd-dvd"></p>
+<ol start="5" type="1">
+<li>启动虚拟机</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/dc4fe07da44ffc55df2f8dbc50be3916.png" alt="grub"></p>
+<p>选择第一个选项启动系统，使用新创建的用户登录。</p>
+<h1 id="安装-deepin-桌面环境">安装 Deepin 桌面环境</h1>
+<p>参考 Acris Liu 博客 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://acris.me/2017/03/24/How-to-install-Arch-Linux-with-Deepin-desktop-on-VMware-Workstation/">VMware Workstation安装Arch Linux和Deepin桌面教程</a></p>
+<h2 id="安装-git">安装 Git</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S git</span><br></pre></td></tr></table></figure>
+<h2 id="安装-aur-助手-yay">安装 AUR 助手 yay</h2>
+<p>如果不想使用 <code>yay</code>，可跳过该步，对于下面命令中的 <code>yay</code> 可以替换为 <code>sudo pacman</code> 。</p>
+<p>使用 git 克隆并编译安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://aur.archlinux.org/yay.git</span><br><span class="line">cd yay</span><br><span class="line">makepkg -si</span><br></pre></td></tr></table></figure>
+<h2 id="安装-bash-自动补全工具">安装 bash 自动补全工具</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S bash-completion</span><br></pre></td></tr></table></figure>
+<h2 id="安装-xdg-user-dirs">安装 xdg-user-dirs</h2>
+<p>安装 xdg-user-dirs，用于生成用户 home 目录下的 Documents、Downloads、Music、Pictures 等文件夹：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yay -S xdg-user-dirs</span><br><span class="line">xdg-user-dirs-update</span><br></pre></td></tr></table></figure>
+<h2 id="安装-dde">安装 dde</h2>
+<p>安装基础组件，直接回车两次，默认安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.archlinux.org/groups/x86_64/deepin/">deepin</a> 组的所有包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S deepin</span><br></pre></td></tr></table></figure>
+<p>安装扩展包，<a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.archlinux.org/groups/x86_64/deepin-extra/">deepin-extra</a> 组包含了一些额外的应用程序来提供一个更完整的桌面环境。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S deepin-extra</span><br></pre></td></tr></table></figure>
+<h2 id="安装-networkmanager">安装 networkmanager</h2>
+<p>为了能够使用内置的网络管理，需要安装 networkmanager 包，并且 NetworkManager.service 需要被激活并设为开机自启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S networkmanager</span><br></pre></td></tr></table></figure>
+<p>设置开机自启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable NetworkManager.service</span><br></pre></td></tr></table></figure>
+<p>现在开启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start NetworkManager.service</span><br></pre></td></tr></table></figure>
+<h2 id="修改-lightdm-配置文件">修改 lightdm 配置文件</h2>
+<p>要使用 DDE 默认的 lightdm greeter，必须修改 /etc/lightdm/lightdm.conf 的配置，将greeter-session设为lightdm-deepin-greeter：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/lightdm/lightdm.conf</span><br></pre></td></tr></table></figure>
+<p>取消注释并修改 greeter-session 如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Seat:*]</span><br><span class="line">...</span><br><span class="line">greeter-session=lightdm-deepin-greeter</span><br></pre></td></tr></table></figure>
+<p>设置开机自启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable lightdm.service</span><br></pre></td></tr></table></figure>
+<p>重启或者直接启动 lightdm 服务，就能进入桌面环境了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start lightdm.service</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/3037c46716e9a2b10e3cfe85422473ec.png" alt="dde"></p>
+<h2 id="安装-open-vm-tools">安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wiki.archlinux.org/index.php/VMware/Installing_Arch_as_a_guest#Open-VM-Tools">open-vm-tools</a></h2>
+<p>安装 open-vm-tools 和 gtkmm3：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S open-vm-tools gtkmm3</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果该功能无法正常工作，请尝试手动安装 gtkmm3 。如要启用客户机的拖拽与复制粘贴功能，则需要安装 gtkmm3 。</p>
+</blockquote>
+<p>设置 open-vm-tools 开机自启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable vmtoolsd.service</span><br><span class="line">sudo systemctl enable vmware-vmblock-fuse.service</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/dd26a250/" rel="bookmark">Ubuntu 18.04 一键安装深度截图工具 Deepin Screenshot</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Deepin Screenshot，一个简洁易用的截图工具。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/11259beb/" rel="bookmark">Ubuntu 16.04 清除旧版本内核</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><strong>内核清除须谨慎，建议保留两个内核版本。</strong></p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/c94241eb/" title="VMware Workstation安装Arch Linux和Deepin桌面">https://wylu.me/posts/c94241eb/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/arch-linux/" rel="tag"><i class="fa fa-tag"></i> arch-linux</a>
+              <a href="/tags/deepin/" rel="tag"><i class="fa fa-tag"></i> deepin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/9a52256e/" rel="prev" title="最大公约数与最小公倍数">
+                  <i class="fa fa-chevron-left"></i> 最大公约数与最小公倍数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/28215e24/" rel="next" title="解决Ubuntu蓝牙搜索不到附近设备的问题">
+                  解决Ubuntu蓝牙搜索不到附近设备的问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="b5ac93be4ef2a8b6a07184eff58c7c5f"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

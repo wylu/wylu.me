@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一些经典的二叉树练习题，帮助理解掌握二叉树的各种遍历方法和递归地解决问题的思路。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树练习">
+<meta property="og:url" content="https://wylu.me/posts/cb350e7d/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="一些经典的二叉树练习题，帮助理解掌握二叉树的各种遍历方法和递归地解决问题的思路。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/d4af01ea9ac3ca3193f50caa8b6a7b8b.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/099321a3abf9e1118186bb2b101338c9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/f2660bc712bf0a802e26ae97e1677ed6.png">
+<meta property="article:published_time" content="2020-05-02T09:33:59.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:41:20.203Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="binary-tree">
+<meta property="article:tag" content="练习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/d4af01ea9ac3ca3193f50caa8b6a7b8b.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/cb350e7d/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/cb350e7d/","path":"posts/cb350e7d/","title":"二叉树练习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>二叉树练习 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="nav-text">二叉树节点定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">利用中序和后序遍历序列重建二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%89%8D%E5%BA%8F%E5%92%8C%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">利用前序和中序遍历序列重建二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A1%AB%E5%85%85%E6%AF%8F%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%8F%B3%E4%BE%A7%E8%8A%82%E7%82%B9%E6%8C%87%E9%92%88"><span class="nav-text">填充每个节点的下一个右侧节点指针</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A1%AB%E5%85%85%E6%AF%8F%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%8F%B3%E4%BE%A7%E8%8A%82%E7%82%B9%E6%8C%87%E9%92%88ii"><span class="nav-text">填充每个节点的下一个右侧节点指针II</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E4%BD%8E%E5%85%B1%E5%90%8C%E7%A5%96%E5%85%88"><span class="nav-text">二叉树的最低共同祖先</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-text">二叉树的序列化与反序列化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/cb350e7d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="二叉树练习 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二叉树练习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-02 17:33:59" itemprop="dateCreated datePublished" datetime="2020-05-02T17:33:59+08:00">2020-05-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:41:20" itemprop="dateModified" datetime="2022-11-23T23:41:20+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/algorithm/tree/" itemprop="url" rel="index"><span itemprop="name">tree</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>一些经典的二叉树练习题，帮助理解掌握二叉树的各种遍历方法和递归地解决问题的思路。</p>
+<span id="more"></span>
+<h1 id="二叉树节点定义">二叉树节点定义</h1>
+<ul>
+<li>java</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Definition for a binary tree node.</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="type">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>python</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x</span>):</span><br><span class="line">        self.val = x</span><br><span class="line">        self.left = <span class="literal">None</span></span><br><span class="line">        self.right = <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h1 id="利用中序和后序遍历序列重建二叉树">利用中序和后序遍历序列重建二叉树</h1>
+<p>给定一棵树的中序和后序遍历结果，构造二叉树。</p>
+<p>注意：您可以假定树中不存在重复项。</p>
+<p>例如，给定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inorder = [9,3,15,20,7]</span><br><span class="line">postorder = [9,15,7,20,3]</span><br></pre></td></tr></table></figure>
+<p>返回以下二叉树：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">9  20</span><br><span class="line">  /  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> TreeNode <span class="title function_">buildTree</span><span class="params">(<span class="type">int</span>[] inorder, <span class="type">int</span>[] postorder)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (inorder == <span class="literal">null</span> || postorder == <span class="literal">null</span> || inorder.length != postorder.length) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        HashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(inorder.length);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; inorder.length; i++) &#123;</span><br><span class="line">            map.put(inorder[i], i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> build(<span class="number">0</span>, postorder, <span class="number">0</span>, postorder.length - <span class="number">1</span>, map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TreeNode <span class="title function_">build</span><span class="params">(<span class="type">int</span> si, <span class="type">int</span>[] post, <span class="type">int</span> sp, <span class="type">int</span> ep, HashMap&lt;Integer, Integer&gt; map)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (sp &gt; ep) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TreeNode</span>(post[ep]);</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> map.get(root.val);</span><br><span class="line">        <span class="type">int</span> <span class="variable">leftLen</span> <span class="operator">=</span> idx - si;</span><br><span class="line">        root.left = build(si, post, sp, sp + leftLen - <span class="number">1</span>, map);</span><br><span class="line">        root.right = build(idx + <span class="number">1</span>, post, sp + leftLen, ep - <span class="number">1</span>, map);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buildTree</span>(<span class="params">self, inorder: <span class="type">List</span>[<span class="built_in">int</span>], postorder: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inorder <span class="keyword">or</span> <span class="keyword">not</span> postorder <span class="keyword">or</span> <span class="built_in">len</span>(inorder) != <span class="built_in">len</span>(postorder):</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        indices = &#123;v: i <span class="keyword">for</span> i, v <span class="keyword">in</span> <span class="built_in">enumerate</span>(inorder)&#125;</span><br><span class="line">        <span class="keyword">return</span> self.build(<span class="number">0</span>, postorder, <span class="number">0</span>, <span class="built_in">len</span>(postorder) - <span class="number">1</span>, indices)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">self, si: <span class="built_in">int</span>, post: <span class="type">List</span>[<span class="built_in">int</span>], sp: <span class="built_in">int</span>, ep: <span class="built_in">int</span>,</span></span><br><span class="line"><span class="params">              indices: <span class="built_in">dict</span></span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> sp &gt; ep:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        root = TreeNode(post[ep])</span><br><span class="line">        idx = indices[root.val]</span><br><span class="line">        llen = idx - si</span><br><span class="line"></span><br><span class="line">        root.left = self.build(si, post, sp, sp + llen - <span class="number">1</span>, indices)</span><br><span class="line">        root.right = self.build(idx + <span class="number">1</span>, post, sp + llen, ep - <span class="number">1</span>, indices)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h1 id="利用前序和中序遍历序列重建二叉树">利用前序和中序遍历序列重建二叉树</h1>
+<p>给定一棵树的前序和中序遍历结果，构造二叉树。</p>
+<p>注意：您可以假定树中不存在重复项。</p>
+<p>例如，给定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">preorder = [3,9,20,15,7]</span><br><span class="line">inorder = [9,3,15,20,7]</span><br></pre></td></tr></table></figure>
+<p>返回以下二叉树：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">9  20</span><br><span class="line">  /  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> TreeNode <span class="title function_">buildTree</span><span class="params">(<span class="type">int</span>[] preorder, <span class="type">int</span>[] inorder)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (preorder == <span class="literal">null</span> || inorder == <span class="literal">null</span> || preorder.length != inorder.length) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        HashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(inorder.length);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; inorder.length; i++) &#123;</span><br><span class="line">            map.put(inorder[i], i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> build(<span class="number">0</span>, preorder, <span class="number">0</span>, preorder.length - <span class="number">1</span>, map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TreeNode <span class="title function_">build</span><span class="params">(<span class="type">int</span> si, <span class="type">int</span>[] pre, <span class="type">int</span> sp, <span class="type">int</span> ep,</span></span><br><span class="line"><span class="params">                           HashMap&lt;Integer, Integer&gt; map)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (sp &gt; ep) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TreeNode</span>(pre[sp]);</span><br><span class="line">        <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> map.get(root.val);</span><br><span class="line">        <span class="type">int</span> <span class="variable">leftLen</span> <span class="operator">=</span> idx - si;</span><br><span class="line">        root.left = build(si, pre, sp + <span class="number">1</span>, sp + leftLen, map);</span><br><span class="line">        root.right = build(idx + <span class="number">1</span>, pre, sp + leftLen + <span class="number">1</span>, ep, map);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buildTree</span>(<span class="params">self, preorder: <span class="type">List</span>[<span class="built_in">int</span>], inorder: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> preorder <span class="keyword">or</span> <span class="keyword">not</span> inorder <span class="keyword">or</span> <span class="built_in">len</span>(preorder) != <span class="built_in">len</span>(inorder):</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        indices = &#123;v: i <span class="keyword">for</span> i, v <span class="keyword">in</span> <span class="built_in">enumerate</span>(inorder)&#125;</span><br><span class="line">        <span class="keyword">return</span> self.build(preorder, <span class="number">0</span>, <span class="built_in">len</span>(preorder) - <span class="number">1</span>, <span class="number">0</span>, indices)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">self, pre: <span class="type">List</span>[<span class="built_in">int</span>], sp: <span class="built_in">int</span>, ep: <span class="built_in">int</span>, si: <span class="built_in">int</span>,</span></span><br><span class="line"><span class="params">              indices: <span class="built_in">dict</span></span>) -&gt; TreeNode:</span><br><span class="line">        <span class="keyword">if</span> sp &gt; ep:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        root = TreeNode(pre[sp])</span><br><span class="line">        idx = indices[root.val]</span><br><span class="line">        llen = idx - si</span><br><span class="line"></span><br><span class="line">        root.left = self.build(pre, sp + <span class="number">1</span>, sp + llen, si, indices)</span><br><span class="line">        root.right = self.build(pre, sp + llen + <span class="number">1</span>, ep, idx + <span class="number">1</span>, indices)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h1 id="填充每个节点的下一个右侧节点指针">填充每个节点的下一个右侧节点指针</h1>
+<p>您会得到一棵完美的二叉树，其中所有叶子都在同一水平上，每个父级都有两个孩子。二叉树定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span> &#123;</span></span><br><span class="line">  <span class="type">int</span> val;</span><br><span class="line">  Node *left;</span><br><span class="line">  Node *right;</span><br><span class="line">  Node *next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>填充每个 next 指针以指向其下一个右节点。如果没有下一个右节点，则 next 指针应设置为 NULL。</p>
+<p>最初，所有 next 指针都设置为 NULL。</p>
+<p>Follow up:</p>
+<ul>
+<li>您只能使用常量的额外空间。</li>
+<li>递归方法很好，您可以假定隐式堆栈空间不算作此问题的额外空间。</li>
+</ul>
+<p>Example 1:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d4af01ea9ac3ca3193f50caa8b6a7b8b.png" alt="116-sample"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: root = [1,2,3,4,5,6,7]</span><br><span class="line">Output: [1,#,2,3,#,4,5,6,7,#]</span><br><span class="line">Explanation: 给定上面完美的二叉树（图A），您的函数应该填充每个下一个指针，</span><br><span class="line">以指向其下一个右节点，如图B所示。序列化的输出按层次顺序排列，与下一个指针相连，</span><br><span class="line">并带有 &#x27;＃&#x27; 表示每个层次的结束。</span><br></pre></td></tr></table></figure>
+<p>限制条件：</p>
+<ul>
+<li>给定树中的节点数少于4096。</li>
+<li><code>-1000 &lt;= node.val &lt;= 1000</code></li>
+</ul>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a Node.</span></span><br><span class="line"><span class="comment"> * class Node &#123;</span></span><br><span class="line"><span class="comment"> *     public int val;</span></span><br><span class="line"><span class="comment"> *     public Node left;</span></span><br><span class="line"><span class="comment"> *     public Node right;</span></span><br><span class="line"><span class="comment"> *     public Node next;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     public Node() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     public Node(int _val) &#123;</span></span><br><span class="line"><span class="comment"> *         val = _val;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     public Node(int _val, Node _left, Node _right, Node  * _next) &#123;</span></span><br><span class="line"><span class="comment"> *         val = _val;</span></span><br><span class="line"><span class="comment"> *         left = _left;</span></span><br><span class="line"><span class="comment"> *         right = _right;</span></span><br><span class="line"><span class="comment"> *         next = _next;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Node <span class="title function_">connect</span><span class="params">(Node root)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">levelStart</span> <span class="operator">=</span> root;</span><br><span class="line">        <span class="keyword">while</span> (levelStart != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="type">Node</span> <span class="variable">cur</span> <span class="operator">=</span> levelStart;</span><br><span class="line">            <span class="keyword">while</span> (cur != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (cur.left != <span class="literal">null</span>) &#123;</span><br><span class="line">                    cur.left.next = cur.right;</span><br><span class="line">                    <span class="keyword">if</span> (cur.next != <span class="literal">null</span>) &#123;</span><br><span class="line">                        cur.right.next = cur.next.left;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                cur = cur.next;</span><br><span class="line">            &#125;</span><br><span class="line">            levelStart = levelStart.left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a Node.</span></span><br><span class="line"><span class="comment"># class Node:</span></span><br><span class="line"><span class="comment">#     def __init__(self,</span></span><br><span class="line"><span class="comment">#                  val: int = 0,</span></span><br><span class="line"><span class="comment">#                  left: &#x27;Node&#x27; = None,</span></span><br><span class="line"><span class="comment">#                  right: &#x27;Node&#x27; = None,</span></span><br><span class="line"><span class="comment">#                  next: &#x27;Node&#x27; = None):</span></span><br><span class="line"><span class="comment">#         self.val = val</span></span><br><span class="line"><span class="comment">#         self.left = left</span></span><br><span class="line"><span class="comment">#         self.right = right</span></span><br><span class="line"><span class="comment">#         self.next = next</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connect</span>(<span class="params">self, root: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; <span class="string">&#x27;Node&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        cur = root</span><br><span class="line">        <span class="keyword">while</span> cur.left:</span><br><span class="line">            head = cur.left</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> cur:</span><br><span class="line">                cur.left.<span class="built_in">next</span> = cur.right</span><br><span class="line">                <span class="keyword">if</span> cur.<span class="built_in">next</span>:</span><br><span class="line">                    cur.right.<span class="built_in">next</span> = cur.<span class="built_in">next</span>.left</span><br><span class="line">                cur = cur.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">            cur = head</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h1 id="填充每个节点的下一个右侧节点指针ii">填充每个节点的下一个右侧节点指针II</h1>
+<p>给定一棵二叉树：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span> &#123;</span></span><br><span class="line">  <span class="type">int</span> val;</span><br><span class="line">  Node *left;</span><br><span class="line">  Node *right;</span><br><span class="line">  Node *next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>填充每个 next 指针以指向其下一个右节点。如果没有下一个右节点，则 next 指针应设置为 NULL。</p>
+<p>最初，所有 next 指针都设置为 NULL。</p>
+<p>Follow up:</p>
+<ul>
+<li>您只能使用常量的额外空间。</li>
+<li>递归方法很好，您可以假定隐式堆栈空间不算作此问题的额外空间。</li>
+</ul>
+<p>Example 1:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/099321a3abf9e1118186bb2b101338c9.png" alt="117-sample"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: root = [1,2,3,4,5,null,7]</span><br><span class="line">Output: [1,#,2,3,#,4,5,7,#]</span><br><span class="line">Explanation: 给定上面的二叉树（图A），您的函数应该填充每个下一个指针，</span><br><span class="line">以指向其下一个右节点，如图B所示。序列化的输出按层次顺序排列，与下一个指针相连，</span><br><span class="line">并用 &#x27;＃&#x27; 表示 每个层次的结尾。</span><br></pre></td></tr></table></figure>
+<p>限制条件：</p>
+<ul>
+<li>给定树中的节点数少于6000。</li>
+<li><code>-100 &lt;= node.val &lt;= 100</code></li>
+</ul>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Node <span class="title function_">connect</span><span class="params">(Node root)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">nextHeadDummy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="type">Node</span> <span class="variable">nextLevelCur</span> <span class="operator">=</span> nextHeadDummy;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">cur</span> <span class="operator">=</span> root;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (cur != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (cur.left != <span class="literal">null</span>) &#123;</span><br><span class="line">                    nextLevelCur.next = cur.left;</span><br><span class="line">                    nextLevelCur = nextLevelCur.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (cur.right != <span class="literal">null</span>) &#123;</span><br><span class="line">                    nextLevelCur.next = cur.right;</span><br><span class="line">                    nextLevelCur = nextLevelCur.next;</span><br><span class="line">                &#125;</span><br><span class="line">                cur = cur.next;</span><br><span class="line">            &#125;</span><br><span class="line">            cur = nextHeadDummy.next;</span><br><span class="line">            nextHeadDummy.next = <span class="literal">null</span>;</span><br><span class="line">            nextLevelCur = nextHeadDummy;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a Node.</span></span><br><span class="line"><span class="comment"># class Node:</span></span><br><span class="line"><span class="comment">#     def __init__(self,</span></span><br><span class="line"><span class="comment">#                  val: int = 0,</span></span><br><span class="line"><span class="comment">#                  left: &#x27;Node&#x27; = None,</span></span><br><span class="line"><span class="comment">#                  right: &#x27;Node&#x27; = None,</span></span><br><span class="line"><span class="comment">#                  next: &#x27;Node&#x27; = None):</span></span><br><span class="line"><span class="comment">#         self.val = val</span></span><br><span class="line"><span class="comment">#         self.left = left</span></span><br><span class="line"><span class="comment">#         self.right = right</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connect</span>(<span class="params">self, root: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; <span class="string">&#x27;Node&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        cur = root</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            head, pre = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> cur:</span><br><span class="line">                <span class="keyword">if</span> cur.left:</span><br><span class="line">                    <span class="keyword">if</span> pre:</span><br><span class="line">                        pre.<span class="built_in">next</span> = cur.left</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        head = cur.left</span><br><span class="line">                    pre = cur.left</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> cur.right:</span><br><span class="line">                    <span class="keyword">if</span> pre:</span><br><span class="line">                        pre.<span class="built_in">next</span> = cur.right</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        head = cur.right</span><br><span class="line">                    pre = cur.right</span><br><span class="line"></span><br><span class="line">                cur = cur.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">            cur = head</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h1 id="二叉树的最低共同祖先">二叉树的最低共同祖先</h1>
+<p>给定二叉树，在树中找到两个给定节点的最低公共祖先（LCA）。</p>
+<p>根据<a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Lowest_common_ancestor">Wikipedia上LCA的定义</a>：“最低的共同祖先被定义为两个节点p和q之间的关系，这是T中同时具有p和q作为后代的最低节点（我们允许一个节点成为其自身的后代）。 ”</p>
+<p>给定以下二叉树：<code>root = [3,5,1,6,2,0,8,null,null,7,4]</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f2660bc712bf0a802e26ae97e1677ed6.png" alt="binarytree"></p>
+<p>Example 1:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: The LCA of nodes 5 and 1 is 3.</span><br></pre></td></tr></table></figure>
+<p>Example 2:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4</span><br><span class="line">Output: 5</span><br><span class="line">Explanation: The LCA of nodes 5 and 4 is 5, since a node can be</span><br><span class="line">a descendant of itself according to the LCA definition.</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li>所有节点的值都是唯一的。</li>
+<li>p和q不同，并且两个值都将存在于二叉树中。</li>
+</ul>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> TreeNode <span class="title function_">lowestCommonAncestor</span><span class="params">(TreeNode root, TreeNode p, TreeNode q)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span> || root == p || root == q) &#123;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">left</span> <span class="operator">=</span> lowestCommonAncestor(root.left, p, q);</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">right</span> <span class="operator">=</span> lowestCommonAncestor(root.right, p, q);</span><br><span class="line">        <span class="keyword">if</span> (left != <span class="literal">null</span> &amp;&amp; right != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> left != <span class="literal">null</span> ? left : right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">lowestCommonAncestor</span>(<span class="params">self, root, p, q</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root <span class="keyword">or</span> root == p <span class="keyword">or</span> root == q:</span><br><span class="line">            <span class="keyword">return</span> root</span><br><span class="line"></span><br><span class="line">        left = self.lowestCommonAncestor(root.left, p, q)</span><br><span class="line">        right = self.lowestCommonAncestor(root.right, p, q)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> left <span class="keyword">and</span> right:</span><br><span class="line">            <span class="keyword">return</span> root</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> left <span class="keyword">or</span> right</span><br></pre></td></tr></table></figure>
+<h1 id="二叉树的序列化与反序列化">二叉树的序列化与反序列化</h1>
+<p>序列化是将数据结构或对象转换为位序列的过程，以便可以将其存储在文件或内存缓冲区中，或者通过网络连接进行传输，以便稍后在相同或另一个计算机环境中进行重构。</p>
+<p>设计一种用于对二叉树进行序列化和反序列化的算法。序列化/反序列化算法的工作方式没有任何限制。您只需要确保可以将二叉树序列化为字符串，并且可以将该字符串反序列化为原始树结构。</p>
+<p>Example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">You may serialize the following tree:</span><br><span class="line"></span><br><span class="line">    1</span><br><span class="line">   / \</span><br><span class="line">  2   3</span><br><span class="line">     / \</span><br><span class="line">    4   5</span><br><span class="line"></span><br><span class="line">as &quot;[1,2,3,null,null,4,5]&quot;</span><br></pre></td></tr></table></figure>
+<p>说明：上面的格式与 LeetCode 序列化二叉树的方式相同。您不一定需要遵循这种格式，因此请发挥创造力并自己提出不同的方法。</p>
+<p>注意：不要使用类成员/全局/静态变量来存储状态。您的序列化和反序列化算法应该是无状态的。</p>
+<p><strong>java 参考代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Codec</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DELIMITER</span> <span class="operator">=</span> <span class="string">&quot;,&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PADDING</span> <span class="operator">=</span> <span class="string">&quot;$&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Encodes a tree to a single string.</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">serialize</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        serialize(root, sb);</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">serialize</span><span class="params">(TreeNode root, StringBuilder sb)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">null</span>) &#123;</span><br><span class="line">            sb.append(PADDING).append(DELIMITER);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        sb.append(root.val).append(DELIMITER);</span><br><span class="line">        serialize(root.left, sb);</span><br><span class="line">        serialize(root.right, sb);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Decodes your encoded data to tree.</span></span><br><span class="line">    <span class="keyword">public</span> TreeNode <span class="title function_">deserialize</span><span class="params">(String data)</span> &#123;</span><br><span class="line">        LinkedList&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;(Arrays.asList(data.split(DELIMITER)));</span><br><span class="line">        <span class="keyword">return</span> deserialize(queue);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TreeNode <span class="title function_">deserialize</span><span class="params">(LinkedList&lt;String&gt; queue)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">val</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">        <span class="keyword">if</span> (PADDING.equals(val)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TreeNode</span>(Integer.valueOf(val));</span><br><span class="line">        root.left = deserialize(queue);</span><br><span class="line">        root.right = deserialize(queue);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Your Codec object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment">// Codec codec = new Codec();</span></span><br><span class="line"><span class="comment">// codec.deserialize(codec.serialize(root));</span></span><br></pre></td></tr></table></figure>
+<p><strong>python 参考代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Codec</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">serialize</span>(<span class="params">self, root: TreeNode</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Encodes a tree to a single string.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            root (TreeNode): the root of tree</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            str: a serial str of binary tree</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        res = []</span><br><span class="line">        self._serial(root, res)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;,&#x27;</span>.join(res)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_serial</span>(<span class="params">self, root: TreeNode, res: <span class="type">List</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            res.append(<span class="string">&#x27;#&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        res.append(<span class="built_in">str</span>(root.val))</span><br><span class="line">        self._serial(root.left, res)</span><br><span class="line">        self._serial(root.right, res)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deserialize</span>(<span class="params">self, data: <span class="built_in">str</span></span>) -&gt; TreeNode:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Decodes your encoded data to tree.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            data (str): a serial str of binary tree</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            TreeNode: the root of tree</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        data = data.split(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">        data.reverse()</span><br><span class="line">        <span class="keyword">return</span> self._deserial(data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_deserial</span>(<span class="params">self, data: <span class="type">List</span>[<span class="built_in">str</span>]</span>) -&gt; TreeNode:</span><br><span class="line">        val = data.pop()</span><br><span class="line">        <span class="keyword">if</span> val == <span class="string">&#x27;#&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        root = TreeNode(<span class="built_in">int</span>(val))</span><br><span class="line">        root.left = self._deserial(data)</span><br><span class="line">        root.right = self._deserial(data)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> root</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Your Codec object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"># codec = Codec()</span></span><br><span class="line"><span class="comment"># codec.deserialize(codec.serialize(root))</span></span><br></pre></td></tr></table></figure>
+<h1 id="references">References</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/942/">https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/942/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/943/">https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/943/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/994/">https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/994/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/1016/">https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/1016/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/932/">https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/932/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/995/">https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/995/</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-04-25</div>
+      <div class="popular-posts-title"><a href="/posts/e85d694a/" rel="bookmark">二叉树</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>了解树和二叉树的相关概念；</p>
+<p>理解不同遍历方法的工作原理，掌握相应遍历方法的递归和迭代实现；</p>
+<ul>
+<li>前序遍历</li>
+<li>中序遍历</li>
+<li>后序遍历</li>
+<li>层次遍历</li>
+</ul><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-05-24</div>
+      <div class="popular-posts-title"><a href="/posts/89cdb724/" rel="bookmark">筛法求素数</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">埃拉托斯特尼筛法</a> 和 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Euler&#39;s_sieve">欧拉线性筛法</a> 的基本原理，并以此思路实现这两种求素数的算法。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-05-02</div>
+      <div class="popular-posts-title"><a href="/posts/657c0b00/" rel="bookmark">递归地解决树问题</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>在前面的部分中，我们介绍了如何递归解决<a href="https://wylu.me/posts/e85d694a">树遍历</a>问题。<strong>递归</strong>是解决树问题的最强大，最常用的技术之一。</p>
+<p>众所周知，树可以递归定义为一个节点（根节点），该节点包含一个值和对子节点的引用列表。递归是树的自然特征之一。因此，许多树问题可以递归解决。对于每个递归函数调用，我们仅关注当前节点的问题，然后递归调用函数以解决其子级。</p>
+<p>通常，我们可以使用 <strong>自上而下</strong> 的方法或 <strong>自下而上</strong> 的方法递归地解决树问题。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-12</div>
+      <div class="popular-posts-title"><a href="/posts/940b8194/" rel="bookmark">Hexo资源文件夹</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍 Hexo 资源文件夹的使用，以及解决如何以相对路径的方式引用图片使其能够在主页和文章中正常显示。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-03-29</div>
+      <div class="popular-posts-title"><a href="/posts/8100d913/" rel="bookmark">python 自定义比较函数</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Python 列表具有内置的 list.sort() 方法，该方法可就地修改列表。还有一个 sorted() 内置函数，可从迭代器构建新的排序列表。</p>
+<p>因为 Python3 中 sorted() 和 list.sort() 放弃了类似 C++ 中的 cmp 写法，本文将展示官方推荐替代解决方案，以实现自定义的两个参数的比较函数，并详细分析了 cmp_to_key 函数实现原理。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/cb350e7d/" title="二叉树练习">https://wylu.me/posts/cb350e7d/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 二叉树</a>
+              <a href="/tags/binary-tree/" rel="tag"><i class="fa fa-tag"></i> binary-tree</a>
+              <a href="/tags/%E7%BB%83%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 练习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/657c0b00/" rel="prev" title="递归地解决树问题">
+                  <i class="fa fa-chevron-left"></i> 递归地解决树问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/5e36b8b8/" rel="next" title="Morris Traversal">
+                  Morris Traversal <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="a0aea659b63a6ade757388483ae0300c"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

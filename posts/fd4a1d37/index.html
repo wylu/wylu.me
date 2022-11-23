@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="对于互联网应用来说，我们要尽量保证服务的不可间断性，一旦出现故障需要尽快的恢复。MongoDB 的副本集模式主要解决了在其主从模式下故障无法自动转移的情况，自动实现高可用。三个成员副本集提供足够的冗余性，以承受大多数网络分区和其他系统故障，这些集合对于许多分布式读取操作也具有足够的容量。本文介绍如何从三个现有 mongod 实例创建三成员副本集，包括不启用访问控制的和启用访问控制的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB副本集搭建">
+<meta property="og:url" content="https://wylu.me/posts/fd4a1d37/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="对于互联网应用来说，我们要尽量保证服务的不可间断性，一旦出现故障需要尽快的恢复。MongoDB 的副本集模式主要解决了在其主从模式下故障无法自动转移的情况，自动实现高可用。三个成员副本集提供足够的冗余性，以承受大多数网络分区和其他系统故障，这些集合对于许多分布式读取操作也具有足够的容量。本文介绍如何从三个现有 mongod 实例创建三成员副本集，包括不启用访问控制的和启用访问控制的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/71ff1feced2a2fa4d924c9ed148c4437.svg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/a65dbacf011bf17efb8c12d1f8658b2f.svg">
+<meta property="article:published_time" content="2020-04-04T06:46:47.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:43:18.943Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="mongodb">
+<meta property="article:tag" content="replica-set">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/71ff1feced2a2fa4d924c9ed148c4437.svg">
+
+
+<link rel="canonical" href="https://wylu.me/posts/fd4a1d37/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/fd4a1d37/","path":"posts/fd4a1d37/","title":"MongoDB副本集搭建"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MongoDB副本集搭建 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mongodb%E5%89%AF%E6%9C%AC%E9%9B%86%E6%90%AD%E5%BB%BA"><span class="nav-text">MongoDB副本集搭建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E6%88%90%E5%91%98%E5%89%AF%E6%9C%AC%E9%9B%86%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F"><span class="nav-text">三成员副本集部署模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#p-s-s"><span class="nav-text">P-S-S</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E"><span class="nav-text">部署说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%8F%90"><span class="nav-text">前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E9%9B%86%E5%90%8D%E7%A7%B0"><span class="nav-text">副本集名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-text">基于命令行参数的部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-text">基于配置文件的部署</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81"><span class="nav-text">启用身份验证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7"><span class="nav-text">创建一个用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-keyfile"><span class="nav-text">创建 KeyFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81"><span class="nav-text">测试密码认证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%A4%B1%E8%B4%A5"><span class="nav-text">初始化失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E8%AE%A4%E8%AF%81%E5%90%8E-secondary-%E8%AF%BB%E5%8F%96%E5%A4%B1%E8%B4%A5"><span class="nav-text">开启认证后 SECONDARY 读取失败</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/fd4a1d37/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MongoDB副本集搭建 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MongoDB副本集搭建
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-04 14:46:47" itemprop="dateCreated datePublished" datetime="2020-04-04T14:46:47+08:00">2020-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:43:18" itemprop="dateModified" datetime="2022-11-23T23:43:18+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web/mongo/" itemprop="url" rel="index"><span itemprop="name">mongo</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>对于互联网应用来说，我们要尽量保证服务的不可间断性，一旦出现故障需要尽快的恢复。MongoDB 的副本集模式主要解决了在其主从模式下故障无法自动转移的情况，自动实现高可用。三个成员副本集提供足够的冗余性，以承受大多数网络分区和其他系统故障，这些集合对于许多分布式读取操作也具有足够的容量。本文介绍如何从三个现有 mongod 实例创建三成员副本集，包括不启用访问控制的和启用访问控制的。</p>
+<span id="more"></span>
+<h1 id="mongodb副本集搭建">MongoDB副本集搭建</h1>
+<p>MongoDB Replica Set</p>
+<h1 id="三成员副本集部署模式">三成员副本集部署模式</h1>
+<h2 id="p-s-s">P-S-S</h2>
+<p>Primary with Two Secondary Members 是具有三个存储数据的成员的副本集部署模式，它包含：</p>
+<ul>
+<li>一个主节点 primary</li>
+<li>两个副节点 secondary （每个副节点都可以被选举为主节点）</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/71ff1feced2a2fa4d924c9ed148c4437.svg" alt="P-S-S"></p>
+<p>除 primary 成员外，P-S-S 部署始终提供数据集的两个完整副本。这些副本集提供了额外的容错能力和高可用性。 如果主服务器不可用，则副本集将 secondary 成员选为 primary 并继续正常操作。原本的 primary 在可用时会重新加入副本集。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a65dbacf011bf17efb8c12d1f8658b2f.svg" alt="elect"></p>
+<h1 id="环境准备">环境准备</h1>
+<ul>
+<li>系统系统：CentOS7 64位</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Replica Set Member</th>
+<th>Hostname</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>rs0-0</td>
+<td>127.0.0.1:27017</td>
+</tr>
+<tr class="even">
+<td>rs0-1</td>
+<td>127.0.0.1:27018</td>
+</tr>
+<tr class="odd">
+<td>rs0-2</td>
+<td>127.0.0.1:27019</td>
+</tr>
+</tbody>
+</table>
+<h1 id="部署说明">部署说明</h1>
+<p>下面将一个示例说明在单机部署一个 P-S-S 集群的流程。</p>
+<h2 id="前提">前提</h2>
+<p>对于测试和开发环境，您可以在本地系统或虚拟实例中运行 mongod 实例。</p>
+<p>在部署副本集之前，必须在将成为副本集一部分的每个系统上安装 MongoDB。</p>
+<p>每个成员都必须能够连接到其他每个成员。</p>
+<h2 id="副本集名称">副本集名称</h2>
+<p>此过程中的示例创建一个名为 rs0 的新副本集。</p>
+<p>如果您的应用程序连接到多个副本集，则每个副本集应具有不同的名称。某些驱动程序通过副本集名称对副本集连接进行分组。</p>
+<h2 id="基于命令行参数的部署">基于命令行参数的部署</h2>
+<ol type="1">
+<li><p>通过执行类似于下列示例的命令，为每个成员创建必要的数据目录，它们将存储 mongod 实例的数据库文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /srv/mongodb/rs0-0/data /srv/mongodb/rs0-1/data /srv/mongodb/rs0-2/data</span><br></pre></td></tr></table></figure></li>
+<li><p>通过下列命令，在终端窗口中启动 mongod 实例：</p>
+<p>启动第一个成员</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-0/data --oplogSize 128 &amp;</span><br></pre></td></tr></table></figure>
+<p>启动第二个成员</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup mongod --replSet rs0 --port 27018 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-1/data --oplogSize 128 &amp;</span><br></pre></td></tr></table></figure>
+<p>启动第三个成员</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup mongod --replSet rs0 --port 27019 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-2/data --oplogSize 128 &amp;</span><br></pre></td></tr></table></figure>
+<p>通过上面的启动，将使每个实例作为名为 rs0 的副本集的成员，每个副本集都在不同的端口上运行，并使用 <code>--dbpath</code> 设置指定数据目录的路径。如果您已经在使用建议的端口，请选择其他端口。</p>
+<p>这些实例同时绑定到主机的 localhost 和 ip 地址。</p>
+<p><code>--oplogSize</code> 设置减少了每个 mongod 实例使用的磁盘空间。这是测试和开发部署的理想选择，因为它可以防止计算机过载。有关此配置选项和其他配置选项的更多信息，请参阅 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/configuration-options/">配置文件选项</a>。</p></li>
+<li><p>通过 mongo shell 连接到您的 mongod 实例之一。您需要通过指定其端口号来指示哪个实例。为了简单明了，直接连接第一个，如以下命令所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 27017</span><br></pre></td></tr></table></figure></li>
+<li><p>在 mongo shell 中，使用 <code>rs.initiate()</code> 初始化副本集。您可以在 mongo shell 环境中创建副本集配置对象，如以下示例所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">rsconf = &#123;</span><br><span class="line">  _id: &quot;rs0&quot;,</span><br><span class="line">  members: [</span><br><span class="line">    &#123;</span><br><span class="line">     _id: 0,</span><br><span class="line">     host: &quot;127.0.0.1:27017&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">     _id: 1,</span><br><span class="line">     host: &quot;127.0.0.1:27018&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">     _id: 2,</span><br><span class="line">     host: &quot;127.0.0.1:27019&quot;</span><br><span class="line">    &#125;</span><br><span class="line">   ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据实际情况替换为系统的主机名和端口，然后将 rsconf 文件传递给 <code>rs.initiate()</code>，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rs.initiate( rsconf )</span><br></pre></td></tr></table></figure></li>
+<li><p>通过以下命令来显示当前 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/replica-configuration/">副本配置</a>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rs.conf()</span><br></pre></td></tr></table></figure>
+<p>副本集配置对象类似于以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">   <span class="attr">&quot;_id&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;rs0&quot;</span><span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;version&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;protocolVersion&quot;</span> <span class="punctuation">:</span> NumberLong(<span class="number">1</span>)<span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;members&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">         <span class="attr">&quot;_id&quot;</span> <span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;host&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;&lt;hostname&gt;:27017&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;arbiterOnly&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;buildIndexes&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;hidden&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;priority&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;tags&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">         <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;slaveDelay&quot;</span> <span class="punctuation">:</span> NumberLong(<span class="number">0</span>)<span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;votes&quot;</span> <span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">         <span class="attr">&quot;_id&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;host&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;&lt;hostname&gt;:27018&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;arbiterOnly&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;buildIndexes&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;hidden&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;priority&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;tags&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">         <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;slaveDelay&quot;</span> <span class="punctuation">:</span> NumberLong(<span class="number">0</span>)<span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;votes&quot;</span> <span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">         <span class="attr">&quot;_id&quot;</span> <span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;host&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;&lt;hostname&gt;:27019&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;arbiterOnly&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;buildIndexes&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;hidden&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;priority&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;tags&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">         <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;slaveDelay&quot;</span> <span class="punctuation">:</span> NumberLong(<span class="number">0</span>)<span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;votes&quot;</span> <span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">   <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">   <span class="attr">&quot;settings&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;chainingAllowed&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;heartbeatIntervalMillis&quot;</span> <span class="punctuation">:</span> <span class="number">2000</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;heartbeatTimeoutSecs&quot;</span> <span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;electionTimeoutMillis&quot;</span> <span class="punctuation">:</span> <span class="number">10000</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;catchUpTimeoutMillis&quot;</span> <span class="punctuation">:</span> <span class="number">-1</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;getLastErrorModes&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;getLastErrorDefaults&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">         <span class="attr">&quot;w&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;wtimeout&quot;</span> <span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;replicaSetId&quot;</span> <span class="punctuation">:</span> ObjectId(<span class="string">&quot;598f630adc9053c6ee6d5f38&quot;</span>)</span><br><span class="line">   <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>随时使用 <code>rs.status()</code> 检查副本集的状态。</p>
+<p>从运行该方法的成员的角度返回副本集状态。此方法为 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#dbcmd.replSetGetStatus">replSetGetStatus</a> 命令提供了包装。</p>
+<p>此输出使用从副本集其他成员发送的心跳数据包派生的数据反映副本集的当前状态。</p></li>
+</ol>
+<h2 id="基于配置文件的部署">基于配置文件的部署</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/configuration-options/">https://docs.mongodb.com/manual/reference/configuration-options/</a></p>
+<ol type="1">
+<li><p>创建日志文件目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /srv/mongodb/rs0-0/log /srv/mongodb/rs0-1/log /srv/mongodb/rs0-2/log</span><br></pre></td></tr></table></figure></li>
+<li><p>创建配置文件目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /srv/mongodb/conf</span><br></pre></td></tr></table></figure></li>
+<li><p>创建每个成员的配置文件</p>
+<p>第一个成员的配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /srv/mongodb/conf/rs0-0.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">systemLog:</span></span><br><span class="line">   <span class="attr">destination:</span> <span class="string">file</span></span><br><span class="line">   <span class="attr">path:</span> <span class="string">/srv/mongodb/rs0-0/log/mongod.log</span></span><br><span class="line">   <span class="attr">logAppend:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">   <span class="attr">dbPath:</span> <span class="string">/srv/mongodb/rs0-0/data</span></span><br><span class="line">   <span class="attr">journal:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">processManagement:</span></span><br><span class="line">   <span class="attr">fork:</span> <span class="literal">true</span></span><br><span class="line">   <span class="attr">pidFilePath:</span> <span class="string">/srv/mongodb/rs0-0/mongod.pid</span></span><br><span class="line"><span class="attr">replication:</span></span><br><span class="line">   <span class="attr">replSetName:</span> <span class="string">rs0</span></span><br><span class="line">   <span class="attr">oplogSizeMB:</span> <span class="number">128</span></span><br><span class="line"><span class="attr">net:</span></span><br><span class="line">   <span class="attr">bindIp:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">   <span class="attr">port:</span> <span class="number">27017</span></span><br><span class="line"><span class="comment"># security:</span></span><br><span class="line"><span class="comment">#     keyFile: /srv/mongodb/mongodb.key</span></span><br><span class="line"><span class="comment">#     authorization: disabled</span></span><br></pre></td></tr></table></figure>
+<p>第二个成员的配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /srv/mongodb/conf/rs0-1.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">systemLog:</span></span><br><span class="line">   <span class="attr">destination:</span> <span class="string">file</span></span><br><span class="line">   <span class="attr">path:</span> <span class="string">/srv/mongodb/rs0-1/log/mongod.log</span></span><br><span class="line">   <span class="attr">logAppend:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">   <span class="attr">dbPath:</span> <span class="string">/srv/mongodb/rs0-1/data</span></span><br><span class="line">   <span class="attr">journal:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">processManagement:</span></span><br><span class="line">   <span class="attr">fork:</span> <span class="literal">true</span></span><br><span class="line">   <span class="attr">pidFilePath:</span> <span class="string">/srv/mongodb/rs0-1/mongod.pid</span></span><br><span class="line"><span class="attr">replication:</span></span><br><span class="line">   <span class="attr">replSetName:</span> <span class="string">rs0</span></span><br><span class="line">   <span class="attr">oplogSizeMB:</span> <span class="number">128</span></span><br><span class="line"><span class="attr">net:</span></span><br><span class="line">   <span class="attr">bindIp:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">   <span class="attr">port:</span> <span class="number">27018</span></span><br><span class="line"><span class="comment"># security:</span></span><br><span class="line"><span class="comment">#     keyFile: /srv/mongodb/mongodb.key</span></span><br><span class="line"><span class="comment">#     authorization: disabled</span></span><br></pre></td></tr></table></figure>
+<p>第三个成员的配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /srv/mongodb/conf/rs0-2.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">systemLog:</span></span><br><span class="line">   <span class="attr">destination:</span> <span class="string">file</span></span><br><span class="line">   <span class="attr">path:</span> <span class="string">/srv/mongodb/rs0-2/log/mongod.log</span></span><br><span class="line">   <span class="attr">logAppend:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line">   <span class="attr">dbPath:</span> <span class="string">/srv/mongodb/rs0-2/data</span></span><br><span class="line">   <span class="attr">journal:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">processManagement:</span></span><br><span class="line">   <span class="attr">fork:</span> <span class="literal">true</span></span><br><span class="line">   <span class="attr">pidFilePath:</span> <span class="string">/srv/mongodb/rs0-2/mongod.pid</span></span><br><span class="line"><span class="attr">replication:</span></span><br><span class="line">   <span class="attr">replSetName:</span> <span class="string">rs0</span></span><br><span class="line">   <span class="attr">oplogSizeMB:</span> <span class="number">128</span></span><br><span class="line"><span class="attr">net:</span></span><br><span class="line">   <span class="attr">bindIp:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">   <span class="attr">port:</span> <span class="number">27019</span></span><br><span class="line"><span class="comment"># security:</span></span><br><span class="line"><span class="comment">#     keyFile: /srv/mongodb/mongodb.key</span></span><br><span class="line"><span class="comment">#     authorization: disabled</span></span><br></pre></td></tr></table></figure></li>
+<li><p>启动副本集成员</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /srv/mongodb/conf/rs0-0.conf</span><br><span class="line">mongod -f /srv/mongodb/conf/rs0-1.conf</span><br><span class="line">mongod -f /srv/mongodb/conf/rs0-2.conf</span><br></pre></td></tr></table></figure></li>
+<li><p>查看 mongod 进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep mongod</span><br></pre></td></tr></table></figure>
+<p>剩余初始副本集的步骤与上面命令行方式部署的操作相同。</p></li>
+</ol>
+<h1 id="启用身份验证">启用身份验证</h1>
+<p>默认情况下，MongoDB 不会进行身份验证，也没有账号，只要能连接上服务就可以对数据库进行各种操作，出于安全角度考虑，我们应当为其添加认证访问。</p>
+<p>通过 <code>--auth</code> 选项可以开启身份认证，此外，副本集设置身份验证与单机不同，需要增加一个 <code>keyFile</code> 以便副本集成员相互认证。</p>
+<h2 id="创建一个用户">创建一个用户</h2>
+<p>首先创建一个用于身份验证的用户，首先使用 mongo shell 连接到集群的 primary 节点，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 27017</span><br></pre></td></tr></table></figure>
+<p>切换到 admin 数据库：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br></pre></td></tr></table></figure>
+<p>在 admin 下创建用户 root：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.createUser(&#123;</span><br><span class="line">  user: &quot;root&quot;,</span><br><span class="line">  pwd: &quot;toor&quot;,</span><br><span class="line">  roles: [</span><br><span class="line">    &#123;role: &quot;userAdminAnyDatabase&quot;, db:&quot;admin&quot;&#125;,</span><br><span class="line">    &#123;role: &quot;readWriteAnyDatabase&quot;, db: &quot;admin&quot;&#125;,</span><br><span class="line">    &#123;role:&quot;clusterAdmin&quot;, db:&quot;admin&quot;&#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="创建-keyfile">创建 KeyFile</h2>
+<p>这个文件需要满足下面几点要求：</p>
+<ul>
+<li>文本长度需要在 6 和 1024 之间</li>
+<li>认证时候不考虑文件中空白字符</li>
+<li>连接到副本集的成员和 mongos 进程的 keyfile 文件内容必须一样</li>
+<li>必须是 base64 编码，但是不能有等号</li>
+<li>文件权限必须是 X00，也就是说，不能分配任何权限给 group 成员和 other 成员</li>
+</ul>
+<p>我们可以在 Linux 上直接使用 openssl 创建一个这样的文件，然后上传至其他副本集成员服务器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -base64 512 &gt; mongodb.key</span><br><span class="line">chmod 400 mongodb.key</span><br></pre></td></tr></table></figure>
+<h2 id="修改配置文件">修改配置文件</h2>
+<p>如果你是通过配置文件形式部署的副本集，那么需要修改对应成员的配置：</p>
+<p>（假设 Key File 文件在 <code>/srv/mongodb</code> 目录下）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">keyFile:</span> <span class="string">/srv/mongodb/mongodb.key</span></span><br><span class="line"><span class="attr">authorization:</span> <span class="string">enabled</span></span><br></pre></td></tr></table></figure>
+<p>如果你是直接通过命令行参数形式启动的副本集，那么需要使用 <code>--auth</code> 选项并指定 <code>--keyFile</code>，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-0 --auth --keyFile=/srv/mongodb/mongodb.key --oplogSize 128 &amp;</span><br></pre></td></tr></table></figure>
+<h2 id="测试密码认证">测试密码认证</h2>
+<p>关闭三个 mongod 服务实例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">killall mongod</span><br></pre></td></tr></table></figure>
+<p>添加 <code>--auth</code> 和 <code>--keyFile</code> 选项重新启动 mongod：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动第一个成员</span></span><br><span class="line">nohup mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-0  --auth --keyFile=/srv/mongodb/mongodb.key --oplogSize 128 &amp;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动第二个成员</span></span><br><span class="line">nohup mongod --replSet rs0 --port 27018 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-1  --auth --keyFile=/srv/mongodb/mongodb.key --oplogSize 128 &amp;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动第三个成员</span></span><br><span class="line">nohup mongod --replSet rs0 --port 27019 --bind_ip 0.0.0.0 --dbpath /srv/mongodb/rs0-2  --auth --keyFile=/srv/mongodb/mongodb.key --oplogSize 128 &amp;</span><br></pre></td></tr></table></figure>
+<p>重启 mongodb ，第一次登陆时，直接查询会报权限错误，使用 <code>db.auth()</code> 认证后就可以成功读取数据库了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">rs0:PRIMARY&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">rs0:PRIMARY&gt; db.auth(&#x27;root&#x27;, &#x27;toor&#x27;)</span><br><span class="line">1</span><br><span class="line">rs0:PRIMARY&gt; show dbs</span><br><span class="line">admin   0.000GB</span><br><span class="line">config  0.000GB</span><br><span class="line">local   0.000GB</span><br><span class="line">test    0.000GB</span><br><span class="line">rs0:PRIMARY&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="问题">问题</h1>
+<h2 id="初始化失败">初始化失败</h2>
+<p>在初始化一个 MongoDB 副本集的过程中，出现了初始化失败，报 "No host described in new configuration 1 for replica set mongotest maps to this node"。具体报错信息如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">rsconf = &#123;</span></span><br><span class="line">...   _id: &quot;rs0&quot;,</span><br><span class="line">...   members: [</span><br><span class="line">...     &#123;</span><br><span class="line">...      _id: 0,</span><br><span class="line">...      host: &quot;0.0.0.0:27017&quot;</span><br><span class="line">...     &#125;,</span><br><span class="line">...     &#123;</span><br><span class="line">...      _id: 1,</span><br><span class="line">...      host: &quot;0.0.0.0:27018&quot;</span><br><span class="line">...     &#125;,</span><br><span class="line">...     &#123;</span><br><span class="line">...      _id: 2,</span><br><span class="line">...      host: &quot;0.0.0.0:27019&quot;</span><br><span class="line">...     &#125;</span><br><span class="line">...    ]</span><br><span class="line">... &#125;</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">rs.initiate( rsconf )</span></span><br><span class="line">&#123;</span><br><span class="line">        &quot;operationTime&quot; : Timestamp(0, 0),</span><br><span class="line">        &quot;ok&quot; : 0,</span><br><span class="line">        &quot;errmsg&quot; : &quot;No host described in new configuration 1 for replica set rs0 maps to this node&quot;,</span><br><span class="line">        &quot;code&quot; : 93,</span><br><span class="line">        &quot;codeName&quot; : &quot;InvalidReplicaSetConfig&quot;,</span><br><span class="line">        &quot;$clusterTime&quot; : &#123;</span><br><span class="line">                &quot;clusterTime&quot; : Timestamp(0, 0),</span><br><span class="line">                &quot;signature&quot; : &#123;</span><br><span class="line">                        &quot;hash&quot; : BinData(0,&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAA=&quot;),</span><br><span class="line">                        &quot;keyId&quot; : NumberLong(0)</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解决方法，将 rsconf 中的 IP 替换为真正的 IP，如：127.0.0.1。</p>
+<h2 id="开启认证后-secondary-读取失败">开启认证后 SECONDARY 读取失败</h2>
+<p>"errmsg" : "not master and slaveOk=false" 的解决办法参考：</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/8990158/mongodb-replicates-and-error-err-not-master-and-slaveok-false-code">https://stackoverflow.com/questions/8990158/mongodb-replicates-and-error-err-not-master-and-slaveok-false-code</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">rs0:SECONDARY&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">rs0:SECONDARY&gt; db.auth(&#x27;root&#x27;, &#x27;toor&#x27;)</span><br><span class="line">1</span><br><span class="line">rs0:SECONDARY&gt; show dbs</span><br><span class="line">2020-03-30T12:03:51.218+0800 E  QUERY    [js] uncaught exception: Error: listDatabases failed:&#123;</span><br><span class="line">        &quot;operationTime&quot; : Timestamp(1585541025, 1),</span><br><span class="line">        &quot;ok&quot; : 0,</span><br><span class="line">        &quot;errmsg&quot; : &quot;not master and slaveOk=false&quot;,</span><br><span class="line">        &quot;code&quot; : 13435,</span><br><span class="line">        &quot;codeName&quot; : &quot;NotMasterNoSlaveOk&quot;,</span><br><span class="line">        &quot;$clusterTime&quot; : &#123;</span><br><span class="line">                &quot;clusterTime&quot; : Timestamp(1585541025, 1),</span><br><span class="line">                &quot;signature&quot; : &#123;</span><br><span class="line">                        &quot;hash&quot; : BinData(0,&quot;DHLkVZz2fe4aeAjIxEmkHu9FhBE=&quot;),</span><br><span class="line">                        &quot;keyId&quot; : NumberLong(&quot;6809843876723949571&quot;)</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125; :</span><br><span class="line">_getErrorWithCode@src/mongo/shell/utils.js:25:13</span><br><span class="line">Mongo.prototype.getDBs/&lt;@src/mongo/shell/mongo.js:135:19</span><br><span class="line">Mongo.prototype.getDBs@src/mongo/shell/mongo.js:87:12</span><br><span class="line">shellHelper.show@src/mongo/shell/utils.js:906:13</span><br><span class="line">shellHelper@src/mongo/shell/utils.js:790:15</span><br><span class="line">@(shellhelp2):1:1</span><br><span class="line">rs0:SECONDARY&gt; rs.slaveOk()</span><br><span class="line">rs0:SECONDARY&gt; show dbs</span><br><span class="line">admin   0.000GB</span><br><span class="line">config  0.000GB</span><br><span class="line">local   0.000GB</span><br><span class="line">rs0:SECONDARY&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="references">References</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/configuration-options/">https://docs.mongodb.com/manual/reference/configuration-options/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.ibm.com/developerworks/cn/opensource/os-mongodb-replication/index.html">https://www.ibm.com/developerworks/cn/opensource/os-mongodb-replication/index.html</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/core/retryable-writes/#retryable-writes">https://docs.mongodb.com/manual/core/retryable-writes/#retryable-writes</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/configuration-file-settings-command-line-options-mapping/#conf-file-command-line-mapping">Configuration File Settings and Command-Line Options Mapping</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-03-25</div>
+      <div class="popular-posts-title"><a href="/posts/696d9dac/" rel="bookmark">CentOS7安装及卸载MongoDB</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1fe9c6f8b2d85e81b79e17c93396ad4c.jpg" alt="mongodb"></p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-03-25</div>
+      <div class="popular-posts-title"><a href="/posts/7043b2c8/" rel="bookmark">远程连接MongoDB</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><img src="https://cdn.jsdelivr.net/gh/wylu/img/74a90895f17097ef8c1a4fe90737282c.png" alt="robo3t"></p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-04-04</div>
+      <div class="popular-posts-title"><a href="/posts/e54730f4/" rel="bookmark">MongoDB分片集群搭建</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>在如今的互联网环境下，海量数据已随处可见并且还在不断增长，对于如何存储处理海量数据，比较常见的方法有两种：</p>
+<ul>
+<li><strong>垂直扩展</strong>：通过增加单台服务器的配置，例如使用更强悍的 CPU、更大的内存、更大容量的磁盘，此种方法虽然成本很高，但是实现比较简单，维护起来也比较方便。</li>
+<li><strong>水平扩展</strong>：通过使用更多配置一般的服务器来共同承担工作负载，此种方法很灵活，可以根据工作负载的大小动态增减服务器的数量，但是实现比较复杂，得有专门的人员来运维。</li>
+</ul>
+<p>MongoDB 支持通过分片技术从而进行水平扩展，用以支撑海量数据集和高吞吐量的操作。如果数据集不够大，还是建议您使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/replication/">MongoDB 副本集</a>，因为分片需要处理更多的技术细节，所以在分片环境下其性能可能始终没有副本集性能强。本文通过介绍如何搭建 MongoDB 分片集群以及及一些相关核心概念，可以帮您快速理解 MongoDB 是如何通过分片技术来处理海量数据的。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/fd4a1d37/" title="MongoDB副本集搭建">https://wylu.me/posts/fd4a1d37/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/mongodb/" rel="tag"><i class="fa fa-tag"></i> mongodb</a>
+              <a href="/tags/replica-set/" rel="tag"><i class="fa fa-tag"></i> replica-set</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/9d582ac3/" rel="prev" title="Hexo NexT主题博客接入谷歌广告">
+                  <i class="fa fa-chevron-left"></i> Hexo NexT主题博客接入谷歌广告
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/e54730f4/" rel="next" title="MongoDB分片集群搭建">
+                  MongoDB分片集群搭建 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="fc3702c38a364cd6c1fba7c2c656b1ca"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

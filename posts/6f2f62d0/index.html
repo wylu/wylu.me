@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Hexo配置NexT主题">
+<meta property="og:url" content="https://wylu.me/posts/6f2f62d0/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/5f9817e7c2fd8745e73fd4788617bba4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2afbbc17939fa78a52fe4d81d7075b8c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/8f9f558fda25195afa0dcdd74ec8c414.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/344960fb309535f6577f9f5b5f4c0908.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/0e60b9cd331d695fc2daf19a13070e12.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/03d2a3bc68ccbe5776bae52a125a9e48.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/255376cd7f83e09e9fb74e49697b432e.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/d13981a985b2c5a07bb76e55a525a969.png">
+<meta property="article:published_time" content="2019-04-13T04:01:51.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:43:04.363Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/5f9817e7c2fd8745e73fd4788617bba4.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/6f2f62d0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/6f2f62d0/","path":"posts/6f2f62d0/","title":"Hexo配置NexT主题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hexo配置NexT主题 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%8A%E7%89%88%E6%9C%AC%E5%A3%B0%E6%98%8E"><span class="nav-text">环境及版本声明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#next-%E4%B8%BB%E9%A2%98%E7%AE%80%E4%BB%8B"><span class="nav-text">NexT 主题简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E7%BA%A6%E5%AE%9A"><span class="nav-text">描述约定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E9%80%89%E6%8B%A9"><span class="nav-text">主题选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-next"><span class="nav-text">安装 NexT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E4%B8%BB%E9%A2%98"><span class="nav-text">下载主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E4%B8%BB%E9%A2%98"><span class="nav-text">启用主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E4%B8%BB%E9%A2%98"><span class="nav-text">验证主题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="nav-text">主题版本管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC1%E7%A7%8D-%E5%B0%86%E5%B5%8C%E5%A5%97%E4%BB%93%E5%BA%93%E7%BA%B3%E5%85%A5%E5%BD%93%E5%89%8D%E4%BB%93%E5%BA%93"><span class="nav-text">第1种 将嵌套仓库纳入当前仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC2%E7%A7%8D-%E4%BD%BF%E7%94%A8-git-submodule"><span class="nav-text">第2种 使用 git submodule</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#add-%E4%B8%80%E4%B8%AA-submodule"><span class="nav-text">add 一个 submodule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clone-%E5%90%AB%E6%9C%89%E5%AD%90%E6%A8%A1%E5%9D%97%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-text">clone 含有子模块的项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#update-%E9%A1%B9%E7%9B%AE%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="nav-text">update 项目子模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC3%E7%A7%8D-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93"><span class="nav-text">第3种 创建自己的主题仓库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%89%E6%8B%A9-scheme"><span class="nav-text">选择 Scheme</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E4%B8%BB%E9%A2%98%E8%AF%AD%E8%A8%80"><span class="nav-text">设置主题语言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%8F%9C%E5%8D%95"><span class="nav-text">设置菜单</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#next-%E9%BB%98%E8%AE%A4%E8%8F%9C%E5%8D%95%E9%A1%B9"><span class="nav-text">NexT 默认菜单项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%8F%9C%E5%8D%95%E9%A1%B9%E6%98%BE%E7%A4%BA%E6%96%87%E6%9C%AC"><span class="nav-text">设置菜单项显示文本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%8F%9C%E5%8D%95%E9%A1%B9%E5%9B%BE%E6%A0%87"><span class="nav-text">设置菜单项图标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA-about-%E9%A1%B5%E9%9D%A2"><span class="nav-text">新建 about 页面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AB%99%E7%82%B9%E5%9B%BE%E6%A0%87"><span class="nav-text">设置站点图标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/6f2f62d0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hexo配置NexT主题 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo配置NexT主题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-04-13 12:01:51" itemprop="dateCreated datePublished" datetime="2019-04-13T12:01:51+08:00">2019-04-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:43:04" itemprop="dateModified" datetime="2022-11-23T23:43:04+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tool/" itemprop="url" rel="index"><span itemprop="name">tool</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tool/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/5f9817e7c2fd8745e73fd4788617bba4.png" alt="next-theme"></p>
+<span id="more"></span>
+<h1 id="环境及版本声明">环境及版本声明</h1>
+<p>本文基于以下环境及版本：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">hexo:</span> <span class="number">3.8</span><span class="number">.0</span></span><br><span class="line"><span class="attr">hexo-cli:</span> <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">NexT:</span> <span class="number">7.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">OS:</span> <span class="string">Ubuntu</span> <span class="number">18.04</span> <span class="string">LTS</span> <span class="string">x86_64</span></span><br></pre></td></tr></table></figure>
+<h1 id="next-主题简介">NexT 主题简介</h1>
+<p>NexT is a high quality elegant Hexo theme.</p>
+<p>原项目已不再维护</p>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://theme-next.iissnan.com/">NexT文档</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/iissnan/hexo-theme-next">Github</a></li>
+</ul>
+<p>目前使用的是其社区版本</p>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://theme-next.org/docs/getting-started/">NexT文档</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/theme-next/hexo-theme-next">Github</a></li>
+</ul>
+<h1 id="描述约定">描述约定</h1>
+<p>在 Hexo 中有两份主要的配置文件，其名称都是 _config.yml。 其中，一份位于站点根目录下，主要包含 Hexo 本身的配置；另一份位于主题目录下，这份配置由主题作者提供，主要用于配置主题相关的选项。</p>
+<p>为了描述方便，在以下说明中，将前者称为 <code>站点配置文件</code>， 后者称为 <code>主题配置文件</code>。</p>
+<h1 id="主题选择">主题选择</h1>
+<p>Hexo 有许多 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://hexo.io/themes/">主题</a> 供你选择，总有一款是适合你的，其中 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/theme-next/hexo-theme-next">NexT</a> 是一个简洁优雅同时集成了许多功能的主题。</p>
+<h1 id="安装-next">安装 NexT</h1>
+<p>Hexo 安装主题的方式非常简单，只需要将主题文件拷贝至站点目录的 themes 目录下， 然后修改下配置文件即可。NexT 安装步骤如下。</p>
+<h2 id="下载主题">下载主题</h2>
+<p>在终端窗口下，进入到 Hexo 站点目录下。使用 Git 克隆最新版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> hexo</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/theme-next/hexo-theme-next themes/next</span></span><br></pre></td></tr></table></figure>
+<h2 id="启用主题">启用主题</h2>
+<p>与所有 Hexo 主题启用的模式一样。 当 克隆/下载 完成后，打开 站点配置文件， 找到 theme 字段，并将其值更改为 next。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure>
+<p>到此，NexT 主题安装完成。下一步我们将验证主题是否正确启用。在切换主题之后、验证之前， 我们最好使用 <code>hexo clean</code> 来清除 Hexo 的缓存。</p>
+<h2 id="验证主题">验证主题</h2>
+<p>执行下列命令启动 Hexo 本地站点，可以加上 <code>--debug</code> 开启调试模式，方便观察异常信息，进而定位错误。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
+<p>当命令行输出提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO  Hexo is running at http://localhost:4000 . Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+<p>当你看到站点的外观与下图所示类似时说明你已成功安装 NexT 主题。这是 NexT 默认的 Scheme —— Muse</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2afbbc17939fa78a52fe4d81d7075b8c.png" alt="checking-NexT"></p>
+<h1 id="主题版本管理">主题版本管理</h1>
+<p>因为我们的主题是 clone 下来的，所以主题本身也是一个 git 项目，所以当我们尝试在站点根目录下执行 <code>git add</code> 时，是无法加入到我们项目的版本管理的，例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add *</span></span><br><span class="line">The following paths are ignored by one of your .gitignore files:</span><br><span class="line">db.json</span><br><span class="line">node_modules</span><br><span class="line">public</span><br><span class="line">Use -f if you really want to add them.</span><br><span class="line">warning: adding embedded git repository: themes/next</span><br><span class="line">hint: You&#x27;ve added another git repository inside your current repository.</span><br><span class="line">hint: Clones of the outer repository will not contain the contents of</span><br><span class="line">hint: the embedded repository and will not know how to obtain it.</span><br><span class="line">hint: If you meant to add a submodule, use:</span><br><span class="line">hint:</span><br><span class="line">hint: 	git submodule add &lt;url&gt; themes/next</span><br><span class="line">hint:</span><br><span class="line">hint: If you added this path by mistake, you can remove it from the</span><br><span class="line">hint: index with:</span><br><span class="line">hint:</span><br><span class="line">hint: 	git rm --cached themes/next</span><br><span class="line">hint:</span><br><span class="line">hint: See &quot;git help submodule&quot; for more information.</span><br></pre></td></tr></table></figure>
+<p><strong>警告信息提示我们已在当前仓库添加了另一个 git 仓库，但当我们在其它地方 clone 外部仓库（也即当前仓库）时，它不会 clone 嵌套仓库的内容，也不知道如何获取嵌套仓库的内容。</strong></p>
+<p>简单地说，就是外部仓库无法 track 一个嵌套仓库，外部仓库所有的 <code>add</code>，<code>commit</code>，<code>push</code> 都与嵌套仓库没有任何关系。下面介绍 3 种方法来管理我们的主题。</p>
+<p><strong>注意：如果你之前尝试添加过嵌套仓库，应该先执行以下命令移除它：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm -f --cached themes/next</span><br></pre></td></tr></table></figure>
+<h2 id="第1种-将嵌套仓库纳入当前仓库">第1种 将嵌套仓库纳入当前仓库</h2>
+<p>最简单直接的方法就是把 themes/next 目录下的 <code>.git</code> 文件夹删掉，这样我们的主题文件夹就是一个普通的目录，而不是一个 git 仓库，这样嵌套仓库的内容就会成为当前仓库内容的一部分，就可以使用 <code>git add</code> 对这些文件进行跟踪。</p>
+<h2 id="第2种-使用-git-submodule">第2种 使用 git submodule</h2>
+<p>有种情况我们经常会遇到：某个工作中的项目需要包含并使用另一个项目。也许是第三方库，或者你独立开发的，用于多个父项目的库。现在问题来了：你想要把它们当做两个独立的项目，同时又想在一个项目中使用另一个。</p>
+<p>Git 通过子模块来解决这个问题。子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。它能让你将另一个仓库克隆到自己的项目中，同时还 <strong>保持提交的独立</strong> 。</p>
+<p>具体介绍请参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97">Git-工具-子模块</a></p>
+<h3 id="add-一个-submodule">add 一个 submodule</h3>
+<p>执行以下命令，使 NexT 成为当前仓库的子模块：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule add https://github.com/theme-next/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git submodule add https://github.com/theme-next/hexo-theme-next themes/next</span></span><br><span class="line">Adding existing repo at &#x27;themes/next&#x27; to the index</span><br></pre></td></tr></table></figure>
+<p>执行完成后，会在站点根目录下生成 <code>.gitmodules</code> 文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[submodule &quot;themes/next&quot;]</span><br><span class="line">    path = themes/next</span><br><span class="line">    url = https://github.com/theme-next/hexo-theme-next</span><br></pre></td></tr></table></figure>
+<p>该配置文件保存了项目 URL 与已经拉取的本地目录之间的映射，如果有多个子模块，该文件中就会有多条记录。要重点注意的是，该文件应像 <code>.gitignore</code> 文件一样受到（通过）版本控制，和该项目的其他部分一同被拉取推送。有了映射关系，克隆该项目的人就知道去哪获得子模块了。</p>
+<p><strong>添加子模块完成后，当在父仓库时，Git 仍然不会跟踪 submodule 的文件， 而是将它看作该仓库中的一个特殊提交。</strong></p>
+<p><strong>这种方法适用于使用第三方模块时，我们自己不做任何自定义修改，只是单纯地使用或者希望同步上游的修改的情况。</strong></p>
+<blockquote>
+<p>官方：项目中使用子模块的最简模型，就是 只使用子项目 并不时地获取更新，而并不在你的检出中进行任何修改。</p>
+</blockquote>
+<p>显然这种方法并不适合我们的需求，因为我们的 NexT 主题都是需要自定义的，但是这种方法却适用于我们为 NexT 主题管理第三方依赖的情况，因为这些第三方依赖我们一般不会去修改它。</p>
+<p>添加了子模块后，就可以像平时一样推送分支了，推送的时候不会包含子模块的文件（意味着你对子模块所做的任何修改都不会被推送，也不会被记录）。假设我们推送到 <code>username.github.io.git</code> 的 dev 分支，可以参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wylu.github.io/posts/Tool/Hexo/Hexo部署站点至Github">提交源码分支</a></p>
+<p><strong>推送到远程仓库后，远程仓库中 submodule 会和指定的 commit 关联起来。</strong></p>
+<h3 id="clone-含有子模块的项目">clone 含有子模块的项目</h3>
+<p>克隆含有子模块的项目时，默认会包含该子模块目录，但其中没有任何文件，假设现在要 clone 我们刚刚推送的分支：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">clone</span> dev分支</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">clone</span> -b dev git@github.com:wylu/wylu.github.io.git</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入到项目文件夹</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> wylu.github.io</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">项目注册submodule</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git submodule init</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">clone</span> submodule代码</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git submodule update</span></span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b dev --recursive git@github.com:wylu/wylu.github.io.git</span><br></pre></td></tr></table></figure>
+<p><strong>现在 /themes/next 子目录是处在和之前提交时相同的状态了。就算官方的 NexT 仓库有了新提交，也不会有影响，因为子模块指向的 commit 与 push 时指向的 commit 是一致的，也就说在执行 <code>git submodule update</code> 时会 clone 指定 commit 的代码，而不是 clone 最新提交。</strong></p>
+<p>例如我当前主题子模块指向的是 hash 以 "71c9e8f" 为开头的提交，并不是官方最新提交：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/8f9f558fda25195afa0dcdd74ec8c414.png" alt="submodule-commit"></p>
+<p>这个提交的完整 hash 为 "71c9e8fc1056bc070d22461696b1078d6419caf5"</p>
+<h3 id="update-项目子模块">update 项目子模块</h3>
+<p>只要在 子模块 的目录下，所有的常规 Git 操作，如 push，pull，reset，status等，都可以正常工作，假设现在我们要同步子模块 NexT 的更新，只要在 /themes/next 目录下执行 <code>git pull</code> 即可。</p>
+<ul>
+<li>如果你得到一个错误信息，说你不在任何分支之上，只要运行 <code>git checkout master</code> 就可修复</li>
+<li>如果你在 pull 后 submodule 有一些更新, 父仓库会告诉你有一些变动需要 commit 了。submodule 自身指向一个指定的 commit, 并且如果这个 commit 改变了, 父仓库会得知这个改变。如果你的 submodule 需要在一个指定 commit 上工作, 可用 <code>git reset</code> 来恢复。</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard 419caf5</span><br></pre></td></tr></table></figure>
+<p>直接指向 子模块 历史的某次 commit 即可。</p>
+<h2 id="第3种-创建自己的主题仓库">第3种 创建自己的主题仓库</h2>
+<p>将 Hexo 项目 与自定义的 NexT 主题项目分仓库管理。</p>
+<p>首先，<code>fork</code> NexT 主题仓库到自己的 github，然后 <code>clone</code> 该仓库到本地。</p>
+<p>然后自定义 NexT 主题，接着提交我们对 NexT 主题的修改，<code>push</code> 到我们自己的远程主题仓库。</p>
+<p>而对于 Hexo 源码仓库同样使用 git submodule 的方式管理我们自定义的主题模块，此时子模块的URL应该映射到你自己的仓库，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[submodule &quot;themes/next&quot;]</span><br><span class="line">    path = themes/next</span><br><span class="line">    url = https://github.com/username/hexo-theme-next</span><br><span class="line">    # The submodule will never be considered modified</span><br><span class="line">    # (but will nonetheless show up in the output of status and commit when it has been staged).</span><br><span class="line">    ignore = all</span><br></pre></td></tr></table></figure>
+<p><strong>注意：这里添加了 <code>ignore</code> 配置项并设置为 <code>all</code>，它的可选值及含义如下：</strong></p>
+<ul>
+<li>all：子模块永远不会被视为已修改（但仍将显示在状态输出中并在提交时提交）。</li>
+<li>dirty：将忽略对子模块工作树的所有更改，仅考虑子模块的HEAD与其在超级项目中的记录状态之间的已提交差异。</li>
+<li>untracked：只有子模块中未跟踪的文件才会被忽略。将显示对跟踪文件的提交的差异和修改。</li>
+<li>none：默认选项，不会忽略对子模块的修改，显示所有已提交的差异以及对已跟踪和未跟踪文件的修改。</li>
+</ul>
+<p>因为我们的自定义主题仓库和 Hexo 项目仓库是分开提交的，所以 Hexo 项目的提交不需要关注子模块的修改，而子模块的修改直接在其目录下提交即可。这样就可以管理我们自定义的主题，同时保持 Hexo 项目和自定义主题提交的独立。</p>
+<h1 id="选择-scheme">选择 Scheme</h1>
+<p>Scheme 是 NexT 提供的一种特性，借助于 Scheme，NexT 为你提供多种不同的外观。同时，几乎所有的配置都可以在 Scheme 之间共用。目前 NexT 支持4种 Scheme，他们是：</p>
+<p>Muse - 默认 Scheme，这是 NexT 最初的版本，黑白主调，大量留白 Mist - Muse 的紧凑版本，整洁有序的单栏外观 Pisces - 双栏 Scheme，小家碧玉似的清新 Gemini - 看起来像 Pisces，但是列块带有更加明显的阴影，视觉上更敏感</p>
+<p>Scheme 的切换通过更改 <code>主题配置文件</code>，搜索 scheme 关键字。你会看到有4行 scheme 的配置，将你需用启用的 scheme 前面注释 # 去除即可。例如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Schemes</span></span><br><span class="line"><span class="comment">#scheme: Muse</span></span><br><span class="line"><span class="comment">#scheme: Mist</span></span><br><span class="line"><span class="comment">#scheme: Pisces</span></span><br><span class="line"><span class="attr">scheme:</span> <span class="string">Gemini</span></span><br></pre></td></tr></table></figure>
+<p>每种 Schemes 的效果可以到 Github <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/README.md#%E5%8D%B3%E6%97%B6%E9%A2%84%E8%A7%88">预览示例</a></p>
+<h1 id="设置主题语言">设置主题语言</h1>
+<p>首先，需要编辑 <code>站点配置文件</code>， 将 language 设置成你所需要的语言。建议明确设置你所需要的语言，例如选用简体中文，配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">language:</span> <span class="string">zh-CN</span></span><br></pre></td></tr></table></figure>
+<p>然后若要修改具体显示的文本，则到 /themes/next/languages 文件夹下找到指定语言的文件，根据需要修改里面字段的值即可。</p>
+<p>例如，修改 zh-CN.yml 文件中 <code>home</code> 对应的值如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">(^_^)</span></span><br></pre></td></tr></table></figure>
+<p>默认为"主页"，这里我们改成"(^_^)"，显示效果如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/344960fb309535f6577f9f5b5f4c0908.png" alt="language-setting"></p>
+<p>NexT 常用语言如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Language</th>
+<th>Code</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>English</td>
+<td>en</td>
+<td>language: en</td>
+</tr>
+<tr class="even">
+<td>简体中文</td>
+<td>zh-CN</td>
+<td>language: zh-CN</td>
+</tr>
+<tr class="odd">
+<td>繁體中文</td>
+<td>zh-TW or zh-HK</td>
+<td>language: zh-TW</td>
+</tr>
+</tbody>
+</table>
+<p>目前 NexT 支持的语言，详见 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://theme-next.org/docs/getting-started/">Choosing Language</a></p>
+<h1 id="设置菜单">设置菜单</h1>
+<p>菜单配置项的格式为 <code>key: /link/ || icon</code>，包含三个部分，第一是菜单项的名称，第二是菜单项的链接，第三是菜单项对应的图标。</p>
+<ul>
+<li><p>key</p>
+<p>key 为菜单项显示的名称（如<code>home</code>，<code>archives</code>等），Hexo 首先会根据 key 在 languages 文件夹找对应语言的翻译，如果找到则会加载该翻译，如果找不到，将使用 key 本身的值。其中 key 的值大小写敏感。</p></li>
+<li><p>link</p>
+<p>link 是你网站内相对网址的目标链接。</p></li>
+<li><p>icon</p>
+<p>FontAwesome 图标的名称。NexT 使用的是 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://fontawesome.com/">Font Awesome</a> 提供的图标， Font Awesome 提供了 600+ 的图标，可以满足绝大的多数的场景。</p></li>
+</ul>
+<p>NexT 默认开启了 <code>主页</code> 和 <code>归档页</code> 菜单项：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0e60b9cd331d695fc2daf19a13070e12.png" alt="default-menu-settings"></p>
+<h2 id="next-默认菜单项">NexT 默认菜单项</h2>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">home</span></span><br><span class="line">  <span class="comment">#about: /about/ || user</span></span><br><span class="line">  <span class="comment">#tags: /tags/ || tags</span></span><br><span class="line">  <span class="comment">#categories: /categories/ || th</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">/archives/</span> <span class="string">||</span> <span class="string">archive</span></span><br><span class="line">  <span class="comment">#schedule: /schedule/ || calendar</span></span><br><span class="line">  <span class="comment">#sitemap: /sitemap.xml || sitemap</span></span><br><span class="line">  <span class="comment">#commonweal: /404/ || heartbeat</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th>key</th>
+<th>link</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>home</td>
+<td>/</td>
+<td>主页</td>
+</tr>
+<tr class="even">
+<td>about</td>
+<td>/about/</td>
+<td>关于</td>
+</tr>
+<tr class="odd">
+<td>tags</td>
+<td>/tags/</td>
+<td>标签</td>
+</tr>
+<tr class="even">
+<td>categories</td>
+<td>/categories/</td>
+<td>分类</td>
+</tr>
+<tr class="odd">
+<td>archives</td>
+<td>/archives/</td>
+<td>归档</td>
+</tr>
+<tr class="even">
+<td>schedule</td>
+<td>/schedule/</td>
+<td>日程表</td>
+</tr>
+<tr class="odd">
+<td>sitemap</td>
+<td>/sitemap.xml</td>
+<td>站点地图</td>
+</tr>
+<tr class="even">
+<td>commonweal</td>
+<td>/404/</td>
+<td>404页面</td>
+</tr>
+</tbody>
+</table>
+<p>可以根据需要取消菜单项的注释，这样就可以在菜单栏看到相应的菜单项了，你也可以添加新的菜单项，然后设置菜单项的显示文本，例如取消注释 <code>about</code>，<code>tags</code>，<code>categories</code>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/03d2a3bc68ccbe5776bae52a125a9e48.png" alt="about-tags-categories"></p>
+<h2 id="设置菜单项显示文本">设置菜单项显示文本</h2>
+<p><strong>在菜单设置中的 <code>key</code> 并不直接用于界面上的展示。Hexo 在生成的时候将使用这个 <code>key</code> 查找对应的语言翻译，并提取显示文本。</strong> 这些翻译文本放置在 NexT 主题目录下的 languages/{language}.yml （{language} 为你所使用的语言）。</p>
+<p>以简体中文为例，若你需要添加一个菜单项，比如 something。那么就需要修改简体中文对应的翻译文件 languages/zh-CN.yml，在 menu 字段下添加一项：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">首页</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">归档</span></span><br><span class="line">  <span class="attr">categories:</span> <span class="string">分类</span></span><br><span class="line">  <span class="attr">tags:</span> <span class="string">标签</span></span><br><span class="line">  <span class="attr">about:</span> <span class="string">关于</span></span><br><span class="line">  <span class="attr">search:</span> <span class="string">搜索</span></span><br><span class="line">  <span class="attr">schedule:</span> <span class="string">日程表</span></span><br><span class="line">  <span class="attr">sitemap:</span> <span class="string">站点地图</span></span><br><span class="line">  <span class="attr">commonweal:</span> <span class="string">公益</span> <span class="number">404</span></span><br><span class="line">  <span class="attr">something:</span> <span class="string">有料</span></span><br></pre></td></tr></table></figure>
+<h2 id="设置菜单项图标">设置菜单项图标</h2>
+<p>默认情况下，NexT 显示没有徽章的菜单项图标。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Enable / Disable menu icons / item badges.</span></span><br><span class="line"><span class="attr">menu_settings:</span></span><br><span class="line">  <span class="attr">icons:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">badges:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>如果不想显示图标可以设置 icons 为 false，如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">icons:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/255376cd7f83e09e9fb74e49697b432e.png" alt="without-menu-icons"></p>
+<p>如果启用徽章，那么在菜单栏会显示 Posts / Categories / Tags 的计数，如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">badges:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d13981a985b2c5a07bb76e55a525a969.png" alt="enable-badges"></p>
+<h1 id="新建-about-页面">新建 about 页面</h1>
+<p>在启用 <code>about</code> 或者 <code>关于</code> 菜单项后，因为我们没有提供 about 页面或者配置的目标链接与实际页面位置不匹配，所以点击该菜单项时会提示无法获取 <code>about</code> 页面：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cannot GET /about/</span><br></pre></td></tr></table></figure>
+<p>因为这里 <code>about</code> 菜单项的目标链接是 <code>/about/</code>，所以正确的文件结构是，在 source 文件夹下包含文件夹 about，about 文件夹下包含 index.md 文件。</p>
+<p>直接在站点根目录下执行，该命令会在 source 文件夹下生成 about 文件夹及相关页面：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page about</span><br></pre></td></tr></table></figure>
+<p>如果你在 <code>站点配置文件</code> 中设置了 <code>post_asset_folder: true</code>，那么生成的 about 文件夹的文件结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tree</span></span><br><span class="line">.</span><br><span class="line">├── about</span><br><span class="line">│   ├── index</span><br><span class="line">│   └── index.md</span><br><span class="line">└── _posts</span><br><span class="line">    └── hello-world.md</span><br><span class="line"></span><br><span class="line">3 directories, 2 files</span><br></pre></td></tr></table></figure>
+<p>如果 <code>post_asset_folder: false</code>，那么生成的 about 文件夹的文件结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tree</span></span><br><span class="line">.</span><br><span class="line">├── about</span><br><span class="line">│   └── index.md</span><br><span class="line">└── _posts</span><br><span class="line">    └── hello-world.md</span><br><span class="line"></span><br><span class="line">2 directories, 2 files</span><br></pre></td></tr></table></figure>
+<p>默认生成的 index.md 文件内容如下，你可以根据需要修改文件的 <code>Front-matter</code> 同时添加内容：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: about</span><br><span class="line"><span class="section">date: 2019-04-13 17:09:44</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="设置站点图标">设置站点图标</h1>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">favicon:</span></span><br><span class="line">  <span class="attr">small:</span> <span class="string">/images/favicon-16x16-next.png</span></span><br><span class="line">  <span class="attr">medium:</span> <span class="string">/images/favicon-32x32-next.png</span></span><br><span class="line">  <span class="attr">apple_touch_icon:</span> <span class="string">/images/apple-touch-icon-next.png</span></span><br><span class="line">  <span class="attr">safari_pinned_tab:</span> <span class="string">/images/logo.svg</span></span><br><span class="line">  <span class="comment">#android_manifest: /images/manifest.json</span></span><br><span class="line">  <span class="comment">#ms_browserconfig: /images/browserconfig.xml</span></span><br></pre></td></tr></table></figure>
+<p>默认情况下，Hexo 站点使用 hexo-site/themes/next/source/images/ 目录中的 NexT favicons，不同的设备使用不同大小的 NexT favicons。你可以用你自己的图标替换它们。</p>
+<p>例如，可以将你的 favicons 放在 hexo-site/source/images/ 目录中。然后，你需要重命名它们，并更改 <code>主题配置文件</code> 中 favicon 部分的设置，否则来自 Next 的图标将在 Hexo 中覆盖你的自定义图标。你还可以将自定义的 favicons 放入 hexo-site/source/ 目录中。这样，你必须在配置路径时删除 /images 前缀。</p>
+<p>要生成自定义的 Favicon，可以访问 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://realfavicongenerator.net/">Favicon Generator</a>。</p>
+<h1 id="references">References</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://incoder.org/2018/05/17/git-sub/">https://incoder.org/2018/05/17/git-sub/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97">https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://git-scm.com/docs/gitmodules">https://git-scm.com/docs/gitmodules</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-01-12</div>
+      <div class="popular-posts-title"><a href="/posts/3504e7d9/" rel="bookmark">Git子模块</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Git 子模块(Git submodules)允许你将 git repo 保留为另一个 git repo 的子目录。Git 子模块只是在特定时间快照上对另一个 repo 的引用。Git 子模块使 Git repo 能够合并和跟踪外部代码的版本历史。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-01</div>
+      <div class="popular-posts-title"><a href="/posts/202f8f32/" rel="bookmark">Ubuntu 18.04 字体显示异常</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>解决 Ubuntu 18.04 下字体显示异常的问题。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-12</div>
+      <div class="popular-posts-title"><a href="/posts/8247e85f/" rel="bookmark">Hexo站点配置</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将详细介绍 Hexo 站点配置文件中的各个配置项的含义与作用。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-13</div>
+      <div class="popular-posts-title"><a href="/posts/a2725fd8/" rel="bookmark">NexT侧边栏配置</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍一些关于 NexT 侧边栏的配置。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-13</div>
+      <div class="popular-posts-title"><a href="/posts/e0424f3f/" rel="bookmark">NexT主题进阶配置</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>本文将介绍一些针对 NexT 主题的个性化配置。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/6f2f62d0/" title="Hexo配置NexT主题">https://wylu.me/posts/6f2f62d0/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+              <a href="/tags/next/" rel="tag"><i class="fa fa-tag"></i> next</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/27298702/" rel="prev" title="Hexo部署站点至Github">
+                  <i class="fa fa-chevron-left"></i> Hexo部署站点至Github
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/a2725fd8/" rel="next" title="NexT侧边栏配置">
+                  NexT侧边栏配置 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="2dec00cb1bd77eb1e9dcd4d83b40f6b9"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在本文中读者会看到有关 make 的介绍，make 是一种控制编译或者重复编译软件的工具。make 可以自动管理软件编译的内容、方式和时机，从而使程序员能够把精力集中在编写代码上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用GNU-make管理项目">
+<meta property="og:url" content="https://wylu.me/posts/cec71891/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="在本文中读者会看到有关 make 的介绍，make 是一种控制编译或者重复编译软件的工具。make 可以自动管理软件编译的内容、方式和时机，从而使程序员能够把精力集中在编写代码上。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/9fdf0734b6ed1ac256008456d12d2187.png">
+<meta property="article:published_time" content="2020-10-25T09:40:46.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:42:18.363Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="make">
+<meta property="article:tag" content="makefile">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/9fdf0734b6ed1ac256008456d12d2187.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/cec71891/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/cec71891/","path":"posts/cec71891/","title":"使用GNU-make管理项目"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用GNU-make管理项目 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-gnu-make-%E7%AE%A1%E7%90%86%E9%A1%B9%E7%9B%AE"><span class="nav-text">使用 GNU make 管理项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95%E4%BD%BF%E7%94%A8-make"><span class="nav-text">1 为何使用 make</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99-makefile"><span class="nav-text">2 编写 makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99-makefile-%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-text">3 编写 makefile 的规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%AA%E7%9B%AE%E6%A0%87"><span class="nav-text">3.1 伪目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-text">3.2 变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A8-4.1-%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F"><span class="nav-text">表 4.1 自动变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A84.2-%E7%94%A8%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%90%8D%E5%92%8C%E6%A0%87%E5%BF%97%E7%9A%84%E9%A2%84%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="nav-text">表4.2 用于程序名和标志的预定义变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E8%A7%84%E5%88%99"><span class="nav-text">3.3 隐式规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F%E8%A7%84%E5%88%99"><span class="nav-text">3.4 模式规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A"><span class="nav-text">3.5 注释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%80%89%E9%A1%B9%E5%92%8C%E5%8F%82%E6%95%B0"><span class="nav-text">4 命令行选项和参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95-make"><span class="nav-text">5 调试 make</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-make-%E5%87%BA%E9%94%99%E4%BF%A1%E6%81%AF"><span class="nav-text">6 常见的 make 出错信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E7%94%A8%E7%9A%84-makefile-%E7%9B%AE%E6%A0%87"><span class="nav-text">7 有用的 makefile 目标</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/cec71891/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用GNU-make管理项目 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用GNU-make管理项目
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-25 17:40:46" itemprop="dateCreated datePublished" datetime="2020-10-25T17:40:46+08:00">2020-10-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:42:18" itemprop="dateModified" datetime="2022-11-23T23:42:18+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/programming-language/" itemprop="url" rel="index"><span itemprop="name">programming-language</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/programming-language/c/" itemprop="url" rel="index"><span itemprop="name">c</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>19 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在本文中读者会看到有关 make 的介绍，make 是一种控制编译或者重复编译软件的工具。make 可以自动管理软件编译的内容、方式和时机，从而使程序员能够把精力集中在编写代码上。</p>
+<span id="more"></span>
+<h1 id="使用-gnu-make-管理项目">使用 GNU make 管理项目</h1>
+<div class="note info"><p><strong>第 4 章 使用 GNU make 管理项目</strong> 原文出处：《GNU/Linux编程指南》第二版 原文作者： Kurt Wall 等著</p>
+</div>
+<h2 id="为何使用-make">1 为何使用 make</h2>
+<p>除了最简单的软件项目，make 对于其他所有项目而言都很必要。首先，包含多个源代码文件的项月在编译时都有长而且复杂的命令行。而且，编程项目经常需要使用那些很少用到且难以记忆的特殊编译选项。make 可以通过把这些复杂而难记的命令行保存在 makefle 文件中来解决上述两个问题，makefile 将在下一小节讨论。</p>
+<p>make 还能减少重复编译所需要的时间，因为它很聪明，能够判断哪些文件被修改过。进而只重新编译程序被修改过的部分。makefile 为项目构建了一个依赖信息数据库，因而可以让 make 在每次编译前检查是否可以找到所有需要的文件。make 还可以让你建立一个稳定的编译环境。最后，make 可以让编译过程自动执行，因为从 shell 脚本或者 cron (定时)作业调用 make 非常容易。</p>
+<h2 id="编写-makefile">2 编写 makefile</h2>
+<p>make 是怎样完成这些神奇工作的呢？是通过使用 makefile 文件做到的。</p>
+<p>makefile 是一个文本形式的数据库文件，其中包含一些规则告诉 make 编译哪些文件、怎样编译以及在什么条件下去编译。每条规则包含以下内容：</p>
+<ul>
+<li>一个 "目标体" (target)，即 make 最终需要创建的东西。</li>
+<li>包含一个或多个 "依赖体" (dependency)的列表，依赖体通常是编泽目标体需要 的其他文件。</li>
+<li>为了从指定的依赖体创建出目标体所需执行的 "命令" (command) 的列表。</li>
+</ul>
+<p>虽然目标体通常都是程序，但它们可以是诸如文本文件、手册页面等任何东西。目标体甚至能测试和设置环境变量。类似地，也可以定义依赖体以确保编译开始前存在某个特殊的环境变量。最后，makefile 中的命令可以是编译器的命令或 shell 命令，它们能设置环境变量、删除文件,或者任何俞令行所能完成的功能,如从 FTP 站点下载文件等。GNU make 被调用后会顺序查找名为 GNUmakefile、makefile 或 Makefile 的文件。出于某种原因，可能只是习惯和长期形成的约定吧，大多数 Linux 程序员使用最后一种形式 Makefile。</p>
+<p>Makefile 规则有下列通用形式：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">target: dependency [dependency [...]</span></span><br><span class="line">	command</span><br><span class="line">	command</span><br><span class="line">	[...]</span><br></pre></td></tr></table></figure>
+<p><strong>警告:</strong></p>
+<p><strong>每一个命令的第一个字符必须是制表符</strong>，仗使用 8 个空格是不够的。这一点经常不被人们注意， 并且当所使用的编辑器友好的将制表符转换成 8 个空格时，会产生问题；因为如果用空格代替制表符，make 会在执行过程中显示 Missing Separator (缺少分隔符)并停止。</p>
+<p>target 是需要创建的二进制文件或目标文件。dependency 是在创建 target 时需要输入的一个或多个文件的列表。命令序列是创建 target 文件所需要的步骤，如编译命令。此外，除非特别指定，否则 make 的工作目录就是当前目录。</p>
+<h2 id="编写-makefile-的规则">3 编写 makefile 的规则</h2>
+<p>如果上一节的内容对你来说太抽象， 那么本节使用程序清单 4.1 再具体讨论。这是用于编译第 3 章中出现的程序 howdy 和 hello 的 makefile 文件。</p>
+<p>程序清单 4.1 演示目标体、依赖体和命令的简单 makefile 文件</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">howdy: howdy.o helper.o helper.h</span></span><br><span class="line">	gcc howdy.o helper.o -o howdy</span><br><span class="line"></span><br><span class="line"><span class="section">helper.o: helper.c helper.h</span></span><br><span class="line">	gcc -c helper.c</span><br><span class="line"></span><br><span class="line"><span class="section">howdy.o: howdy.c</span></span><br><span class="line">	gcc -c howdy.c</span><br><span class="line"></span><br><span class="line"><span class="section">hello: hello.c</span></span><br><span class="line">	gcc hello.c -o hello</span><br><span class="line"></span><br><span class="line"><span class="section">all: howdy hello</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm howdy hello *.o</span><br></pre></td></tr></table></figure>
+<p>要编译 howdy，只需在 makefile 所在目录下输入 make 即可。就这么简单。</p>
+<p>这个 makefile 文件包含 6 条规则。第一个目标体 howdy 称为默认(default) 目标体，这是 make 要创建的文件。howdy 有 3 个依赖体，分别为 howdy.o、helper.o 和 helper.h，要编译生成 howdy，必须要有这 3 个文件。第二行调用编译器的命令供 make 执行来创建 howdy。由对第 3 章内容的回忆可知，这条命令从两个目标文件创建名为 howdy 的可执行文件。把头文件 helper.h 作为一个依赖体列入是为了避免编译器调用未声明的函数产生出错信息。接下来的两条规则告诉 make 怎样生成单个目标文件，helper.o 和 howdy.o。这些规则使用了 gcc 的 <code>-c</code> 选项，只创建目标文件但跳过链接。如果只想生成两个目标文件而不生成 howdy 本身，可以使用下面两条命令:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">make helper.o</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">make howdy.o</span></span><br></pre></td></tr></table></figure>
+<p>更简洁一点，只需使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">make helper.o howdy.o</span></span><br></pre></td></tr></table></figure>
+<p>正如你所看到的那样，make 允许把多个目标作为参数。这两种方法都能使用相应的规则和命令生成目标文件。图 4.1 给出了这个过程的图示。</p>
+<p>图4.1 把生成 howdy 的步骤归结到第 3 章讨论的一般性的 预处理/编译/链接 过程上。howdy.c 和 helper.c 这两个源代码文件经预处理后编译成目标文件。然后链接器把来自文件 howdy.o 和 helper.o 的目标代码和标准库以及 C 启动代码链接到一起生成二进制文件 hello。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/9fdf0734b6ed1ac256008456d12d2187.png" alt="compile"></p>
+<p>现在，make 的价值就体现出来了：通常情况下，如果试图在依赖体 helper.o 和 howdy.o 不存在的情况下使用所示的命令编译 howdy，则 gcc 会报错井退出。另一方面，在看到 howdy 需要这两个文件（和 helper.c）后，make 先确认它们是否存在，如果不存在则首先执行命令生成它们，然后再返回到第一条规则创建可执行文件 howdy。当然，如果 helper.h 不存在，make 也会放弃执行，因为它没有创建 helper.h 的规则。</p>
+<p>"一切都很好"，也许你会这么想，"但是 make 怎样知道什么时候需要重新编译一个文件呢？" 答案极其简单：如果指定的目标文件 make 找不到，make 就会生成它。如果目标体存在，make 会对目标体文件和依赖体文件的时间戳进行比较。如果有一个或多个依赖体比目标体新，make 就重新编译生成目标体，因为 make 认为新的依赖体意味着对代码做过修改，必须把改动融入到目标体中去。</p>
+<p>第四条规则相当简单。它定义了如何编译生成第 3 章介绍的简单程序 hello。第五条是创建 hello 和 howdy 的笼统规则，它还表明甚至二进制文件都能作依赖体。下一小节将讨论第六条规则，即伪目标。</p>
+<h3 id="伪目标">3.1 伪目标</h3>
+<p>除了一般的文件目标体， 比如 howdy 和 hello 之外，make 也允许指定伪目标。称其为伪目标是因为它们并不对应于实际的文件。程序清单 4.1 中最后一个目标体 clean 就是伪目标。伪目标体规定了 make 应该执行的命令。但是，因为 clean 没有依赖体，所以它的命令不会被自动执行。下面解释 make 是如何工作的：当遇到目标体 clean 时，make 先查看其是否有依赖体，因为 clean 没有依赖体，所以 make 认为目标体是最新的而不执行任何操作。为了编译这个目标体，必须输入make clean。在本例中，clean 删除了可执行文件 hello 和 howdy 以及构成 howdy 的目标文件。在创建和发行仅包含源代码的压缩包或者需要彻底重新编译时可能会用到这样一个目标体。</p>
+<p>然而，如果恰巧有一个名为 clean 的文件存在，make 就会发现它。然后和前面一样，因为 clean 没有依赖体文件，make 就认为这个文件是最新的而不会执行相关命令。为了处理这类情况，需要使用特殊的 make 目标体 <code>.PH0NY</code>。 <code>.PHONY</code> 的依赖体文件的含义和通常一样， 但是 make 不检查是否存在有文件名和依赖体中的一个名字相匹配的文件，而是直接执行与之相关的命令。在使用了 <code>.PHONY</code> 之后，前面的例子如下：</p>
+<p>程序清单 4.2 带有 PHONY 目标的 Makefile 文件</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">howdy: howdy.o helper.o helper.h</span></span><br><span class="line">	gcc howdy.o helper.o -o howdy</span><br><span class="line"></span><br><span class="line"><span class="section">helper.o: helper.c helper.h</span></span><br><span class="line">	gcc -c helper.c</span><br><span class="line"></span><br><span class="line"><span class="section">howdy.o: howdy.c</span></span><br><span class="line">	gcc -c howdy.c</span><br><span class="line"></span><br><span class="line"><span class="section">hello: hello.c</span></span><br><span class="line">	gcc hello.c -o hello</span><br><span class="line"></span><br><span class="line"><span class="section">all: howdy hello</span></span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm howdy hello *.o</span><br></pre></td></tr></table></figure>
+<h3 id="变量">3.2 变量</h3>
+<p>为了简化编辑和维护 makefile，make 允许在 makefile 中创建和使用变量。所谓的变量其实是用指定文本串在 makefile 中定义的一个名字，这个文本串就是变量的值。下面是定义变量的一般方法:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VARNAME=some_text [...]</span><br></pre></td></tr></table></figure>
+<p>把变量用括号括起来，井在前面加上 "$" 符号，就可以引用变量的值：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(VARNAME)</span></span><br></pre></td></tr></table></figure>
+<p>此时，VARNAME 在等式右端展开为它所代表的文本。变量一般都在 makefle 的头部定义，并且，按照惯例，所有的 makefle 变量都应该是大写( 虽然这不是必须的)。这样，如果变量的值发生变化，就只需要在一个地方修改，从而简化了 makefile 的维护。现在，继续现在修改程序清单 4.1，加入两个变量，结果如程序清单 4.3 所示。</p>
+<p>程序清单 4.3 在 makefle 中使用变量</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">OBJS = howdy.o helper.o</span><br><span class="line">HDRS = helper.h</span><br><span class="line"></span><br><span class="line"><span class="section">howdy: <span class="variable">$(OBJS)</span> <span class="variable">$(HDRS)</span></span></span><br><span class="line">	gcc <span class="variable">$(OBJS)</span> -o howdy</span><br><span class="line"></span><br><span class="line"><span class="section">helper.o: helper.c <span class="variable">$(HDRS)</span></span></span><br><span class="line">	gcc -c helper.c</span><br><span class="line"></span><br><span class="line"><span class="section">howdy.o: howdy.c</span></span><br><span class="line">	gcc -c howdy.c</span><br><span class="line"></span><br><span class="line"><span class="section">hello: hello.c</span></span><br><span class="line">	gcc hello.c -o hello</span><br><span class="line"></span><br><span class="line"><span class="section">all: howdy hello</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm howdy hello *.o</span><br></pre></td></tr></table></figure>
+<p>OBJS 和 HDRS 在被引用的每个地方都展开成它的取值。编译时也是如此。</p>
+<p>实际上，make 使用两种变量：<strong>递归展开变量和简单展开变量</strong>。递归展开变量在引用时逐层展开，即如果在展开式中包含了对其他变量的引用，则这些变量也将被展开，直到没有需要展开的变量为止，这就是所谓的递归展开。下面的例子有助于弄清这个概念。</p>
+<p>假设变量 TOPDIR 和 SRCDIR 如下定义:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TOPDIR = /home/kwall/myproject</span><br><span class="line">SRCDIR = <span class="variable">$(TOPDIR)</span>/src</span><br></pre></td></tr></table></figure>
+<p>这样，SRCDIR 的值是 /home/kwall/myproject/src，则工作正常。但是，考虑下面的变量定义:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CC = gcc</span><br><span class="line">CC = <span class="variable">$(CC)</span> -o</span><br></pre></td></tr></table></figure>
+<p>很清楚，定义者想要得到的结果是 "CC=gcc -o"。但是实际并非如此；CC 在被引用时递归展开，从而陷入一个无限循环中；CC 将扩展为 <code>$(CC)</code> 的值，从而永远也读不到 <code>-o</code> 选项。幸运的是，make 能够检测到这个问题并报告错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*** Recursive variable &#x27;CC&#x27; references itself (eventually). Stop</span><br></pre></td></tr></table></figure>
+<p>为了避免这个问题，可以使用<strong>简单展开变量</strong>。与<strong>递归展开变量</strong>在引用时展开不同，简单展开变量在定义处展开，并且只展开一次，从而消除了变量的嵌套引用。在定义时,其语法与递归展开变量有细微的不同：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CC := gcc -o</span><br><span class="line">CC += -O2</span><br></pre></td></tr></table></figure>
+<p>第一个定义使用 <code>:=</code> 设置 CC 的值为 <code>gcc -o</code>，第二个定义使用 "+=" 在前面定义的 CC 后附加了 <code>-O2</code>，从而 CC 最终的值是 <code>gcc -o -O2</code>。如果在使用 make 变量时遇到 "VARNAME references itself" 这类错误信息，就可以使用简单展开变量来解决。一些程序员仅使用简单展开变量，以避免出现意想不到的问题；但既然现在是在 Linux 上，你可以自由选择使用的方式。</p>
+<p>除用户定义变量外, make 也允许使用环境变量、自动变量和预定义变量。使用环境变量非常简单。在启动时，make 读取己定义的环境变量，并且创建与之同名同值的变量。但是，如果 makefile 中有同名的变量，则这个变量将取代与之相应的环境变量，所以应当注意这一点。</p>
+<p>此外，make 也提供一长串预定义变量和自动变量，但是它们看起来有些神秘。之所以称为自动变量是因为 make 自动用特定的、熟知的值替换它们。表 4.1 给出了部分自动变量。</p>
+<h4 id="表-4.1-自动变量">表 4.1 自动变量</h4>
+<table>
+<thead>
+<tr class="header">
+<th>变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>$@</td>
+<td>规则的目标所对应的文件名</td>
+</tr>
+<tr class="even">
+<td>$&lt;</td>
+<td>规则中的第一个相关文件名</td>
+</tr>
+<tr class="odd">
+<td>$^</td>
+<td>规则中所有相关文件的列表，以空格为分隔符</td>
+</tr>
+<tr class="even">
+<td>$?</td>
+<td>规则中日期新于目标的所有相关文件的列表，以空格为分隔符</td>
+</tr>
+<tr class="odd">
+<td>$(<span class="citation" data-cites="D">@D</span>)</td>
+<td>目标文件的目录部分(如果目标在子目录中)</td>
+</tr>
+<tr class="even">
+<td>$(<span class="citation" data-cites="F">@F</span>)</td>
+<td>目标文件的文件名部分(如果目标在子目录中)</td>
+</tr>
+</tbody>
+</table>
+<p>除了表 4.1 列出的自动变量外，make 还预定义了许多其他变量，用于定义程序名或给这些程序传递标志和参数。这些预定义的变量看上去更像常规的 make 变量而不是像字符名称的自动变量。表 4.2 给出了一些有用的预定义变量。</p>
+<h4 id="表4.2-用于程序名和标志的预定义变量">表4.2 用于程序名和标志的预定义变量</h4>
+<table>
+<thead>
+<tr class="header">
+<th>变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AR</td>
+<td>归档维护程序，默认值=ar</td>
+</tr>
+<tr class="even">
+<td>AS</td>
+<td>汇编程序，默认值=as</td>
+</tr>
+<tr class="odd">
+<td>CC</td>
+<td>C 编译程序，默认值=cc</td>
+</tr>
+<tr class="even">
+<td>CPP</td>
+<td>C 预处理程序，默认值=cpp</td>
+</tr>
+<tr class="odd">
+<td>RM</td>
+<td>文件删除程序，默认值="rm -f"</td>
+</tr>
+<tr class="even">
+<td>ARFLAGS</td>
+<td>传给归档维护程序的标志，默认值=rv</td>
+</tr>
+<tr class="odd">
+<td>ASFLAGS</td>
+<td>传给汇编程序的标志，没有默认值</td>
+</tr>
+<tr class="even">
+<td>CFLAGS</td>
+<td>传给 C 编译器的标志，没有默认值</td>
+</tr>
+<tr class="odd">
+<td>CPPFLAGS</td>
+<td>传给 C 预处理程序的标志，没有默认值</td>
+</tr>
+<tr class="even">
+<td>LDFLAGS</td>
+<td>传给链接程序（Id）的标志，没有默认值</td>
+</tr>
+</tbody>
+</table>
+<p>如果需要，可以在 makefile 中重新定义这些变量，但是在大多数情况下，这些默认值都是合理的。</p>
+<h3 id="隐式规则">3.3 隐式规则</h3>
+<p>除了在 makefile 文件中显式指定的规则（称为显式规则）外，make 还有一整套隐式规则，或称为预定义规则。这些规则多数有特殊目的而且用途有限，所以在这里只介绍几种最常用的隐式规则。隐式规则简化了 makefile 的编写和维护。</p>
+<p>假设有下面这样的一个 makefile：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">OBJS = editor.o screen.o keyboard.o</span><br><span class="line"></span><br><span class="line"><span class="section">editor: <span class="variable">$(OBJS)</span></span></span><br><span class="line">	cc -o editor <span class="variable">$(OBJS)</span></span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm editor <span class="variable">$(OBJS)</span></span><br></pre></td></tr></table></figure>
+<p>默认目标 editor 所对应的命令提及了 editor.o，screen.o 和 keyboard.o，但是 makefile 中没有怎样编译生成这些目标的规则。此时，make 就使用所谓的隐式规则，实际上，对每一个名为 somefile.o 的目标（object）文件，make 首先找到与之相应的源代码 somefile.c，并且用 <code>gcc -c somefile.c -o somefile.o</code> 编译生成这个目标文件。所以，在本例中 make 先查找名 为 editor.c，screen.c 和 keyboard.c 的文件并将它们编译为目标文件（editor.o，screen.o 和 keyboard.o），然后，编译生成默认目标 editor。</p>
+<p>实际的机制比这里所描述的要全面。目标文件（.o） 可以从 C、Pascal 和 Fortran 等源代码中生成，所以 make 也应去查找符合实际情况的相关文件。所以，如果在工作目录下有 editor.p，screen.p 和 keyboard.p 三个 Pascal 文件（p 通常被认为是 Pascal 源代码的扩展名），make 就会激活 Pascal 编译器来编译它们，而不用 C 编译器。因此，如果出于某种原因而在项目中需要使用多种语言时，就不能依靠隐式规则，因为此时使用该规则所得到的结果可能会与期望的有所不同。</p>
+<h3 id="模式规则">3.4 模式规则</h3>
+<p>通过定义用户自己的隐式规则，模式规则提供了扩展 make 的隐式规则的一种方法。模式规则类似于普通规则，但是它的目标必定含有符号 "%"，这个符号可以与任何非空字符串匹配；为与目标中的 "%" 匹配，这个规则的相关文件部分也必须使用 "%"。例如，下面的规则：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">%.o: %.c</span></span><br></pre></td></tr></table></figure>
+<p>告诉 make 所有形为 somename.o 的目标（object）文件都应从源文件 somename.c 编译而来。</p>
+<p>与隐式规则一样， make 预定义了一些模式规则：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">%.o: %.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> -c <span class="variable">$(CFLAGS)</span> <span class="variable">$(CPPFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br></pre></td></tr></table></figure>
+<p>与前面的例子相同，make 定义了一条规则，即任何 x.o 的文件都从 x.c 编译而来。每次使用该规则时，该规则用自动变量 <code>$&lt;</code> 和 <code>$@</code> 来代替第一个依赖体和目标体。此外，变量 <code>$(CC)</code>，<code>$(CFLAGS)</code> 和 <code>$(CPPFLAGS)</code> 的默认值如表 4.2 所示。</p>
+<h3 id="注释">3.5 注释</h3>
+<p>在 makefile 中插入注释时，必须在注释前加上符号 "#"。make 读到 "#" 后，它忽略该符号以及这一行余下的字母。注释可以出现在 makefile 的所有地方。但是，因为多数 shell 把 "#" 看作是元符号（通常也是注释符），所以在命令中加入注释时要特别小心。此外，实际上就 make 本身而言，一个只含注释的行就是一个空行。</p>
+<h2 id="命令行选项和参数">4 命令行选项和参数</h2>
+<p>同多数 GNU 程序一样，make 也有丰富的命令行选项。表 4.3 列出了最常用的部分。</p>
+<p>表 4.3 常用的 make 俞令行选项</p>
+<table>
+<thead>
+<tr class="header">
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-f file</code></td>
+<td>指定 makefile 的文件名</td>
+</tr>
+<tr class="even">
+<td><code>-n</code></td>
+<td>打印将需要执行的命令，但实际上并不执行这些命令</td>
+</tr>
+<tr class="odd">
+<td><code>-Idirname</code></td>
+<td>指定被包含的 makefile 所在的目录</td>
+</tr>
+<tr class="even">
+<td><code>-s</code></td>
+<td>在执行时不打印命令名</td>
+</tr>
+<tr class="odd">
+<td><code>-w</code></td>
+<td>如果 make 在执行时改变目录，打印当前目录名</td>
+</tr>
+<tr class="even">
+<td><code>-Wfile</code></td>
+<td>如果文件己修改，则使用 <code>-n</code> 来显示 make 将要执行的命令</td>
+</tr>
+<tr class="odd">
+<td><code>-r</code></td>
+<td>禁止使用所有 make 的内置规则</td>
+</tr>
+<tr class="even">
+<td><code>-d</code></td>
+<td>打印调试信息</td>
+</tr>
+<tr class="odd">
+<td><code>-i</code></td>
+<td>忽略 makefile 规则中的命令执行后返回的非零错误码。此时，即使某个命令返回非零的退出状态值，make 仍将继续执行</td>
+</tr>
+<tr class="even">
+<td><code>-k</code></td>
+<td>如果某个目标编译失败，继续编译其他目标。通常，make 在一个目标编译失败后终止</td>
+</tr>
+<tr class="odd">
+<td><code>jN</code></td>
+<td>每次运行 N 条命令，这里 N 是非零整数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="调试-make">5 调试 make</h2>
+<p>如果在使用 make 时遇到问题，<code>-d</code> 选项能够使 make 在执行命令时打印大量的额外调试信息。此时，因为需要显示 make 内部所做的每一件事以及为什么做这些事的调试信息，将会产生大量的输出。其中包括如下信息：</p>
+<ul>
+<li>在重新编译时 make 需要检查的文件</li>
+<li>被比较的文件以及比较的结果</li>
+<li>需要被重新生成的文件</li>
+<li>make 想要使用的隐式规则</li>
+<li>make 实际使用的隐式规则以及所执行的命令</li>
+</ul>
+<h2 id="常见的-make-出错信息">6 常见的 make 出错信息</h2>
+<p>这里列出使用 make 时可能遇到的最常用的出错信息，完整文档诮参见 make 使用手册或其信息页。</p>
+<ul>
+<li>No rule to make target 'target'. Stop makefile 中没有包含创建指定的 target 所需要的规则，而且也没有合适的默认规则可用。</li>
+<li>'target' is up to date 指定 target 的相关文件没有变化。</li>
+<li>Target 'target' not remade because of errors 在编译 target 时出错，这一消息仅在使用make的 -k 选项时才会出现。</li>
+<li>command: Command not found make 找不到命令。递常是因为命令被拼写错误或者不在路径 <code>$PATH</code> 下。</li>
+<li>Illegal option -option 在调用 make 时包含了不能被 make 识别的选项。</li>
+</ul>
+<h2 id="有用的-makefile-目标">7 有用的 makefile 目标</h2>
+<p>除了前面提及的 clean，编写 makefile 时还有一些常用的目标。名为 install 的目标把最终的二进制文件，所支持的库文件或 shell 脚本，以及相关的文档移动到文件系统中与之相应的最终位置，并适当设置文件的权限和属主。此外，install 通常也编译程序，以及运行简单的测试以确认程序已正确编译。uninstall 目标则删除由 install 目标所安装的那些文件。如果需要，在设置 install 目标前存储系统当前的设置。</p>
+<p>dist 目标可以用来生成准备发布的软件包。最低限度，dist 目标将删除编译工作目录中旧的二进制文件和目标文件并创建一个归档文件（如普通的压缩包），以便上传到万维网页或FTP站点。</p>
+<p>为了方便其他开发者，可以用一个 tags 目标来创建或更新程序的标记表。如果程序的验证过程比较复杂，也可以创建一个 单独的 test 或 check 目标来执行这一过程并显示适当的诊断信息。与之类似，installtest 或 installcheck 目标，通常被用来验证安装过程。当然，在此之前，install 目标必须已经成功地编译和安装了所需的程序。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/cec71891/" title="使用GNU-make管理项目">https://wylu.me/posts/cec71891/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/make/" rel="tag"><i class="fa fa-tag"></i> make</a>
+              <a href="/tags/makefile/" rel="tag"><i class="fa fa-tag"></i> makefile</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/eaa75cf0/" rel="prev" title="差分序列">
+                  <i class="fa fa-chevron-left"></i> 差分序列
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="916a30e9934eff644790201421cf201f"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

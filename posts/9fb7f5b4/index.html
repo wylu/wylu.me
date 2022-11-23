@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="进程通信（Inter-Process Communication, IPC）是指进程之间的信息交换。其所交换的信息量，少则是一个状态或数值，多则是成千上万个字节。多个进程为了协调完成一项工作，相互之间必须能够进行通信。进程的互斥和同步可归结为低级通信。进程的高级通信是指用户可直接利用系统所提供的一组通信命令，高效地传送大量数据的一种通信方式。操作系统隐藏了进程通信的实现细节，即对用户来说是透明的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程间通信机制">
+<meta property="og:url" content="https://wylu.me/posts/9fb7f5b4/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="进程通信（Inter-Process Communication, IPC）是指进程之间的信息交换。其所交换的信息量，少则是一个状态或数值，多则是成千上万个字节。多个进程为了协调完成一项工作，相互之间必须能够进行通信。进程的互斥和同步可归结为低级通信。进程的高级通信是指用户可直接利用系统所提供的一组通信命令，高效地传送大量数据的一种通信方式。操作系统隐藏了进程通信的实现细节，即对用户来说是透明的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/e7555aebbcdae382572ddedda53516e8.png">
+<meta property="article:published_time" content="2020-05-10T14:51:26.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:41:52.623Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="进程间通信">
+<meta property="article:tag" content="IPC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/e7555aebbcdae382572ddedda53516e8.png">
+
+
+<link rel="canonical" href="https://wylu.me/posts/9fb7f5b4/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/9fb7f5b4/","path":"posts/9fb7f5b4/","title":"进程间通信机制"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>进程间通信机制 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="nav-text">进程间通信机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7"><span class="nav-text">信号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-text">管道</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E5%90%8D%E7%AE%A1%E9%81%93"><span class="nav-text">无名管道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%AE%A1%E9%81%93"><span class="nav-text">命名管道</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-text">信号量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B"><span class="nav-text">实现过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E4%BF%A1%E5%8F%B7%E9%87%8F%E6%9C%89%E5%85%B3%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-text">与信号量有关的系统调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-text">死锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%E5%8C%BA"><span class="nav-text">共享存储区</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/9fb7f5b4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="进程间通信机制 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          进程间通信机制
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-10 22:51:26" itemprop="dateCreated datePublished" datetime="2020-05-10T22:51:26+08:00">2020-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:41:52" itemprop="dateModified" datetime="2022-11-23T23:41:52+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/" itemprop="url" rel="index"><span itemprop="name">os</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>进程通信（Inter-Process Communication, IPC）是指进程之间的信息交换。其所交换的信息量，少则是一个状态或数值，多则是成千上万个字节。多个进程为了协调完成一项工作，相互之间必须能够进行通信。进程的互斥和同步可归结为低级通信。进程的高级通信是指用户可直接利用系统所提供的一组通信命令，高效地传送大量数据的一种通信方式。操作系统隐藏了进程通信的实现细节，即对用户来说是透明的。这样就大大简化了通信程序编程上的复杂性。</p>
+<span id="more"></span>
+<h1 id="进程间通信机制">进程间通信机制</h1>
+<p>Linux 操作系统支持以下几种进程间通信机制：</p>
+<ul>
+<li>Unix IPC 机制
+<ul>
+<li>信号（signal）</li>
+<li>管道（pipe）和命名管道（named pipe）</li>
+</ul></li>
+<li>System V 的 IPC 机制
+<ul>
+<li>信号量（semaphore）</li>
+<li>消息队列（message queue）</li>
+<li>共享内存（shared memory）</li>
+</ul></li>
+<li>网络通信的套接字机制
+<ul>
+<li>套接字（socket）</li>
+</ul></li>
+<li>全双工管道机制</li>
+</ul>
+<p>以上各种通信机制都提供了相应的接口，IPC 结构图如下所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e7555aebbcdae382572ddedda53516e8.png" alt="IPC"></p>
+<h2 id="信号">信号</h2>
+<p>信号是用来向一个或多个进程发送异步事件的软件机制，它类似于硬件中断，所以也叫软中断。信号不仅可以从键盘中断中产生，进程对虚拟内存的非法存取等系统错误环境下也会有信号产生，此外信号还被 shell 程序用来向其子进程发送任务控制命令。</p>
+<p>系统中有一组被详细定义的信号类型，使用 <code>man 7 signal</code> 可以看到详细介绍。除了 SIGSTOP（进程终止执行）和 SIGKILL（进程退出）两个信号外，进程可以忽略其余信号。信号没有相对优先级，如果在同一时刻对于一个进程产生了两个信号，则它们将可能以任意顺序到达进程并进行处理。同时 Linux 并不提供处理多个相同类型信号的方式。</p>
+<p>信号个数受到处理器字长的限制。32 位字长的处理器最多可以有 32 个信号，而 64 位处理器可以有最多 64 个信号。Linux 通过存储在进程 task_struct 中的信息来实现信号。当前未处理的信号保存在 signal 域中，并带有保存在 blocked 中的被阻塞信号的屏蔽码。除了 SIGSTOP 和 SIGKILL 外，所有的信号都能被阻塞。</p>
+<p>系统中只有核心和超级用户进程可以向其他所有进程发送信号，普通进程只能向具有相同 uid 和 gid 的进程或者在同一进程组中的进程发送信号。信号是通过设置 task_struct 结构中 signal 域里的某一位来产生的。如果进程没有阻塞信号并且处于可中断的等待状态，则可以将其状态改成 Running，同时如确认进程还处在运行队列中，就可以通过信号唤醒它。这样系统下次发生调度时，调度管理器将选择它运行。信号必须等待到进程再次运行时才交给它，每次进程从系统调用中退出前，它都会检查 signal 和 blocked 域，看是否有可以立刻发送的非阻塞信号。对当前不可阻塞信号的处理代码放置在 sigaction 结构中。</p>
+<h2 id="管道">管道</h2>
+<p>管道是一个先进先出、大小固定的缓冲区，容量为 1 页（4KB），用于两个进程之间的单向数据传递。当管道有空间时，写者进程把数据送入管道，否则将被阻塞；如果管道中没有数据或读者进程需要的数据多于其中的数据，读者进程会被阻塞，否则执行读者进程的请求。整个过程由操作系统监控完成，互斥地访问管道。当传送的数据量大于管道的容量时，可以通过同步机制分次传送数据。</p>
+<h3 id="无名管道">无名管道</h3>
+<p>例如：Linux shell 程序中的重定向操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> -l | more</span></span><br></pre></td></tr></table></figure>
+<p>在这个管道应用中，<code>ls</code> 列出当前目录的输出被作为标准输入送到 more 程序中按格式显示处理。无名管道是将两个相关联的进程联系在一起。shell 程序负责在进程间建立临时的管道。</p>
+<p>在 Linux 中，管道是通过指向同一个临时 VFS（Virtual File System，虚拟文件系统）inode 的两个 file 数据结构来实现的，此 VFS inode 指向内存中的一个物理块。当写者进程向管道中写入数据时，字节被复制到共享数据页面中，当读者进程从管道中读时，字节从共享数据页面中复制出来。</p>
+<p>Linux 必须同步对管道的访问。它必须保证读者和写者进程以确定的步骤执行，为此需要使用锁、等待队列和信号等同步机制。以写数据为例，如果没有足够的空间容纳对所有写入管道的数据，或者管道被读者进程加锁时，当前进程将在管道 inode 的等待队列中睡眠，同时调度管理器开始执行以选择其他进程来执行。当有足够的空间或者管道被解锁时，它将被读者唤醒，然后执行写操作。当两个进程对管道的使用结束时，管道 inode 和共享数据页面将同时被释放。</p>
+<h3 id="命名管道">命名管道</h3>
+<p>Linux 还支持命名管道（named pipe），即 FIFO 管道，为两个不相关的进程提供通信手动。命名管道不是临时对象，它们是文件系统中的实体并且可以通过 <code>mknod</code> 命令来创建。进程只要拥有适当的权限就可以自由使用 FIFO 管道。在写者进程使用之前，Linux 必须让读者进程先打开此 FIFO 管道；任何读者进程从中读取之前必须有写者进程向其写入数据。</p>
+<h2 id="消息队列">消息队列</h2>
+<p>Linux 系统也支持 System V 的进程间通信机制，包括消息序列、信号量和共享内存。所有的 IPC 对象在 Linux 中有一个公共的 ipc_perm 结构，它含有进程拥有者、创建者和组标志符，对此对象（拥有者，组及其他）的存取模式以及 IPC 对象键。</p>
+<p>消息是按一定格式封装起来的消息。每个进程都有一个与之关联的消息队列，接收进程按时间顺序或消息类型从消息队列取走消息。如果进程向一个满队列发送消息或从一个空队列取走消息都会被阻塞。</p>
+<p>Linux 系统维护着一个 msgque 消息队列链表，其中每个元素指向一个描述消息队列 msqid_ds 结构，该结构完整地描述一个消息队列。每个 msqid_ds 结构包含一个 ipc_perm 结构和指向已经进入此队列消息的指针。另外，Linux 保留有关队列修改时间信息，如上次系统向队列中写入的时间等。msqid_ds 包含两个等待队列：一个为队列写入进程使用而另一个由队列读取进程使用。</p>
+<p>每次进程试图向写入队列写入消息时，系统将把其有效用户和组标志符与此队列的 ipc_perm 结构中的模式进行比较。如果允许写入操作，则把此消息从该进程的地址空间复制到 msg 数据结构中，并放置到此消息队列尾部。如果消息队列的长度已满，则该写入进程将被阻塞，并调度新进程运行。若有消息被取走时，该进程将被唤醒。读进程执行时将选择队列中第一个消息或者某特定类型的消息。如果没有消息可以满足此要求，读进程将被阻塞，并运行调度程序。当有新消息写入队列时，进程将被唤醒。</p>
+<h2 id="信号量">信号量</h2>
+<p>信号量是用一个整数表示系统当前资源的使用情况，当信号量大于或等于 0 时，其值表示可用资源的数量，当它小于 0 时，其值表示等待该资源的进程数。信号量是 wait 和 signal 原语的推广，可以通过它实现进程的同步与互斥。例如用信号量实现临界区（critical region）的互斥，即在某一时刻在此区域内的代码只能被一个进程执行。</p>
+<h3 id="数据结构">数据结构</h3>
+<p>信号量在 Linux 中使用以下几个数据结构来表示：</p>
+<ul>
+<li>sem：表示系统中的每个信号量</li>
+<li>semid_ds：表示信号量的集合</li>
+<li>sem_queue：表示由每个信号量集合所构成的队列</li>
+</ul>
+<p>semid_ds 结构的 sem_base 指向一个 sem 数组，进程可以使用系统调用来操作这些信号量数组。</p>
+<h3 id="实现过程">实现过程</h3>
+<p>在执行信号量操作时，Linux 首先将检查是否所有操作已经成功。如果操作值与信号量当前数组相加大于 0，或者操作值与信号量当前值都是 0，操作将会成功。如果所有信号量操作失败，Linux 仅仅会把那些操作标志没有要求系统调用为非阻塞类型的进程挂起。进程挂起后，Linux 必须保存信号量操作的执行状态并将当前进程放入等待队列。系统还堆栈上建立 sem_queue 结构并填充各个域。 这个 sem_queue 结构将被放到信号量对象等待队列的尾部。系统把当前进程置入 sem_queue 结构中的等待队列中，然后执行调度程序。</p>
+<p>如果所有这些信号量操作都成功则无须挂起当前进程，Linux 将对信号量数组中的其他成员进行相同操作，然后检查那些处于等待或挂起状态的进程。首先，Linux 将依次检查挂起队列（sem_pending）中的每个成员，看信号量操作能否继续。如果可以则将其 sem_queue 结构从挂起链表中删除并对信号量数组发出信号灯操作。Linux 还将唤醒处于睡眠状态的进程并使之成为下一个运行的进程。如果在对挂起队列的遍历过程中有的信号量操作不能完成则 Linux 将一直重复此过程，直到所有信号量操作完成且没有进程需要继续睡眠。</p>
+<h3 id="与信号量有关的系统调用">与信号量有关的系统调用</h3>
+<ul>
+<li><code>semget()</code>：创建新的信号量集合或存取一个已有的信号量集合。</li>
+<li><code>semop()</code>： 当操作数和信号量的值相加大于或等于 0 时，即进程请求的资源能够满足，操作成功，返回 0；若相加后其中某个值小于 0，资源不能满足，将进程阻塞，操作不成功。</li>
+<li><code>semctl()</code>：在信号量集合上完成指定的命令操作。</li>
+</ul>
+<h3 id="死锁">死锁</h3>
+<p>死锁是信号量使用过程中可能产生的一个最严重的问题。当一个进程进入临界区时它修改了信号量的值，然后在离开临界区时由于运行失败或者被 kill 而没有改回信号量时，死锁将会发生。</p>
+<p>Linux 为了避免死锁的发生，为每个进程维护至少一个对应于信号量数组的 sem_undo 结构，它保存了完成信号量操作之前的状态。当对信号量进行操作时，信号量变化的数值被放入进程的 sem_undo 结构的该信号的入口中。当进程被删除时，Linux 将遍历该进程的 sem_undo 集合对信号量数组使用调整值。如果信号量集合被删除而 sem_undo 数据结构还在进程的 task_struct 结构中，则此信号灯数组标志符将被置为无效。此时信号量清除代码只需丢弃 sem_undo 即可。</p>
+<h2 id="共享存储区">共享存储区</h2>
+<p>共享存储区是指被多个进程共享的虚存中的一个数据块，进程利用它来实现通信。此虚拟内存的页面出现在每个共享进程页表中，但位置可以不同。每个进程有相应的读或读写权限，对共享存储区的互斥访问必须依赖于其他机制，如信号量。</p>
+<p>每个新创建的共享存储区由一个 shmid_ds 数据结构来表示，它描述共享存储区的大小，进程如何使用以及共享存储区映射到各自地址空间的方式。由共享存储区创建者控制对此内存的存取权限。</p>
+<p>每个使用此共享内存的进程必须它能通过系统调用将其连接到虚拟内存上，但在连接时并没有创建共享存储区，只有进程访问它时才创建。当进程首次访问共享虚拟内存中的页面时将产生缺页中断。当取回此页面后，Linux 找到了描述此页面的数据结构。它包含指向使用此种类型虚拟内存的处理函数地址指针。当发生共享内存页面缺页错误时，错误处理代码将在此 shmid_ds 对应的页表入口链表中寻找此页面是否在内存。如果不在，则为其分配物理页面并创建页表入口。同时还将它放入当前进程的页表中，此入口被保存在 shmid_ds 结构中。下个访问此内存的进程就会连接到此页面上。这样，第一个访问虚拟内存页面的进程创建这块内存，随后的进程把此页面加入到各自的虚拟地址空间中。</p>
+<p>不再使用共享存储区的进程将断开与之的连接，其对应的页面结构将从 shmid_ds 结构中删除并回收。当前进程对应此共享内存地址的页表入口也将被更新并置为无效。当最后一个进程断开与共享内存的连接时，当前位于物理内存中的共享内存页面将被释放，同时删除 shmid_ds 结构。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-05-10</div>
+      <div class="popular-posts-title"><a href="/posts/3a046ccf/" rel="bookmark">Linux进程管理</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>操作系统的重要任务之一是管理计算机的软、硬件资源。现代操作系统的主要特点在于程序的并发执行，由此引出系统的资源被共享和用户随机使用系统。因而操作系统最核心的概念就是进程：即正在运行的程序。操作系统借助于进程来管理计算机的软、硬件资源，支持多任务的并发。操作系统的其他内容都是围绕进程展开的。所以进程管理是 Linux 操作系统内核的主要内容之一，它对整个操作系统的执行效率至关重要。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/11259beb/" rel="bookmark">Ubuntu 16.04 清除旧版本内核</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><strong>内核清除须谨慎，建议保留两个内核版本。</strong></p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/2882d36c/" rel="bookmark">Windows下读取Linux系统文件 Paragon ExtFS for Windows</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Paragon ExtFS for Windows 拥有简洁美观的界面，能够实现 Windows 下读写 Linux 系统文件，读写 ext 文件系统的文件。</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/9fb7f5b4/" title="进程间通信机制">https://wylu.me/posts/9fb7f5b4/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" rel="tag"><i class="fa fa-tag"></i> 进程间通信</a>
+              <a href="/tags/IPC/" rel="tag"><i class="fa fa-tag"></i> IPC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/3a046ccf/" rel="prev" title="Linux进程管理">
+                  <i class="fa fa-chevron-left"></i> Linux进程管理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/6a7a0bd6/" rel="next" title="CentOS7下Firewall的设置与使用">
+                  CentOS7下Firewall的设置与使用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="b407d5b512b1bbe537c43a90df2cda09"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

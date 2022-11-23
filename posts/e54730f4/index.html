@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在如今的互联网环境下，海量数据已随处可见并且还在不断增长，对于如何存储处理海量数据，比较常见的方法有两种：  垂直扩展：通过增加单台服务器的配置，例如使用更强悍的 CPU、更大的内存、更大容量的磁盘，此种方法虽然成本很高，但是实现比较简单，维护起来也比较方便。 水平扩展：通过使用更多配置一般的服务器来共同承担工作负载，此种方法很灵活，可以根据工作负载的大小动态增减服务器的数量，但是实现比较复杂，得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB分片集群搭建">
+<meta property="og:url" content="https://wylu.me/posts/e54730f4/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="在如今的互联网环境下，海量数据已随处可见并且还在不断增长，对于如何存储处理海量数据，比较常见的方法有两种：  垂直扩展：通过增加单台服务器的配置，例如使用更强悍的 CPU、更大的内存、更大容量的磁盘，此种方法虽然成本很高，但是实现比较简单，维护起来也比较方便。 水平扩展：通过使用更多配置一般的服务器来共同承担工作负载，此种方法很灵活，可以根据工作负载的大小动态增减服务器的数量，但是实现比较复杂，得">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/29228540b81791a13235d9e8e5cf3d2c.svg">
+<meta property="article:published_time" content="2020-04-04T08:17:04.000Z">
+<meta property="article:modified_time" content="2022-11-23T15:43:21.823Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="mongodb">
+<meta property="article:tag" content="sharding-cluster">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/29228540b81791a13235d9e8e5cf3d2c.svg">
+
+
+<link rel="canonical" href="https://wylu.me/posts/e54730f4/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/e54730f4/","path":"posts/e54730f4/","title":"MongoDB分片集群搭建"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MongoDB分片集群搭建 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+  <script async defer data-website-id src></script>
+
+  <script defer data-domain src></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">66</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">35</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言板</a></li><li class="menu-item menu-item-sitelog"><a href="/sitelog/" rel="section"><i class="fa fa-list-alt fa-fw"></i>站点日志</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E7%BB%84%E4%BB%B6"><span class="nav-text">分片集群组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sharded-key-%E5%88%86%E7%89%87%E9%94%AE"><span class="nav-text">Sharded Key 分片键</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chunk-%E5%9D%97"><span class="nav-text">Chunk 块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chunk-%E7%9A%84%E6%8B%86%E5%88%86"><span class="nav-text">Chunk 的拆分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chunk-%E7%9A%84%E8%BF%81%E7%A7%BB%E8%BF%87%E7%A8%8B"><span class="nav-text">Chunk 的迁移过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chunk-%E8%BF%81%E7%A7%BB%E7%9A%84%E9%98%88%E5%80%BC"><span class="nav-text">Chunk 迁移的阈值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-chunk-size-%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-text">修改 Chunk Size 的注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#balancer-%E5%9D%87%E8%A1%A1%E5%99%A8"><span class="nav-text">Balancer 均衡器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-text">分片集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mongodb"><span class="nav-text">安装 mongodb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%92%8C%E6%97%A5%E5%BF%97%E7%9B%AE%E5%BD%95"><span class="nav-text">创建数据和日志目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">配置环境变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#config-server-%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">config server 配置服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%88%86%E7%89%87%E5%89%AF%E6%9C%AC%E9%9B%86%E4%B8%89%E5%8F%B0%E6%9C%BA%E5%99%A8"><span class="nav-text">配置分片副本集（三台机器）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%88%86%E7%89%87%E5%89%AF%E6%9C%AC%E9%9B%86"><span class="nav-text">设置第一个分片副本集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%88%86%E7%89%87%E5%89%AF%E6%9C%AC%E9%9B%86"><span class="nav-text">设置第二个分片副本集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%88%86%E7%89%87%E5%89%AF%E6%9C%AC%E9%9B%86"><span class="nav-text">设置第三个分片副本集</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E5%99%A8-mongos"><span class="nav-text">配置路由服务器 mongos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E5%88%86%E7%89%87"><span class="nav-text">启用分片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%88%86%E7%89%87"><span class="nav-text">测试分片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-hashed-%E7%9A%84%E5%88%86%E7%89%87"><span class="nav-text">基于 Hashed 的分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-ranged-%E7%9A%84%E5%88%86%E7%89%87"><span class="nav-text">基于 Ranged 的分片</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E6%9C%9F%E8%BF%90%E7%BB%B4"><span class="nav-text">后期运维</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%85%B3%E9%97%AD"><span class="nav-text">启动关闭</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E9%99%A4%E6%95%B0%E6%8D%AE%E5%92%8C%E6%97%A5%E5%BF%97%E7%9B%AE%E5%BD%95"><span class="nav-text">清除数据和日志目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/e54730f4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MongoDB分片集群搭建 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MongoDB分片集群搭建
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-04 16:17:04" itemprop="dateCreated datePublished" datetime="2020-04-04T16:17:04+08:00">2020-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-23 23:43:21" itemprop="dateModified" datetime="2022-11-23T23:43:21+08:00">2022-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web/mongo/" itemprop="url" rel="index"><span itemprop="name">mongo</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在如今的互联网环境下，海量数据已随处可见并且还在不断增长，对于如何存储处理海量数据，比较常见的方法有两种：</p>
+<ul>
+<li><strong>垂直扩展</strong>：通过增加单台服务器的配置，例如使用更强悍的 CPU、更大的内存、更大容量的磁盘，此种方法虽然成本很高，但是实现比较简单，维护起来也比较方便。</li>
+<li><strong>水平扩展</strong>：通过使用更多配置一般的服务器来共同承担工作负载，此种方法很灵活，可以根据工作负载的大小动态增减服务器的数量，但是实现比较复杂，得有专门的人员来运维。</li>
+</ul>
+<p>MongoDB 支持通过分片技术从而进行水平扩展，用以支撑海量数据集和高吞吐量的操作。如果数据集不够大，还是建议您使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/replication/">MongoDB 副本集</a>，因为分片需要处理更多的技术细节，所以在分片环境下其性能可能始终没有副本集性能强。本文通过介绍如何搭建 MongoDB 分片集群以及及一些相关核心概念，可以帮您快速理解 MongoDB 是如何通过分片技术来处理海量数据的。</p>
+<span id="more"></span>
+<h1 id="分片集群组件">分片集群组件</h1>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/29228540b81791a13235d9e8e5cf3d2c.svg" alt="sharded cluster"></p>
+<p>MongoDB 分片集群（参考官方文档 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/sharding/">Sharded Cluster</a>）由以下三个组件构成，缺一不可：</p>
+<ul>
+<li>mongos：数据库集群请求的入口，所有的请求都通过 mongos 进行协调，不需要在应用程序添加一个路由选择器，mongos 自己就是一个请求分发中心，它负责把对应的数据请求请求转发到对应的 shard 服务器上。在生产环境通常有多 mongos 作为请求的入口，防止其中一个挂掉所有的 mongodb 请求都没有办法操作。</li>
+<li>config server：顾名思义为配置服务器，存储所有数据库元信息（路由、分片）的配置。mongos 本身没有物理存储分片服务器和数据路由信息，只是缓存在内存里，配置服务器则实际存储这些数据。mongos 第一次启动或者关掉重启就会从 config server 加载配置信息，以后如果配置服务器信息变化会通知到所有的 mongos 更新自己的状态，这样 mongos 就能继续准确路由。从 MongoDB 3.4 开始，必须将配置服务器部署为副本集（CSRS，全称是 Config Servers Replica Set），因为它存储了分片路由的元数据，防止数据丢失！</li>
+<li>shard，分片（sharding）是指将数据库拆分，将其分散在不同的机器上的过程，每个分片是整体数据的子集，且都可以部署为副本集。将数据分散到不同的机器上，不需要功能强大的服务器就可以存储更多的数据和处理更大的负载。基本思想就是将集合切成小块，这些块分散到若干片里，每个片只负责总数据的一部分，最后通过一个均衡器来对各个分片进行均衡（数据迁移）。</li>
+</ul>
+<p>其它名词概念：</p>
+<ul>
+<li>replica set：中文翻译副本集，其实就是 shard 的备份，防止 shard 挂掉之后数据丢失。复制提供了数据的冗余备份，并在多个服务器上存储数据副本，提高了数据的可用性， 并可以保证数据的安全性。</li>
+<li>仲裁者（Arbiter）：是复制集中的一个 MongoDB 实例，它并不保存数据。仲裁节点使用最小的资源并且不要求硬件设备，不能将 Arbiter 部署在同一个数据集节点中，可以部署在其他应用服务器或者监视服务器中，也可部署在单独的虚拟机中。为了确保复制集中有奇数的投票成员（包括 primary），需要添加仲裁节点做为投票，否则 primary 不能运行时不会自动切换 primary。</li>
+</ul>
+<p>简单了解之后，我们可以这样总结一下，应用请求 mongos 来操作 mongodb 的增删改查，配置服务器存储数据库元信息，并且和 mongos 做同步，数据最终存入在 shard（分片）上，为了防止数据丢失同步在副本集中存储了一份，仲裁在数据存储到分片的时候决定存储到哪个节点。</p>
+<h1 id="sharded-key-分片键">Sharded Key 分片键</h1>
+<p>MongoDB 通过定义 shared key（分片键）从而对整个集合进行分片，分片键的好坏直接影响到整个集群的性能。另外需要注意的是，一个集合只有且只能有一个分片键，一旦分片键确定好之后就不能更改。分片键分为以下两种类型：</p>
+<ul>
+<li><strong>基于 Hashed 的分片</strong>：MongoDB 会计算分片键字段值的哈希值，用以确定该文档存于哪个 chunk，从而达到将集合分摊到不同的 chunk。此种类型能够使得数据整体分布比较均匀，对于等值查询效率很高，但是对于范围查询效率就比较低，因为可能要扫描所有的分片才能获取到数据。</li>
+<li><strong>基于 Ranged 的分片</strong>：MongoDB 会将相似的值放到一个 chunk 中，所以说如果在查询的时候带上分片键的范围条件，查询效率会非常高，因为不需要扫描所有的分片就可以定位到数据。注意，如果片键的值为单调递增或单调递减，那么不适合采用该分片策略，因为数据总会写到一个分片，从而没有很好地分散 IO。</li>
+</ul>
+<p>分片键的类型需要根据实际的业务场景决定，例如有张非常大的用户表，用户表里有用户 ID 字段，每次查询的时候都会带上用户 ID，如果想对该用户表进行分片，可以选择将用户 ID 字段作为 shard key，并且分片键类型可以使用基于 Hashed 的分片。</p>
+<h1 id="chunk-块">Chunk 块</h1>
+<p><strong>chunk</strong>（块）是均衡器迁移数据的最小单元，默认大小为 64MB，取值范围为 1-1024MB。一个块只存在于一个分片，每个块由片键特定范围内的文档组成，块的范围为左闭又开即 <code>[start,end)</code>。一个文档属于且只属于一个块，当一个块增加到特定大小的时候，会通过拆分点（split point）被拆分成 2 个较小的块。在有些情况下，chunk 会持续增长，超过 ChunkSize，官方称为 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.ibm.com/developerworks/cn/opensource/os-mongodb-sharded-cluster/Maximum-Number-of-Documents-Per-Chunk-to-Migrate">jumbo chunk</a>，该块无法被 MongoDB 拆分，也不能被均衡器迁移，故久而久之会导致 chunk 在分片服务器上分布不均匀，从而成为性能瓶颈，表现之一为 insert 数据变慢。</p>
+<h2 id="chunk-的拆分">Chunk 的拆分</h2>
+<p>mongos 会记录每个块中有多少数据，一旦达到了阈值就会检查是否需要对其进行拆分，如果确实需要拆分则可以在配置服务器上更新这个块的相关元信息。</p>
+<p>chunk 的拆分过程如下：</p>
+<ol type="1">
+<li>mongos 接收到客户端发起的写请求后会检查当前块的拆分阈值点。</li>
+<li>如果需要拆分，mongos 则会像分片服务器发起一个拆分请求。</li>
+<li>分片服务器会做拆分工作，然后将信息返回 mongos。</li>
+</ol>
+<p>注意，相同的片键只能保存在相同的块中，如果一个相同的片键过多，则会导致一个块过大，成为 jumbo chunk，所以具有不同值的片键很重要。</p>
+<h2 id="chunk-的迁移过程"><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/core/sharding-balancer-administration/">Chunk 的迁移过程</a></h2>
+<ol type="1">
+<li>均衡器进程发送 <code>moveChunk</code> 命令到源分片。</li>
+<li>源分片使用内部 <code>moveChunk</code> 命令，在迁移过程，对该块的操作还是会路由到源分片。</li>
+<li>目标分片构建索引。</li>
+<li>目标分片开始进行数据复制。</li>
+<li>复制完成后会同步在迁移过程中该块的更改。</li>
+<li>同步完成后源分片会连接到配置服务器，使用块的新位置更新集群元数据。</li>
+<li>源分片完成元数据更新后，一旦块上没有打开的游标，源分片将删除其文档副本。</li>
+</ol>
+<p>迁移过程可确保一致性，并在平衡期间最大化块的可用性。</p>
+<h2 id="chunk-迁移的阈值">Chunk 迁移的阈值</h2>
+<p>为了最大程度地减少平衡对集群的影响，平衡器仅在分片集合的块分配达到某些阈值之后才开始平衡。阈值适用于集合中具有最多块的 shard 与该集合中具有最少块的 shard 之间的块数差异。平衡器具有以下阈值：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Number of Chunks</th>
+<th style="text-align: left;">Migration Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Fewer than 20</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">20-79</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80 and greater</td>
+<td style="text-align: left;">8</td>
+</tr>
+</tbody>
+</table>
+<p>当该集合的任何两个分片上的块数之差小于2或块迁移失败时，平衡器将停止在目标集合上运行。</p>
+<h2 id="修改-chunk-size-的注意事项">修改 Chunk Size 的注意事项</h2>
+<p>修改 chunk 大小需要注意以下几点：</p>
+<ol type="1">
+<li>chunk 的自动拆分操作仅发生在插入或更新的时候。</li>
+<li>如果减少 chunk size，将会耗费一些时间将原有的 chunk 拆分到新 chunk，并且此操作不可逆。</li>
+<li>如果新增 chunk size，已存在的 chunk 只会等到新的插入或更新操作将其扩充至新的大小。</li>
+<li>chunk size 的可调整范围为 1-1024MB。</li>
+</ol>
+<h1 id="balancer-均衡器">Balancer 均衡器</h1>
+<p>MongoDB 的 balancer（均衡器）是监视每个分片的 chunk 数的一个后台进程。当分片上的 chunk 数达到特定迁移阈值时，均衡器会尝试在分片之间自动迁移块，使得每个分片的块的数量达到平衡。分片群集的平衡过程对用户和应用程序层完全透明，但在执行过程时可能会对性能产生一些影响。</p>
+<p>从 MongoDB 3.4 开始，balancer 在配置服务器副本集（CSRS）的主服务器上运行，在 3.4 版本中，当平衡器进程处于活动状态时，主配置服务器的的 locks 集合通过修改 <code>_id: "balancer"</code> 文档会获取一个 balancer lock，该 balancer lock 不会被释放，是为了保证只有一个 mongos 实例能够在分片集群中执行管理任务。从 3.6 版本开始，均衡器不再需要 balancer lock。</p>
+<p>均衡器可以动态的开启和关闭，也可以针对指定的集合开启和关闭，还可以手动控制均衡器迁移 chunk 的时间，避免在业务高峰期的时候迁移 chunk 从而影响集群性能。以下命令将均衡器的迁移 chunk 时间控制在凌晨 02 点至凌晨 06 点：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use config</span><br><span class="line">db.settings.update(</span><br><span class="line">   &#123; _id: &quot;balancer&quot; &#125;,</span><br><span class="line">   &#123; $set: &#123; activeWindow : &#123; start : &quot;02:00&quot;, stop : &quot;06:00&quot; &#125; &#125; &#125;,</span><br><span class="line">   &#123; upsert: true &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h1 id="环境准备">环境准备</h1>
+<ul>
+<li><p>系统系统：CentOS7 64位</p></li>
+<li><p>三台服务器：192.168.0.11/12/13</p></li>
+<li><p>安装包：mongodb-linux-x86_64-4.2.5.tgz</p></li>
+<li><p>服务器规划</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>服务器11</strong></th>
+<th><strong>服务器12</strong></th>
+<th><strong>服务器13</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mongos</td>
+<td>mongos</td>
+<td>mongos</td>
+</tr>
+<tr class="even">
+<td>config server</td>
+<td>config server</td>
+<td>config server</td>
+</tr>
+<tr class="odd">
+<td>shard server1 主节点</td>
+<td>shard server1 副节点</td>
+<td>shard server1 仲裁</td>
+</tr>
+<tr class="even">
+<td>shard server2 仲裁</td>
+<td>shard server2 主节点</td>
+<td>shard server2 副节点</td>
+</tr>
+<tr class="odd">
+<td>shard server3 副节点</td>
+<td>shard server3 仲裁</td>
+<td>shard server3 主节点</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>端口分配</p>
+<ul>
+<li>mongos：20000</li>
+<li>config：21000</li>
+<li>shard1：27001</li>
+<li>shard2：27002</li>
+<li>shard3：27003</li>
+</ul></li>
+</ul>
+<h1 id="分片集群搭建">分片集群搭建</h1>
+<h2 id="安装-mongodb">安装 mongodb</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat-tarball/">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat-tarball/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf mongodb-linux-x86_64-4.2.5.tgz -C /usr/local/</span><br><span class="line">mv mongodb-linux-x86_64-4.2.5 mongodb</span><br></pre></td></tr></table></figure>
+<h3 id="创建数据和日志目录">创建数据和日志目录</h3>
+<p>分别在每台机器建立 conf、mongos、config、shard1、shard2、shard3 六个目录，因为 mongos 不存储数据，只需要建立日志文件目录即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/local/mongodb/conf /usr/local/mongodb/mongos/log /usr/local/mongodb/config/data /usr/local/mongodb/config/log /usr/local/mongodb/shard1/data /usr/local/mongodb/shard1/log /usr/local/mongodb/shard2/data /usr/local/mongodb/shard2/log /usr/local/mongodb/shard3/data /usr/local/mongodb/shard3/log</span><br></pre></td></tr></table></figure>
+<h3 id="配置环境变量">配置环境变量</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>添加如下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export MONGODB_HOME=/usr/local/mongodb</span><br><span class="line">export PATH=$MONGODB_HOME/bin:$PATH</span><br></pre></td></tr></table></figure>
+<p>使修改立即生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+<h2 id="config-server-配置服务器">config server 配置服务器</h2>
+<p>mongodb3.4 以后要求配置服务器也创建副本集，不然集群搭建不成功。</p>
+<p>添加配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/mongodb/conf/config.conf</span><br></pre></td></tr></table></figure>
+<p>配置文件内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pidfilepath</span>=/usr/local/mongodb/config/log/configsrv.pid</span><br><span class="line"><span class="attr">dbpath</span>=/usr/local/mongodb/config/data</span><br><span class="line"><span class="attr">logpath</span>=/usr/local/mongodb/config/log/configsrv.log</span><br><span class="line"><span class="attr">logappend</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">bind_ip</span>=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">21000</span></span><br><span class="line"><span class="attr">fork</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 声明这是集群的配置服务器</span></span><br><span class="line"><span class="attr">configsvr</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 副本集名称</span></span><br><span class="line"><span class="attr">replSet</span>=configs</span><br><span class="line"><span class="comment"># 设置最大连接数</span></span><br><span class="line"><span class="attr">maxConns</span>=<span class="number">20000</span></span><br></pre></td></tr></table></figure>
+<p>启动三台服务器的 config server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /usr/local/mongodb/conf/config.conf</span><br></pre></td></tr></table></figure>
+<p>登录任意一台配置服务器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 21000</span><br></pre></td></tr></table></figure>
+<p>定义 config server 副本集配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">config = &#123;</span><br><span class="line">    _id : &quot;configs&quot;,</span><br><span class="line">    members : [</span><br><span class="line">        &#123;_id : 0, host : &quot;192.168.0.11:21000&quot; &#125;,</span><br><span class="line">        &#123;_id : 1, host : &quot;192.168.0.12:21000&quot; &#125;,</span><br><span class="line">        &#123;_id : 2, host : &quot;192.168.0.13:21000&quot; &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>初始化 config server 副本集：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rs.initiate(config)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>_id : "configs"</code> 应与配置文件中配置的 <code>replicaction.replSetName</code> 一致，"members" 中的 "host" 为三个节点的 ip 和 port</p>
+<h2 id="配置分片副本集三台机器">配置分片副本集（三台机器）</h2>
+<h3 id="设置第一个分片副本集">设置第一个分片副本集</h3>
+<p>添加配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/mongodb/conf/shard1.conf</span><br></pre></td></tr></table></figure>
+<p>配置文件内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pidfilepath</span>=/usr/local/mongodb/shard1/log/shard1.pid</span><br><span class="line"><span class="attr">dbpath</span>=/usr/local/mongodb/shard1/data</span><br><span class="line"><span class="attr">logpath</span>=/usr/local/mongodb/shard1/log/shard1.log</span><br><span class="line"><span class="attr">logappend</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">bind_ip</span>=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">27001</span></span><br><span class="line"><span class="attr">fork</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 副本集名称</span></span><br><span class="line"><span class="attr">replSet</span>=shard1</span><br><span class="line"><span class="comment"># 声明这是集群的一个分片服务器</span></span><br><span class="line"><span class="attr">shardsvr</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 设置最大连接数</span></span><br><span class="line"><span class="attr">maxConns</span>=<span class="number">20000</span></span><br></pre></td></tr></table></figure>
+<p>启动三台服务器的 shard1 server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /usr/local/mongodb/conf/shard1.conf</span><br></pre></td></tr></table></figure>
+<p>登录任意一台非 arbiter 的 shard1 server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 27001</span><br></pre></td></tr></table></figure>
+<p>使用 admin 数据库，定义 shard1 server 副本集配置：</p>
+<p>第三个节点的 <code>arbiterOnly: true</code> 代表其为仲裁节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br><span class="line">config = &#123;</span><br><span class="line">    _id : &quot;shard1&quot;,</span><br><span class="line">    members : [</span><br><span class="line">        &#123;_id : 0, host : &quot;192.168.0.11:27001&quot;&#125;,</span><br><span class="line">        &#123;_id : 1, host : &quot;192.168.0.12:27001&quot;&#125;,</span><br><span class="line">        &#123;_id : 2, host : &quot;192.168.0.13:27001&quot;, arbiterOnly: true&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>初始化 shard1 server 副本集：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rs.initiate(config)</span><br></pre></td></tr></table></figure>
+<h3 id="设置第二个分片副本集">设置第二个分片副本集</h3>
+<p>添加配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/mongodb/conf/shard2.conf</span><br></pre></td></tr></table></figure>
+<p>配置文件内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pidfilepath</span>=/usr/local/mongodb/shard2/log/shard2.pid</span><br><span class="line"><span class="attr">dbpath</span>=/usr/local/mongodb/shard2/data</span><br><span class="line"><span class="attr">logpath</span>=/usr/local/mongodb/shard2/log/shard2.log</span><br><span class="line"><span class="attr">logappend</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">bind_ip</span>=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">27002</span></span><br><span class="line"><span class="attr">fork</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 副本集名称</span></span><br><span class="line"><span class="attr">replSet</span>=shard2</span><br><span class="line"><span class="comment"># 声明这是集群的一个分片服务器</span></span><br><span class="line"><span class="attr">shardsvr</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 设置最大连接数</span></span><br><span class="line"><span class="attr">maxConns</span>=<span class="number">20000</span></span><br></pre></td></tr></table></figure>
+<p>启动三台服务器的 shard2 server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /usr/local/mongodb/conf/shard2.conf</span><br></pre></td></tr></table></figure>
+<p>登录任意一台非 arbiter 的 shard2 server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 27002</span><br></pre></td></tr></table></figure>
+<p>使用 admin 数据库，定义 shard2 server 副本集配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br><span class="line">config = &#123;</span><br><span class="line">    _id : &quot;shard2&quot;,</span><br><span class="line">    members : [</span><br><span class="line">        &#123;_id : 0, host : &quot;192.168.0.11:27002&quot;, arbiterOnly: true&#125;,</span><br><span class="line">        &#123;_id : 1, host : &quot;192.168.0.12:27002&quot;&#125;,</span><br><span class="line">        &#123;_id : 2, host : &quot;192.168.0.13:27002&quot;&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>初始化 shard2 server 副本集：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rs.initiate(config)</span><br></pre></td></tr></table></figure>
+<h3 id="设置第三个分片副本集">设置第三个分片副本集</h3>
+<p>添加配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/mongodb/conf/shard3.conf</span><br></pre></td></tr></table></figure>
+<p>配置文件内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pidfilepath</span>=/usr/local/mongodb/shard3/log/shard3.pid</span><br><span class="line"><span class="attr">dbpath</span>=/usr/local/mongodb/shard3/data</span><br><span class="line"><span class="attr">logpath</span>=/usr/local/mongodb/shard3/log/shard3.log</span><br><span class="line"><span class="attr">logappend</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">bind_ip</span>=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">27003</span></span><br><span class="line"><span class="attr">fork</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 副本集名称</span></span><br><span class="line"><span class="attr">replSet</span>=shard3</span><br><span class="line"><span class="comment"># 声明这是集群的一个分片服务器</span></span><br><span class="line"><span class="attr">shardsvr</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 设置最大连接数</span></span><br><span class="line"><span class="attr">maxConns</span>=<span class="number">20000</span></span><br></pre></td></tr></table></figure>
+<p>启动三台服务器的 shard3 server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /usr/local/mongodb/conf/shard3.conf</span><br></pre></td></tr></table></figure>
+<p>登录任意一台非 arbiter 的 shard3 server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 27003</span><br></pre></td></tr></table></figure>
+<p>使用 admin 数据库，定义 shard3 server 副本集配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br><span class="line">config = &#123;</span><br><span class="line">    _id : &quot;shard3&quot;,</span><br><span class="line">    members : [</span><br><span class="line">        &#123;_id : 0, host : &quot;192.168.0.11:27003&quot;&#125;,</span><br><span class="line">        &#123;_id : 1, host : &quot;192.168.0.12:27003&quot;, arbiterOnly: true&#125;,</span><br><span class="line">        &#123;_id : 2, host : &quot;192.168.0.13:27003&quot;&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>初始化 shard3 server 副本集：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rs.initiate(config)</span><br></pre></td></tr></table></figure>
+<h2 id="配置路由服务器-mongos">配置路由服务器 mongos</h2>
+<p>先启动配置服务器和分片服务器，后启动路由实例：（三台机器）</p>
+<p>添加配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/mongodb/conf/mongos.conf</span><br></pre></td></tr></table></figure>
+<p>配置文件内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pidfilepath</span>=/usr/local/mongodb/mongos/log/mongos.pid</span><br><span class="line"><span class="attr">logpath</span>=/usr/local/mongodb/mongos/log/mongos.log</span><br><span class="line"><span class="attr">logappend</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">bind_ip</span>=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">20000</span></span><br><span class="line"><span class="attr">fork</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 监听的配置服务器, 只能有1个或者3个, configs为配置服务器的副本集名字</span></span><br><span class="line"><span class="attr">configdb</span>=configs/<span class="number">192.168</span>.<span class="number">0.11</span>:<span class="number">21000</span>,<span class="number">192.168</span>.<span class="number">0.12</span>:<span class="number">21000</span>,<span class="number">192.168</span>.<span class="number">0.13</span>:<span class="number">21000</span></span><br><span class="line"><span class="comment"># 设置最大连接数</span></span><br><span class="line"><span class="attr">maxConns</span>=<span class="number">20000</span></span><br></pre></td></tr></table></figure>
+<p>启动三台服务器的 mongos server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongos -f /usr/local/mongodb/conf/mongos.conf</span><br></pre></td></tr></table></figure>
+<h2 id="启用分片">启用分片</h2>
+<p>目前搭建了 mongodb 配置服务器、路由服务器，各个分片服务器，不过应用程序连接到 mongos 路由服务器并不能使用分片机制，还需要在程序里设置分片配置，让分片生效。</p>
+<p>登陆任意一台 mongos：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 20000</span><br></pre></td></tr></table></figure>
+<p>使用 admin 数据库，串联路由服务器与分片副本集：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br><span class="line">sh.addShard(&quot;shard1/192.168.0.11:27001,192.168.0.12:27001,192.168.0.13:27001&quot;)</span><br><span class="line">sh.addShard(&quot;shard2/192.168.0.11:27002,192.168.0.12:27002,192.168.0.13:27002&quot;)</span><br><span class="line">sh.addShard(&quot;shard3/192.168.0.11:27003,192.168.0.12:27003,192.168.0.13:27003&quot;)</span><br></pre></td></tr></table></figure>
+<p>查看集群状态：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh.status()</span><br></pre></td></tr></table></figure>
+<h2 id="测试分片">测试分片</h2>
+<h3 id="基于-hashed-的分片">基于 Hashed 的分片</h3>
+<p>目前配置服务、路由服务、分片服务、副本集服务都已经串联起来了，现在我们希望插入数据时，数据能够自动分片。</p>
+<p>首先连接到 mongos：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 20000</span><br></pre></td></tr></table></figure>
+<p>切换到 admin 数据库，让指定的数据库、指定的集合分片生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启 <span class="built_in">test</span> 库的分片功能</span></span><br><span class="line">db.runCommand(&#123;enablesharding: &quot;test&quot;&#125;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">选择集合的分片键，注意这里创建的是 <span class="built_in">hash</span> 索引</span></span><br><span class="line">db.runCommand(&#123;shardcollection: &quot;test.hashed&quot;, key: &#123;_id: &quot;hashed&quot;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>这里设置 test 数据库的 <code>hashed</code> 表需要分片，根据 <code>_id</code> 自动分片到 shard1，shard2，shard3 上面去，之所以这样设置是因为不是所有 mongodb 的数据库和表都需要分片！</p>
+<p>查看此时的分片的状态：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mongos&gt; </span><span class="language-bash">sh.status()</span></span><br><span class="line">--- Sharding Status ---</span><br><span class="line">  sharding version: &#123;</span><br><span class="line">        &quot;_id&quot; : 1,</span><br><span class="line">        &quot;minCompatibleVersion&quot; : 5,</span><br><span class="line">        &quot;currentVersion&quot; : 6,</span><br><span class="line">        &quot;clusterId&quot; : ObjectId(&quot;5e82a238caf5457afd11f184&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">  shards:</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;shard1&quot;,  &quot;host&quot; : &quot;shard1/192.168.0.11:27001,192.168.0.12:27001&quot;,  &quot;state&quot; : 1 &#125;</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;shard2&quot;,  &quot;host&quot; : &quot;shard2/192.168.0.12:27002,192.168.0.13:27002&quot;,  &quot;state&quot; : 1 &#125;</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;shard3&quot;,  &quot;host&quot; : &quot;shard3/192.168.0.11:27003,192.168.0.13:27003&quot;,  &quot;state&quot; : 1 &#125;</span><br><span class="line">  active mongoses:</span><br><span class="line">        &quot;4.2.5&quot; : 1</span><br><span class="line">  autosplit:</span><br><span class="line">        Currently enabled: yes</span><br><span class="line">  balancer:</span><br><span class="line">        Currently enabled:  yes</span><br><span class="line">        Currently running:  no</span><br><span class="line">        Failed balancer rounds in last 5 attempts:  0</span><br><span class="line">        Migration Results for the last 24 hours:</span><br><span class="line">                6 : Success</span><br><span class="line">  databases:</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;config&quot;,  &quot;primary&quot; : &quot;config&quot;,  &quot;partitioned&quot; : true &#125;</span><br><span class="line">                config.system.sessions</span><br><span class="line">                        shard key: &#123; &quot;_id&quot; : 1 &#125;</span><br><span class="line">                        unique: false</span><br><span class="line">                        balancing: true</span><br><span class="line">                        chunks:</span><br><span class="line">                                shard1  1</span><br><span class="line">                        &#123; &quot;_id&quot; : &#123; &quot;$minKey&quot; : 1 &#125; &#125; --&gt;&gt; &#123; &quot;_id&quot; : &#123; &quot;$maxKey&quot; : 1 &#125; &#125; on : shard1 Timestamp(1, 0)</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;test&quot;,  &quot;primary&quot; : &quot;shard1&quot;,  &quot;partitioned&quot; : true,  &quot;version&quot; : &#123;  &quot;uuid&quot; : UUID(&quot;3ed17366-fef3-4225-bdc4-f89f8bf751cf&quot;),  &quot;lastMod&quot; : 1 &#125; &#125;</span><br><span class="line">                test.hashed</span><br><span class="line">                        shard key: &#123; &quot;_id&quot; : &quot;hashed&quot; &#125;</span><br><span class="line">                        unique: false</span><br><span class="line">                        balancing: true</span><br><span class="line">                        chunks:</span><br><span class="line">                                shard1  2</span><br><span class="line">                                shard2  2</span><br><span class="line">                                shard3  2</span><br><span class="line">                        &#123; &quot;_id&quot; : &#123; &quot;$minKey&quot; : 1 &#125; &#125; --&gt;&gt; &#123; &quot;_id&quot; : NumberLong(&quot;-6148914691236517204&quot;) &#125; on : shard1 Timestamp(1, 0)</span><br><span class="line">                        &#123; &quot;_id&quot; : NumberLong(&quot;-6148914691236517204&quot;) &#125; --&gt;&gt; &#123; &quot;_id&quot; : NumberLong(&quot;-3074457345618258602&quot;) &#125; on : shard1 Timestamp(1, 1)</span><br><span class="line">                        &#123; &quot;_id&quot; : NumberLong(&quot;-3074457345618258602&quot;) &#125; --&gt;&gt; &#123; &quot;_id&quot; : NumberLong(0) &#125; on : shard2 Timestamp(1, 2)</span><br><span class="line">                        &#123; &quot;_id&quot; : NumberLong(0) &#125; --&gt;&gt; &#123; &quot;_id&quot; : NumberLong(&quot;3074457345618258602&quot;) &#125; on : shard2 Timestamp(1, 3)</span><br><span class="line">                        &#123; &quot;_id&quot; : NumberLong(&quot;3074457345618258602&quot;) &#125; --&gt;&gt; &#123; &quot;_id&quot; : NumberLong(&quot;6148914691236517204&quot;) &#125; on : shard3 Timestamp(1, 4)</span><br><span class="line">                        &#123; &quot;_id&quot; : NumberLong(&quot;6148914691236517204&quot;) &#125; --&gt;&gt; &#123; &quot;_id&quot; : &#123; &quot;$maxKey&quot; : 1 &#125; &#125; on : shard3 Timestamp(1, 5)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">mongos&gt;</span></span><br></pre></td></tr></table></figure>
+<p>切换到 test 数据库，测试分片配置结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use test</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">插入测试数据</span></span><br><span class="line">for (var i = 1; i &lt;= 100000; i++) db.hashed.save(&#123;&quot;task&quot;: i, &quot;createTime&quot;: new Date()&#125;);</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看分片情况</span></span><br><span class="line">db.hashed.stats();</span><br></pre></td></tr></table></figure>
+<p>查看分片情况，省掉了部分无关信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mongos&gt; </span><span class="language-bash">use <span class="built_in">test</span></span></span><br><span class="line">switched to db test</span><br><span class="line"><span class="meta prompt_">mongos&gt; </span><span class="language-bash"><span class="keyword">for</span> (var i = 1; i &lt;= 100000; i++) db.hashed.save(&#123;<span class="string">&quot;task&quot;</span>: i, <span class="string">&quot;createTime&quot;</span>: new Date()&#125;);</span></span><br><span class="line">WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)</span><br><span class="line"><span class="meta prompt_">mongos&gt; </span><span class="language-bash">db.hashed.stats()</span></span><br><span class="line">&#123;</span><br><span class="line">        &quot;sharded&quot; : true,</span><br><span class="line">        &quot;capped&quot; : false,</span><br><span class="line">        ...</span><br><span class="line">        &quot;ns&quot; : &quot;test.hashed&quot;,</span><br><span class="line">        &quot;count&quot; : 100000,</span><br><span class="line">        &quot;size&quot; : 5600000,</span><br><span class="line">        &quot;storageSize&quot; : 2539520,</span><br><span class="line">        &quot;totalIndexSize&quot; : 4485120,</span><br><span class="line">        &quot;indexSizes&quot; : &#123;</span><br><span class="line">                &quot;_id_&quot; : 1036288,</span><br><span class="line">                &quot;_id_hashed&quot; : 3448832</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;avgObjSize&quot; : 56,</span><br><span class="line">        &quot;maxSize&quot; : NumberLong(0),</span><br><span class="line">        &quot;nindexes&quot; : 2,</span><br><span class="line">        &quot;nchunks&quot; : 6,</span><br><span class="line">        &quot;shards&quot; : &#123;</span><br><span class="line">                &quot;shard3&quot; : &#123;</span><br><span class="line">                        &quot;ns&quot; : &quot;test.hashed&quot;,</span><br><span class="line">                        &quot;size&quot; : 1872584,</span><br><span class="line">                        &quot;count&quot; : 33439,</span><br><span class="line">                        &quot;avgObjSize&quot; : 56,</span><br><span class="line">                        &quot;storageSize&quot; : 675840,</span><br><span class="line">                        &quot;capped&quot; : false,</span><br><span class="line">                        ...</span><br><span class="line">                        &quot;ok&quot; : 1,</span><br><span class="line">                        ...</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;shard2&quot; : &#123;</span><br><span class="line">                        &quot;ns&quot; : &quot;test.hashed&quot;,</span><br><span class="line">                        &quot;size&quot; : 1874656,</span><br><span class="line">                        &quot;count&quot; : 33476,</span><br><span class="line">                        &quot;avgObjSize&quot; : 56,</span><br><span class="line">                        &quot;storageSize&quot; : 663552,</span><br><span class="line">                        &quot;capped&quot; : false,</span><br><span class="line">                        ...</span><br><span class="line">                        &quot;ok&quot; : 1,</span><br><span class="line">                        ...</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;shard1&quot; : &#123;</span><br><span class="line">                        &quot;ns&quot; : &quot;test.hashed&quot;,</span><br><span class="line">                        &quot;size&quot; : 1852760,</span><br><span class="line">                        &quot;count&quot; : 33085,</span><br><span class="line">                        &quot;avgObjSize&quot; : 56,</span><br><span class="line">                        &quot;storageSize&quot; : 1200128,</span><br><span class="line">                        &quot;capped&quot; : false,</span><br><span class="line">                        ...</span><br><span class="line">                        &quot;ok&quot; : 1,</span><br><span class="line">                        ...</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;ok&quot; : 1,</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_">mongos&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到数据分到3个分片，各自分片数量为：</p>
+<ul>
+<li>shard1 <code>"count": 33085</code></li>
+<li>shard2 <code>"count": 33476</code></li>
+<li>shard3 <code>"count": 33439</code></li>
+</ul>
+<p>33085 + 33476 + 33085 = 100000</p>
+<h3 id="基于-ranged-的分片">基于 Ranged 的分片</h3>
+<p>基于范围分片特别适合范围查找，因为可以直接定位到分片，所以效率很高。</p>
+<p>为了方便看到基于 Ranged 分片的效果，我们先修改分片集群的 Chunk Size。</p>
+<blockquote>
+<p>分片群集的默认块大小为 64 MB。 此默认块大小适用于大多数部署。但是，如果您发现自动迁移的 I/O超出了硬件的处理能力，则可能需要减小块大小。对于自动拆分和迁移，小的块大小会导致更快和更频繁的迁移。块大小的允许范围在 1 到 1024 MB（含）之间。</p>
+</blockquote>
+<p>连接到 mongos：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo --port 20000</span><br></pre></td></tr></table></figure>
+<p>切换到 config 数据库，使用 save() 来设置全局块大小的配置值：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">use config</span><br><span class="line">db.settings.save(&#123;_id: &quot;chunksize&quot;, value: 2&#125;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看 chunk size 配置值</span></span><br><span class="line">db.settings.find(&#123;_id: &quot;chunksize&quot;&#125;)</span><br></pre></td></tr></table></figure>
+<p>切换到 admin 数据库，让指定的数据库、指定的集合分片生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use admin</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启 <span class="built_in">test</span> 库的分片功能</span></span><br><span class="line">db.runCommand(&#123;enablesharding: &quot;test&quot;&#125;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">选择集合的分片键，此时 MongoDB 会自动为 age 字段创建索引</span></span><br><span class="line">db.runCommand(&#123;shardcollection: &quot;test.ranged&quot;, key: &#123;&quot;age&quot;: 1&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>这里设置 test 数据库的 <code>ranged</code> 表需要分片，根据 <code>age</code> 自动分片到 shard1，shard2，shard3，查看此时的分片的状态：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mongos&gt; </span><span class="language-bash">sh.status()</span></span><br><span class="line">--- Sharding Status ---</span><br><span class="line">  sharding version: &#123;</span><br><span class="line">        &quot;_id&quot; : 1,</span><br><span class="line">        &quot;minCompatibleVersion&quot; : 5,</span><br><span class="line">        &quot;currentVersion&quot; : 6,</span><br><span class="line">        &quot;clusterId&quot; : ObjectId(&quot;5e82fe6c6f3857f3fd9253ed&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">  shards:</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;shard1&quot;,  &quot;host&quot; : &quot;shard1/10.251.1.231:27001,10.251.1.232:27001&quot;,  &quot;state&quot; : 1 &#125;</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;shard2&quot;,  &quot;host&quot; : &quot;shard2/10.251.1.232:27002,10.251.1.233:27002&quot;,  &quot;state&quot; : 1 &#125;</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;shard3&quot;,  &quot;host&quot; : &quot;shard3/10.251.1.231:27003,10.251.1.233:27003&quot;,  &quot;state&quot; : 1 &#125;</span><br><span class="line">  active mongoses:</span><br><span class="line">        &quot;4.2.5&quot; : 1</span><br><span class="line">  autosplit:</span><br><span class="line">        Currently enabled: yes</span><br><span class="line">  balancer:</span><br><span class="line">        Currently enabled:  yes</span><br><span class="line">        Currently running:  no</span><br><span class="line">        Failed balancer rounds in last 5 attempts:  0</span><br><span class="line">        Migration Results for the last 24 hours:</span><br><span class="line">                No recent migrations</span><br><span class="line">  databases:</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;config&quot;,  &quot;primary&quot; : &quot;config&quot;,  &quot;partitioned&quot; : true &#125;</span><br><span class="line">                config.system.sessions</span><br><span class="line">                        shard key: &#123; &quot;_id&quot; : 1 &#125;</span><br><span class="line">                        unique: false</span><br><span class="line">                        balancing: true</span><br><span class="line">                        chunks:</span><br><span class="line">                                shard1  1</span><br><span class="line">                        &#123; &quot;_id&quot; : &#123; &quot;$minKey&quot; : 1 &#125; &#125; --&gt;&gt; &#123; &quot;_id&quot; : &#123; &quot;$maxKey&quot; : 1 &#125; &#125; on : shard1 Timestamp(1, 0)</span><br><span class="line">        &#123;  &quot;_id&quot; : &quot;test&quot;,  &quot;primary&quot; : &quot;shard1&quot;,  &quot;partitioned&quot; : true,  &quot;version&quot; : &#123;  &quot;uuid&quot; : UUID(&quot;73c9a05f-b578-41ea-92c0-42d11821004c&quot;),  &quot;lastMod&quot; : 1 &#125; &#125;</span><br><span class="line">                test.ranged</span><br><span class="line">                        shard key: &#123; &quot;age&quot; : 1 &#125;</span><br><span class="line">                        unique: false</span><br><span class="line">                        balancing: true</span><br><span class="line">                        chunks:</span><br><span class="line">                                shard1  1</span><br><span class="line">                        &#123; &quot;age&quot; : &#123; &quot;$minKey&quot; : 1 &#125; &#125; --&gt;&gt; &#123; &quot;age&quot; : &#123; &quot;$maxKey&quot; : 1 &#125; &#125; on : shard1 Timestamp(1, 0)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">mongos&gt;</span></span><br></pre></td></tr></table></figure>
+<p>切换到 test 数据库，测试分片配置结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use test</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">插入测试数据</span></span><br><span class="line">for (var i = 1; i &lt;= 100000; i++) db.ranged.save(&#123;&quot;age&quot;: NumberInt(i % 100), &quot;createTime&quot;: new Date()&#125;);</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看分片情况</span></span><br><span class="line">db.ranged.stats()</span><br></pre></td></tr></table></figure>
+<h1 id="后期运维">后期运维</h1>
+<h2 id="启动关闭">启动关闭</h2>
+<p>mongodb 的启动顺序是，先启动配置服务器，再启动分片，最后启动 mongos</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mongod -f /usr/local/mongodb/conf/config.conf</span><br><span class="line">mongod -f /usr/local/mongodb/conf/shard1.conf</span><br><span class="line">mongod -f /usr/local/mongodb/conf/shard2.conf</span><br><span class="line">mongod -f /usr/local/mongodb/conf/shard3.conf</span><br><span class="line">mongod -f /usr/local/mongodb/conf/mongos.conf</span><br></pre></td></tr></table></figure>
+<p>关闭时，直接 killall 杀掉所有进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">killall mongod</span><br><span class="line">killall mongos</span><br></pre></td></tr></table></figure>
+<h2 id="注意事项">注意事项</h2>
+<ol type="1">
+<li>Mongodb 分片需要比较大的内存，搭建时分配比较大的内存空间，线上环境是 48G</li>
+<li>每个 mongodb 实例，需要限制 wiredTigerCacheSizeGB 大小，即在每个配置文件中增加这个配置。根据经验，如果每台机器上的实例个数 n，<code>n * wiredTigerCacheSizeGB &lt; 2/3</code> 总内存</li>
+<li>Mongodb 分片后，每次 update 数据时，必须指定片键，没有片键无法 update</li>
+</ol>
+<h1 id="附录">附录</h1>
+<h2 id="清除数据和日志目录">清除数据和日志目录</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">rm -rf config/data/*</span><br><span class="line">rm -rf config/log/*</span><br><span class="line">rm -rf mongos/log/*</span><br><span class="line">rm -rf shard1/data/*</span><br><span class="line">rm -rf shard1/log/*</span><br><span class="line">rm -rf shard2/data/*</span><br><span class="line">rm -rf shard2/log/*</span><br><span class="line">rm -rf shard3/data/*</span><br><span class="line">rm -rf shard3/log/*</span><br></pre></td></tr></table></figure>
+<h1 id="references">References</h1>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/sharding/">https://docs.mongodb.com/manual/sharding/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.ibm.com/developerworks/cn/opensource/os-mongodb-sharded-cluster/index.html">https://www.ibm.com/developerworks/cn/opensource/os-mongodb-sharded-cluster/index.html</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="http://www.ityouknow.com/mongodb/2017/08/05/mongodb-cluster-setup.html">http://www.ityouknow.com/mongodb/2017/08/05/mongodb-cluster-setup.html</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-03-25</div>
+      <div class="popular-posts-title"><a href="/posts/696d9dac/" rel="bookmark">CentOS7安装及卸载MongoDB</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1fe9c6f8b2d85e81b79e17c93396ad4c.jpg" alt="mongodb"></p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-03-25</div>
+      <div class="popular-posts-title"><a href="/posts/7043b2c8/" rel="bookmark">远程连接MongoDB</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><img src="https://cdn.jsdelivr.net/gh/wylu/img/74a90895f17097ef8c1a4fe90737282c.png" alt="robo3t"></p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-04-04</div>
+      <div class="popular-posts-title"><a href="/posts/fd4a1d37/" rel="bookmark">MongoDB副本集搭建</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>对于互联网应用来说，我们要尽量保证服务的不可间断性，一旦出现故障需要尽快的恢复。MongoDB 的副本集模式主要解决了在其主从模式下故障无法自动转移的情况，自动实现高可用。三个成员副本集提供足够的冗余性，以承受大多数网络分区和其他系统故障，这些集合对于许多分布式读取操作也具有足够的容量。本文介绍如何从三个现有 mongod 实例创建三成员副本集，包括不启用访问控制的和启用访问控制的。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-04-07</div>
+      <div class="popular-posts-title"><a href="/posts/4a17b156/" rel="bookmark">Hello World</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Welcome to <a target="_blank" rel="external nofollow noopener noreferrer" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="external nofollow noopener noreferrer" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="external nofollow noopener noreferrer" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-04-04</div>
+      <div class="popular-posts-title"><a href="/posts/ec244fdf/" rel="bookmark">Nginx configuration for CodeIgniter</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Nginx server configuration for CodeIgniter</p><p></p></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wylu.me/posts/e54730f4/" title="MongoDB分片集群搭建">https://wylu.me/posts/e54730f4/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/mongodb/" rel="tag"><i class="fa fa-tag"></i> mongodb</a>
+              <a href="/tags/sharding-cluster/" rel="tag"><i class="fa fa-tag"></i> sharding-cluster</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/fd4a1d37/" rel="prev" title="MongoDB副本集搭建">
+                  <i class="fa fa-chevron-left"></i> MongoDB副本集搭建
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/ec244fdf/" rel="next" title="Nginx configuration for CodeIgniter">
+                  Nginx configuration for CodeIgniter <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="59ee260fee674ae982e71640217fa2dd"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wylu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">125k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:33</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

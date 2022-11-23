@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /guestbook/
+Allow: /page/
+Allow: /posts/
+Allow: /sitelog/
+Allow: /tags/
+Disallow: /assets/
+Disallow: /css/
+Disallow: /images/
+Disallow: /js/
+Disallow: /lib/
+Disallow: /live2dw/
+
+Sitemap: https://wylu.me/sitemap.xml
