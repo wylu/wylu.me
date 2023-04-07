@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/1f1835b407e30a88de5ee111ac3dc678.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/f72a6e75403d80030e402e44c9f5e05d.png">
 <meta property="article:published_time" content="2019-06-01T13:17:45.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-07T15:29:35.060Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="ubuntu">
 <meta property="article:tag" content="shadowsocks">
@@ -167,7 +167,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu-18.04-%E5%AE%89%E8%A3%85-shadowsocks"><span class="nav-text">Ubuntu 18.04 安装 shadowsocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-shadowsocks-%E7%9A%84%E5%89%8D%E6%8F%90"><span class="nav-text">使用 shadowsocks 的前提</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shadowsocks-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">shadowsocks 基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-shadowsocks"><span class="nav-text">安装 shadowsocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-text">查看版本号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-shadowsocks-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">配置 shadowsocks 客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-text">运行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-text">前台运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-text">后台运行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shadowsocks-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">shadowsocks 代理模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ubuntu-%E4%BD%BF%E7%94%A8-pac-%E6%A8%A1%E5%BC%8F"><span class="nav-text">配置 Ubuntu 使用 PAC 模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#autoproxy.pac-%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90"><span class="nav-text">autoproxy.pac 文件分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ubuntu-%E4%BD%BF%E7%94%A8-global-%E6%A8%A1%E5%BC%8F"><span class="nav-text">配置 Ubuntu 使用 Global 模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-privoxy"><span class="nav-text">安装配置 privoxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B3%BB%E7%BB%9F%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86"><span class="nav-text">配置系统网络代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu-18.04-%E5%AE%89%E8%A3%85-shadowsocks"><span class="nav-text">Ubuntu 18.04 安装 shadowsocks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-shadowsocks-%E7%9A%84%E5%89%8D%E6%8F%90"><span class="nav-text">使用 shadowsocks 的前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shadowsocks-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">shadowsocks 基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-shadowsocks"><span class="nav-text">安装 shadowsocks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-text">查看版本号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-shadowsocks-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">配置 shadowsocks 客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-text">运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-text">前台运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="nav-text">后台运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shadowsocks-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">shadowsocks 代理模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ubuntu-%E4%BD%BF%E7%94%A8-pac-%E6%A8%A1%E5%BC%8F"><span class="nav-text">配置 Ubuntu 使用 PAC 模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#autoproxy.pac-%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90"><span class="nav-text">autoproxy.pac 文件分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ubuntu-%E4%BD%BF%E7%94%A8-global-%E6%A8%A1%E5%BC%8F"><span class="nav-text">配置 Ubuntu 使用 Global 模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-privoxy"><span class="nav-text">安装配置 privoxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B3%BB%E7%BB%9F%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86"><span class="nav-text">配置系统网络代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -276,7 +276,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-07 23:29:35" itemprop="dateModified" datetime="2023-04-07T23:29:35+08:00">2023-04-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -330,24 +330,24 @@
 <p><strong>本文使用的是 shadowsocks 的 python 实现版本，没有 GUI，此外只涉及客户端配置，服务端可参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks/blob/master/README.md">官方文档</a></strong></p>
 <p><strong>Github 主页：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks">shadowsocks</a></strong></p>
 <p><strong>官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://shadowsocks.org/en/index.html">https://shadowsocks.org/en/index.html</a></strong></p>
-<h1 id="使用-shadowsocks-的前提">使用 shadowsocks 的前提</h1>
+<h2 id="使用-shadowsocks-的前提">使用 shadowsocks 的前提</h2>
 <ul>
 <li>一台在防火墙之外的服务器</li>
 <li>墙内主机需要安装 shadowsocks 本地端</li>
 <li>墙外服务器需要安装 shadowsocks 服务端</li>
 </ul>
-<h1 id="shadowsocks-基本原理">shadowsocks 基本原理</h1>
+<h2 id="shadowsocks-基本原理">shadowsocks 基本原理</h2>
 <p>Shadowsocks 是一个基于 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://tools.ietf.org/html/rfc1928">SOCKS5</a> 的安全拆分代理，由两部分组成，客户端和服务端。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client &lt;---&gt; ss-local &lt;--[encrypted]--&gt; ss-remote &lt;---&gt; target</span><br></pre></td></tr></table></figure>
 <p>Shadowsocks 本地组件（ss-local）就像传统的 SOCKS5 服务器，为客户端提供代理服务。它将数据流和数据包从客户端加密并转发到 Shadowsocks 远程组件（ss-remote），后者解密并转发到目标。来自目标的回复同样被加密并由 ss-remote 中继回 ss-local，后者解密并最终返回到原始客户端。</p>
-<h1 id="安装-shadowsocks">安装 shadowsocks</h1>
+<h2 id="安装-shadowsocks">安装 shadowsocks</h2>
 <p>使用的是阿里的镜像源，执行安装命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install shadowsocks</span><br></pre></td></tr></table></figure>
-<h1 id="查看版本号">查看版本号</h1>
+<h2 id="查看版本号">查看版本号</h2>
 <p>执行以下命令查看 shadowsocks 的版本</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal --version</span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/625e5581421c3b9c67e88f3eb2f99b3a.png" alt="sslocal-version"></p>
-<h1 id="配置-shadowsocks-客户端">配置 shadowsocks 客户端</h1>
+<h2 id="配置-shadowsocks-客户端">配置 shadowsocks 客户端</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File">Configuration via Config File</a> 通过配置文件进行配置</p>
 <p>修改 <code>/etc/shadowsocks/config.json</code> 配置（客户端配置），例如：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;my_server_ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">8388</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span><span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span><span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;mypassword&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span><span class="punctuation">:</span><span class="number">300</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-256-cfb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
@@ -398,14 +398,14 @@
 </tr>
 </tbody>
 </table>
-<h1 id="运行">运行</h1>
-<h2 id="前台运行">前台运行</h2>
+<h2 id="运行">运行</h2>
+<h3 id="前台运行">前台运行</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
-<h2 id="后台运行">后台运行</h2>
+<h3 id="后台运行">后台运行</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json -d start</span><br><span class="line">sslocal -c /etc/shadowsocks.json -d stop</span><br></pre></td></tr></table></figure>
 <p>是否使用 sudo 权限根据具体情况而定</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2b6d687c30da2cde582e2581e6163dc7.png" alt="run-ss"></p>
-<h1 id="shadowsocks-代理模式">shadowsocks 代理模式</h1>
+<h2 id="shadowsocks-代理模式">shadowsocks 代理模式</h2>
 <p>启动后还不能直接翻墙，因为上面只是启动了代理服务器，但是网络请求并没有经过代理服务器，所以还需要配置代理服务，代理服务可分为部分代理和全局代理。</p>
 <p><strong>特别说明：这里所说的是 shadowsocks 的 PAC 模式和全局模式，另外 shadowsocks 的全局模式并不是整个系统所有软件都进行代理，而只是针对所有浏览器进行的全局代理。</strong></p>
 <ul>
@@ -418,7 +418,7 @@
 <li><p>区别</p>
 <p>简单地说，在全局模式下，所有网站默认走代理。而 PAC 模式是只有被墙的才会走代理，推荐使用 PAC 模式，如果 PAC 模式无法访问一些网站，就换全局模式试试，一般是因为 PAC 更新不及时（也就是 GFWList 更新不及时）导致的。</p></li>
 </ul>
-<h1 id="配置-ubuntu-使用-pac-模式">配置 Ubuntu 使用 PAC 模式</h1>
+<h2 id="配置-ubuntu-使用-pac-模式">配置 Ubuntu 使用 PAC 模式</h2>
 <p>配置 PAC 模式需要 pac 文件，这个 pac 文件可以自己编写也可以用工具生成，这里直接使用工具 GenPAC 来生成。</p>
 <p><strong>Github 主页: <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/JinnLynn/GenPAC">GenPAC</a></strong></p>
 <p>GenPAC：基于 gfwlist 的多种代理软件配置文件生成工具，支持自定义规则，目前可生成的格式有 pac, dnsmasq, wingy</p>
@@ -452,21 +452,21 @@
 </ol>
 <p>以上只是针对浏览器的代理，而使用 privoxy 代理能把电脑上所有 http 请求都转发给 ss，这意味着在终端下也能使用 wget、curl 等命令访问墙外资源。</p>
 <p>关于 privoxy 的安装和使用可以参考：</p>
-<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jianshu.com/p/41378f4e14bc">https://www.jianshu.com/p/41378f4e14bc</a></p>
-<p>https://www.jianshu.com/p/e0b05cb7cd50</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jianshu.com/p/41378f4e14bc" class="uri">https://www.jianshu.com/p/41378f4e14bc</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jianshu.com/p/e0b05cb7cd50" class="uri">https://www.jianshu.com/p/e0b05cb7cd50</a></p>
 <p>配置手动代理可以参考：</p>
-<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/">https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/" class="uri">https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/</a></p>
 <blockquote>
 <p>shell 终端里执行的命令，发起的网络请求现在还不支持 socks5 代理，只支持 http/https 代理。使用 privoxy 代理，可以将 shell 发起的网络请求转发给 shadowsocks</p>
 </blockquote>
-<h1 id="autoproxy.pac-文件分析">autoproxy.pac 文件分析</h1>
+<h2 id="autoproxy.pac-文件分析">autoproxy.pac 文件分析</h2>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="string">&#x27;SOCKS5 127.0.0.1:1080&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> rules = [</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    用于添加自定义规则</span></span><br><span class="line"><span class="comment">    分析以下的js代码，可以知道rules元素，越靠前的优先级越高；</span></span><br><span class="line"><span class="comment">    即如果在rules[0]中匹配成功，则不再匹配，直接返回选择&quot;直连&quot;或者&quot;走代理&quot;</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    [</span><br><span class="line">        [],</span><br><span class="line">        []</span><br><span class="line">    ],</span><br><span class="line">    [</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        以rules[1]为例进行分析，其它类似；</span></span><br><span class="line"><span class="comment">        同样，在rules[1]中的元素也是越靠前的优先级越高；</span></span><br><span class="line"><span class="comment">        如果在rules[1][0]中匹配成功，则不再匹配，直接返回；</span></span><br><span class="line"><span class="comment">        分析代码可知，当匹配成功时：</span></span><br><span class="line"><span class="comment">            --如果该元素的索引为偶数，则返回字面值&#x27;DIRECT&#x27;，即选择直连</span></span><br><span class="line"><span class="comment">            --如果该元素的索引为奇数，则返回proxy变量的值，即选择使用代理</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        [],</span><br><span class="line">        []</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    以上规则如果没有一个匹配成功，根据代码分析，最终将返回字面值&#x27;DIRECT&#x27;，</span></span><br><span class="line"><span class="comment">    也就是选择直连；这也意味着如果某些URL被墙，而又没有加入到pac规则中，</span></span><br><span class="line"><span class="comment">    最终会以直连的方式访问，因为被墙所以肯定是访问不到的, 这时应该使用全局模式，</span></span><br><span class="line"><span class="comment">    或者在pac中添加规则。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> lastRule = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FindProxyForURL</span>(<span class="params">url, host</span>) &#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    个人认为，如果这里直接返回proxy，应该就等同于全局模式了，</span></span><br><span class="line"><span class="comment">    此时，不管是什么URL，都会走代理</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; rules.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        ret = <span class="title function_">testHost</span>(host, i);</span><br><span class="line">        <span class="keyword">if</span> (ret != <span class="literal">undefined</span>)</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;DIRECT&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">testHost</span>(<span class="params">host, index</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; rules[index].<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; rules[index][i].<span class="property">length</span>; j++) &#123;</span><br><span class="line">            lastRule = rules[index][i][j];</span><br><span class="line">            <span class="keyword">if</span> (host == lastRule || host.<span class="title function_">endsWith</span>(<span class="string">&#x27;.&#x27;</span> + lastRule))</span><br><span class="line">                <span class="keyword">return</span> i % <span class="number">2</span> == <span class="number">0</span> ? <span class="string">&#x27;DIRECT&#x27;</span> : proxy;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    lastRule = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// REF: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">endsWith</span>) &#123;</span><br><span class="line">    <span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">endsWith</span> = <span class="keyword">function</span>(<span class="params">searchString, position</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> subjectString = <span class="variable language_">this</span>.<span class="title function_">toString</span>();</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> position !== <span class="string">&#x27;number&#x27;</span> || !<span class="built_in">isFinite</span>(position) || <span class="title class_">Math</span>.<span class="title function_">floor</span>(position) !== position || position &gt; subjectString.<span class="property">length</span>) &#123;</span><br><span class="line">            position = subjectString.<span class="property">length</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        position -= searchString.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">var</span> lastIndex = subjectString.<span class="title function_">indexOf</span>(searchString, position);</span><br><span class="line">        <span class="keyword">return</span> lastIndex !== -<span class="number">1</span> &amp;&amp; lastIndex === position;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>理解 pac 文件 rules 的含义后，就可以自行添加一些规则了。比如 PAC 模式下访问不了 Jetbrains 的插件网址 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://plugins.jetbrains.com">https://plugins.jetbrains.com</a>，因为在该 pac 文件中并没有与此 URL 匹配的规则，所以最后会以直连的方式访问，但是该网址已被墙，最终是无法访问的，我们可以把该域名添加到 pac 文件的规则列表中，该规则列表应是一个使用代理的列表，在添加规则后会以走代理的方式访问 Jetbrains 的插件网址。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6cda56daa540d379099a4c6b28bda0dc.png" alt="pac-file-rules"></p>
-<h1 id="配置-ubuntu-使用-global-模式">配置 Ubuntu 使用 Global 模式</h1>
+<h2 id="配置-ubuntu-使用-global-模式">配置 Ubuntu 使用 Global 模式</h2>
 <p>要实现 Global 模式，需要使用 privoxy，并且配置系统网络代理使用手动模式。</p>
 <p>privoxy 能够实现不同代理之间的切换，使用它可以作为 SOCKS 代理和 HTTP、HTTPS 代理连接的桥梁，它能把所有的 http 请求（包括终端执行的命令，浏览器）转发给 shadowsocks，它就像是一个适配器，将 SOCKS 代理转为 HTTP 代理。</p>
-<h2 id="安装配置-privoxy">安装配置 privoxy</h2>
+<h3 id="安装配置-privoxy">安装配置 privoxy</h3>
 <ol type="1">
 <li>安装 privoxy</li>
 </ol>
@@ -493,7 +493,7 @@
 <li>测试</li>
 </ol>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1f1835b407e30a88de5ee111ac3dc678.png" alt="Global-mode-shell-test"></p>
-<h2 id="配置系统网络代理">配置系统网络代理</h2>
+<h3 id="配置系统网络代理">配置系统网络代理</h3>
 <p>配置完 privoxy 后，终端发起的网络请求也能走 SOCKS5 代理了，但浏览器要使用全局模式还需要配置系统网络代理。</p>
 <p>默认浏览器默认使用系统代理，所以只需配置系统网络代理即可，具体配置过程如下：</p>
 <ol type="1">
@@ -506,7 +506,7 @@
 <li>Pac 和 Global 模式切换</li>
 </ol>
 <p>系统网络代理的自动 (Automatic) 模式和手动 (Manual) 模式都配置完成后，当选用 Automatic 则使用 Pac 模式，当选用 Manual 则使用 Global 模式。</p>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://shadowsocks.org/en/spec/Protocol.html">https://shadowsocks.org/en/spec/Protocol.html</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/shadowsocks/shadowsocks">https://github.com/shadowsocks/shadowsocks</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/JinnLynn/GenPAC">https://github.com/JinnLynn/GenPAC</a></p>
@@ -522,14 +522,6 @@
     
     
       
-  <div class="popular-posts-header">相关文章</div>
-  <ul class="popular-posts">
-    <li class="popular-posts-item">
-        <div class="popular-posts-date">2019-06-01</div>
-      <div class="popular-posts-title"><a href="/posts/202f8f32/" rel="bookmark">Ubuntu 18.04 字体显示异常</a></div>
-        <div class="popular-posts-excerpt"><p></p><p>解决 Ubuntu 18.04 下字体显示异常的问题。</p><p></p></div>
-    </li>
-  </ul>
 
 
     <footer class="post-footer">

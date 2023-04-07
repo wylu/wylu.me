@@ -25,17 +25,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="article">
+    <meta name="description" content="本文将介绍在 Ubuntu 系统中如何通过 MAME 模拟器安装拳皇97。">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Ubuntu下安装拳皇97">
 <meta property="og:url" content="https://wylu.me/posts/7de10289/index.html">
 <meta property="og:site_name" content="wylu">
+<meta property="og:description" content="本文将介绍在 Ubuntu 系统中如何通过 MAME 模拟器安装拳皇97。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/47388022e4a3b798095c5d9db042a1a5.jpeg">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2938522a5e40a5dfd2608ebd476204c4.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/6cda02f480b578316d17c0a5357a2e05.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/fa2bd08f3fe5eed992ab014923140d8e.png">
 <meta property="article:published_time" content="2020-02-02T13:17:51.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-07T16:04:15.470Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="ubuntu">
@@ -164,7 +166,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83"><span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mame-%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-text">安装 MAME 模拟器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-mame-%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-text">测试 MAME 是否安装成功</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-kof97.zip-rom"><span class="nav-text">下载 kof97.zip rom</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-neogeo.zip"><span class="nav-text">下载 neogeo.zip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86-kof97.zip-%E5%92%8C-neogeo.zip-%E6%94%BE%E5%88%B0-mame-%E7%9A%84-roms-%E7%9B%AE%E5%BD%95%E4%B8%8B"><span class="nav-text">将 kof97.zip 和 neogeo.zip 放到 MAME 的 roms 目录下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-rom-%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE%E5%8F%AF%E7%94%A8"><span class="nav-text">验证 rom 是否正确可用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B8%B8%E6%88%8F"><span class="nav-text">运行游戏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A7%86%E5%9B%BE%E9%95%BF%E5%AE%BD%E6%AF%94aspect-ratio"><span class="nav-text">配置视图长宽比（Aspect Ratio）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85%E6%8B%B3%E7%9A%8797"><span class="nav-text">Ubuntu下安装拳皇97</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83"><span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mame-%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-text">安装 MAME 模拟器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-mame-%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-text">测试 MAME 是否安装成功</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-kof97.zip-rom"><span class="nav-text">下载 kof97.zip rom</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-neogeo.zip"><span class="nav-text">下载 neogeo.zip</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86-kof97.zip-%E5%92%8C-neogeo.zip-%E6%94%BE%E5%88%B0-mame-%E7%9A%84-roms-%E7%9B%AE%E5%BD%95%E4%B8%8B"><span class="nav-text">将 kof97.zip 和 neogeo.zip 放到 MAME 的 roms 目录下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-rom-%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE%E5%8F%AF%E7%94%A8"><span class="nav-text">验证 rom 是否正确可用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B8%B8%E6%88%8F"><span class="nav-text">运行游戏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%A7%86%E5%9B%BE%E9%95%BF%E5%AE%BD%E6%AF%94aspect-ratio"><span class="nav-text">配置视图长宽比（Aspect Ratio）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-text">Reference</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -273,7 +275,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 00:04:15" itemprop="dateModified" datetime="2023-04-08T00:04:15+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -303,7 +305,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>804</span>
+      <span>834</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -321,38 +323,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/47388022e4a3b798095c5d9db042a1a5.jpeg" alt="kof97"></p>
+        <p>本文将介绍在 Ubuntu 系统中如何通过 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.mamedev.org/">MAME</a> 模拟器安装拳皇97。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/47388022e4a3b798095c5d9db042a1a5.jpeg" alt="kof97"></p>
 <span id="more"></span>
-<h1 id="系统环境">系统环境</h1>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID:	Ubuntu</span><br><span class="line">Description:	Ubuntu 18.04.3 LTS</span><br><span class="line">Release:	18.04</span><br><span class="line">Codename:	bionic</span><br></pre></td></tr></table></figure>
-<h1 id="安装-mame-模拟器">安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.mamedev.org/">MAME</a> 模拟器</h1>
+<h1 id="ubuntu下安装拳皇97">Ubuntu下安装拳皇97</h1>
+<h2 id="系统环境">系统环境</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description: Ubuntu 18.04.3 LTS</span><br><span class="line">Release: 18.04</span><br><span class="line">Codename: bionic</span><br></pre></td></tr></table></figure>
+<h2 id="安装-mame-模拟器">安装 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.mamedev.org/">MAME</a> 模拟器</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/MAME">MAME</a>（最初是 Multiple Arcade Machine Emulator 的缩写）是一种免费的开源模拟器，旨在在现代个人计算机和其他平台上的软件中重新创建街机游戏系统的硬件。MAME 目的是通过防止老式游戏丢失或遗忘来保留游戏历史，并为模拟街机的内部工作提供参考，其实际玩游戏的能力被认为是“不错的副作用”。</p>
 <p>执行以下命令安装 MAME 模拟器：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt install mame</span></span><br></pre></td></tr></table></figure>
-<h1 id="测试-mame-是否安装成功">测试 MAME 是否安装成功</h1>
+<h2 id="测试-mame-是否安装成功">测试 MAME 是否安装成功</h2>
 <p>执行 <code>mame</code> 命令启动模拟器，如果启动后界面如下，说明模拟器安装成功，按 <code>ESC</code> 键可退出程序。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2938522a5e40a5dfd2608ebd476204c4.png" alt="mame"></p>
-<h1 id="下载-kof97.zip-rom">下载 kof97.zip rom</h1>
+<h2 id="下载-kof97.zip-rom">下载 kof97.zip rom</h2>
 <p>因为大多数游戏数据都是存储于只读存储器，渐渐地不管这些文件原先是被存储于怎样的介质，读取后的文件都通称为 ROM 映像档或 ROM。在要运行某一特定的游戏时，MAME 就需要这些读取自原始街机的整组文件，这一整组的文件称之为“ROM 集合”，但是碍于法规 MAME 不会自带这些文件。</p>
 <p>所以想要在 MAME 中玩拳皇97还需要下载游戏的 rom 包，MAME 支持的游戏 rom 包可以到 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.planetemu.net/roms/mame-roms">https://www.planetemu.net/roms/mame-roms</a> 下载。</p>
 <p>这是拳皇97的 rom：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.planetemu.net/rom/mame-roms/kof97">kof97.zip</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6cda02f480b578316d17c0a5357a2e05.png" alt="download-kof97"></p>
 <p>拳皇97风云再起的 rom: <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.planetemu.net/rom/mame-roms/kof97pls">kof97pls.zip</a>，该 rom 依赖于 kof97.zip</p>
-<h1 id="下载-neogeo.zip">下载 neogeo.zip</h1>
+<h2 id="下载-neogeo.zip">下载 neogeo.zip</h2>
 <p>neogeo.zip 是玩所有 NEOGEO 公司出品的游戏所必需的 BIOS 文件，需要和其它游戏 ROM 一起放在模拟器的 roms 文件夹下。</p>
 <p>Mame 0.198 街机 BIOS 文件 neogeo.zip 进行了更新，新增 uni-bios_3_3.rom，sp1-u3.bin sp1-j3.bin 驱动。</p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://source.mamecn.com/newrom2018/0.198mameBIOS/neogeo.zip">https://source.mamecn.com/newrom2018/0.198mameBIOS/neogeo.zip</a></p>
-<h1 id="将-kof97.zip-和-neogeo.zip-放到-mame-的-roms-目录下">将 kof97.zip 和 neogeo.zip 放到 MAME 的 roms 目录下</h1>
+<h2 id="将-kof97.zip-和-neogeo.zip-放到-mame-的-roms-目录下">将 kof97.zip 和 neogeo.zip 放到 MAME 的 roms 目录下</h2>
 <p>使用 apt 安装 MAME 时，默认会将模拟器安装在 <code>/usr/share/games/mame</code>，所以 MAME 的 roms 目录在 <code>/usr/share/games/mame/roms</code>，将 kof97.zip 和 neogeo.zip 都拷贝到 roms 目录下。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">wylu @ X555LJ <span class="keyword">in</span> /usr/share/games/mame/roms [23:28:54]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">cp</span> ~/Downloads/kof97.zip .</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">wylu @ X555LJ <span class="keyword">in</span> /usr/share/games/mame/roms [23:29:54]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">cp</span> ~/Downloads/neogeo.zip .</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">wylu @ X555LJ <span class="keyword">in</span> /usr/share/games/mame/roms [23:30:11]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ll</span></span><br><span class="line">total 30M</span><br><span class="line">-rw-r--r-- 1 root root  28M Feb  2 23:29 kof97.zip</span><br><span class="line">-rw-r--r-- 1 root root 1.7M Feb  2 23:30 neogeo.zip</span><br></pre></td></tr></table></figure>
-<h1 id="验证-rom-是否正确可用">验证 rom 是否正确可用</h1>
+<h2 id="验证-rom-是否正确可用">验证 rom 是否正确可用</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mame -verifyroms kof97</span></span><br><span class="line">romset kof97 [neogeo] is good</span><br><span class="line">1 romsets found, 1 were OK.</span><br></pre></td></tr></table></figure>
 <p>验证成功，如果提示你的 neogeo.zip 缺少文件导致无法运行，请尝试获取最新的 neogeo.zip 文件然后重试。</p>
-<h1 id="运行游戏">运行游戏</h1>
+<h2 id="运行游戏">运行游戏</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mame kof97</span></span><br></pre></td></tr></table></figure>
 <p>执行以上命令即可启动游戏，默认 MAME 运行时是全屏，使用组合键 <code>Alt + Enter</code> 可切换成窗口模式；按 <code>p</code> 键暂停游戏并释放鼠标；按 <code>Tab</code> 键可进行相应的设置，按 <code>Esc</code> 退出 MAME。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/fa2bd08f3fe5eed992ab014923140d8e.png" alt="run-kof97"></p>
-<h1 id="配置视图长宽比aspect-ratio">配置视图长宽比（Aspect Ratio）</h1>
+<h2 id="配置视图长宽比aspect-ratio">配置视图长宽比（Aspect Ratio）</h2>
 <p>如果你成功运行了 kof97，并尝试进行设置，你会发现视图的长宽比始终为 4:3，且无法调整，导致整个视图看起来非常窄，为了能够调整长宽比，我查阅了许多资料，后来发现一个帖子，它基本上解决了我遇到的问题：</p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="http://forum.arcadecontrols.com/index.php?topic=154130.0">Correct Aspect Ratio for vertical games on 16:9 screens??</a></p>
 <p>我的方法就是修改模拟器的配置文件，首先进入到 MAME 配置文件目录：</p>
@@ -360,7 +364,7 @@
 <p>然后编辑 mame.ini 文件，在文件末尾加上如下配置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keepaspect              0</span><br><span class="line">unevenstretch           1</span><br><span class="line">autostretchxy           0</span><br></pre></td></tr></table></figure>
 <p>保存退出，最后重新运行游戏 <code>mame kof97</code></p>
-<h1 id="reference">Reference</h1>
+<h2 id="reference">Reference</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.mamecn.com/jiejiyouxixiazaijieshao/13814.html">https://www.mamecn.com/jiejiyouxixiazaijieshao/13814.html</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="http://forum.arcadecontrols.com/index.php?topic=154130.0">http://forum.arcadecontrols.com/index.php?topic=154130.0</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mamedev.org/advanced/multiconfig.html">https://docs.mamedev.org/advanced/multiconfig.html</a></p>

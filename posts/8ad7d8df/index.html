@@ -78,7 +78,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/faf924b5fdfa67b4fe0e78afc1151076.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/8b85c54a331eac1c619bd48f4bed5c5a.png">
 <meta property="article:published_time" content="2020-04-12T02:19:41.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-07T15:15:58.770Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="cryptography">
 <meta name="twitter:card" content="summary">
@@ -203,7 +203,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E7%9B%AE%E6%A0%87"><span class="nav-text">信息安全的三个基本的目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%AE%89%E5%85%A8%E5%9F%BA%E4%BA%8E%E5%AF%86%E9%92%A5%E7%9A%84%E4%BF%9D%E5%AF%86%E8%80%8C%E4%B8%8D%E6%98%AF%E7%AE%97%E6%B3%95%E7%9A%84%E4%BF%9D%E5%AF%86"><span class="nav-text">数据的安全基于密钥的保密，而不是算法的保密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81%E4%BD%BF%E5%BE%97%E6%97%A0%E5%AF%86%E9%92%A5%E4%BC%A0%E8%BE%93%E7%9A%84%E4%BF%9D%E5%AF%86%E9%80%9A%E4%BF%A1%E6%88%90%E4%B8%BA%E5%8F%AF%E8%83%BD"><span class="nav-text">公钥密码使得无密钥传输的保密通信成为可能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">密码学的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB-i"><span class="nav-text">密码算法分类-I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB-ii"><span class="nav-text">密码算法分类-II</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="nav-text">数论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%92%E7%B4%A0"><span class="nav-text">互素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E8%BF%90%E7%AE%97"><span class="nav-text">模运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%8A%A0%E6%B3%95"><span class="nav-text">模加法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%87%8F%E6%B3%95"><span class="nav-text">模减法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E4%B9%98%E6%B3%95"><span class="nav-text">模乘法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%86%E5%85%83"><span class="nav-text">逆元</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E6%B3%95%E9%80%86%E5%85%83"><span class="nav-text">加法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83"><span class="nav-text">乘法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9Cm%E6%98%AF%E4%B8%80%E4%B8%AA%E7%B4%A0%E6%95%B0%E5%88%99%E5%AF%B9%E6%AF%8F%E4%B8%80%E4%B8%AA0xm-%E9%83%BD%E5%AD%98%E5%9C%A8%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83"><span class="nav-text">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%AE%9A%E7%90%86"><span class="nav-text">一个定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E4%B8%80%E6%AC%A1%E5%90%8C%E4%BD%99%E5%BC%8F"><span class="nav-text">解一次同余式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81"><span class="nav-text">古典密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%A1%A8%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6"><span class="nav-text">单表密码体制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%A1%A8%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6"><span class="nav-text">多表密码体制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E6%96%B9%E6%A1%88"><span class="nav-text">安全电子邮件方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pgp%E4%BA%A7%E7%94%9F%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-text">PGP产生的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pgp%E6%8F%90%E4%BE%9B%E4%BA%86%E4%B8%80%E4%B8%AA%E5%AE%89%E5%85%A8%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">PGP提供了一个安全电子邮件解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp%E5%8A%A0%E5%AF%86%E6%B5%81%E7%A8%8B"><span class="nav-text">PGP加密流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp%E8%A7%A3%E5%AF%86%E6%B5%81%E7%A8%8B"><span class="nav-text">PGP解密流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp%E6%95%B4%E5%90%88%E4%BA%86%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E5%85%AC%E9%92%A5%E5%8A%A0%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88"><span class="nav-text">PGP整合了对称加密和公钥加密的方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pgp%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E5%92%8Chash%E5%87%BD%E6%95%B0"><span class="nav-text">PGP数字签名和Hash函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E5%85%B1%E5%AF%86%E9%92%A5%E5%88%86%E5%8F%91%E5%92%8C%E8%AF%81%E6%98%8E%E6%A8%A1%E5%9E%8B"><span class="nav-text">公共密钥分发和证明模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%91%E5%AD%97%E5%A1%94%E6%A8%A1%E5%9E%8B"><span class="nav-text">金字塔模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E4%BF%A1%E4%BB%BB%E6%A8%A1%E5%9E%8B"><span class="nav-text">直接信任模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E4%BB%BB%E7%BD%91%E7%BB%9C"><span class="nav-text">信任网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="nav-text">对称密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aes%E7%9A%84%E8%8B%A5%E5%B9%B2%E8%A6%81%E6%B1%82%E5%92%8C%E8%AF%84%E4%BC%B0%E5%87%86%E5%88%99"><span class="nav-text">AES的若干要求和评估准则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E5%A1%AB%E5%85%85%E4%B8%8E%E6%A8%A1%E5%BC%8F"><span class="nav-text">分组密码的填充与模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E5%AF%86%E7%A0%81"><span class="nav-text">流密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E4%BD%8D%E7%9A%84%E6%B5%8B%E8%AF%95"><span class="nav-text">随机位的测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0"><span class="nav-text">单向散列函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-text">性质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-text">应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E"><span class="nav-text">碰撞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E7%9A%84%E7%94%9F%E6%97%A5%E6%94%BB%E5%87%BB"><span class="nav-text">对数字签名的生日攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8D%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="nav-text">不对称密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-text">公钥密码的特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa%E7%AE%97%E6%B3%95"><span class="nav-text">RSA算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#euler%E5%87%BD%E6%95%B0"><span class="nav-text">Euler函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#euler%E5%AE%9A%E7%90%86"><span class="nav-text">Euler定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E6%AD%A5%E9%AA%A4"><span class="nav-text">RSA密钥对生成步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">RSA加密和解密步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%AE%9E%E4%BE%8B"><span class="nav-text">RSA密钥对生成实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-text">RSA的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93pq%E6%AF%94%E8%BE%83%E6%8E%A5%E8%BF%91%E7%9A%84%E6%95%B0%E5%88%86%E8%A7%A3%E6%94%BB%E5%87%BB"><span class="nav-text">当p,q比较接近的数分解攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB"><span class="nav-text">选择明文攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#elgamal%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6"><span class="nav-text">ElGamal密码体制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E6%AD%A5%E9%AA%A4"><span class="nav-text">ElGamal密钥对生成步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">ElGamal加密和解密步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E4%BE%8B%E5%AD%90"><span class="nav-text">ElGamal密钥对生成例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%E4%BE%8B%E5%AD%90"><span class="nav-text">ElGamal加密和解密例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#diffie-hellman%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2"><span class="nav-text">Diffie-Hellman密钥交换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dh%E5%AF%86%E9%92%A5%E5%8C%99%E6%96%B9%E6%A1%88%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-text">DH密钥匙方案实现步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dh%E5%AF%86%E9%92%A5%E5%8C%99%E4%BA%A4%E6%8D%A2%E6%96%B9%E6%A1%88%E5%AE%9E%E7%8E%B0%E4%BE%8B%E5%AD%90"><span class="nav-text">DH密钥匙交换方案实现例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dh%E5%AF%86%E9%92%A5%E5%8C%99%E6%96%B9%E6%A1%88%E7%9A%84%E7%AC%AC%E4%B8%89%E8%80%85%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95"><span class="nav-text">DH密钥匙方案的第三者攻击方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D"><span class="nav-text">数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88"><span class="nav-text">RSA签名方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elg%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88"><span class="nav-text">ELG签名方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C02"><span class="nav-text">实验02</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%AF%86%E7%A0%81%E5%AD%A6%E6%80%BB%E7%BB%93"><span class="nav-text">应用密码学总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%9A%84%E7%9B%AE%E6%A0%87"><span class="nav-text">信息安全的三个基本的目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%AE%89%E5%85%A8%E5%9F%BA%E4%BA%8E%E5%AF%86%E9%92%A5%E7%9A%84%E4%BF%9D%E5%AF%86%E8%80%8C%E4%B8%8D%E6%98%AF%E7%AE%97%E6%B3%95%E7%9A%84%E4%BF%9D%E5%AF%86"><span class="nav-text">数据的安全基于密钥的保密，而不是算法的保密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81%E4%BD%BF%E5%BE%97%E6%97%A0%E5%AF%86%E9%92%A5%E4%BC%A0%E8%BE%93%E7%9A%84%E4%BF%9D%E5%AF%86%E9%80%9A%E4%BF%A1%E6%88%90%E4%B8%BA%E5%8F%AF%E8%83%BD"><span class="nav-text">公钥密码使得无密钥传输的保密通信成为可能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">密码学的基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB-i"><span class="nav-text">密码算法分类-I</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB-ii"><span class="nav-text">密码算法分类-II</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="nav-text">数论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E7%B4%A0"><span class="nav-text">互素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E8%BF%90%E7%AE%97"><span class="nav-text">模运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%8A%A0%E6%B3%95"><span class="nav-text">模加法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%87%8F%E6%B3%95"><span class="nav-text">模减法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E4%B9%98%E6%B3%95"><span class="nav-text">模乘法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%86%E5%85%83"><span class="nav-text">逆元</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E6%B3%95%E9%80%86%E5%85%83"><span class="nav-text">加法逆元</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83"><span class="nav-text">乘法逆元</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E6%9E%9Cm%E6%98%AF%E4%B8%80%E4%B8%AA%E7%B4%A0%E6%95%B0%E5%88%99%E5%AF%B9%E6%AF%8F%E4%B8%80%E4%B8%AA0xm-%E9%83%BD%E5%AD%98%E5%9C%A8%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83"><span class="nav-text">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%AE%9A%E7%90%86"><span class="nav-text">一个定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E4%B8%80%E6%AC%A1%E5%90%8C%E4%BD%99%E5%BC%8F"><span class="nav-text">解一次同余式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81"><span class="nav-text">古典密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%A1%A8%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6"><span class="nav-text">单表密码体制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%A1%A8%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6"><span class="nav-text">多表密码体制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E6%96%B9%E6%A1%88"><span class="nav-text">安全电子邮件方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp%E4%BA%A7%E7%94%9F%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-text">PGP产生的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp%E6%8F%90%E4%BE%9B%E4%BA%86%E4%B8%80%E4%B8%AA%E5%AE%89%E5%85%A8%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">PGP提供了一个安全电子邮件解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pgp%E5%8A%A0%E5%AF%86%E6%B5%81%E7%A8%8B"><span class="nav-text">PGP加密流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pgp%E8%A7%A3%E5%AF%86%E6%B5%81%E7%A8%8B"><span class="nav-text">PGP解密流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pgp%E6%95%B4%E5%90%88%E4%BA%86%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E5%85%AC%E9%92%A5%E5%8A%A0%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88"><span class="nav-text">PGP整合了对称加密和公钥加密的方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pgp%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E5%92%8Chash%E5%87%BD%E6%95%B0"><span class="nav-text">PGP数字签名和Hash函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%85%B1%E5%AF%86%E9%92%A5%E5%88%86%E5%8F%91%E5%92%8C%E8%AF%81%E6%98%8E%E6%A8%A1%E5%9E%8B"><span class="nav-text">公共密钥分发和证明模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%91%E5%AD%97%E5%A1%94%E6%A8%A1%E5%9E%8B"><span class="nav-text">金字塔模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E4%BF%A1%E4%BB%BB%E6%A8%A1%E5%9E%8B"><span class="nav-text">直接信任模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E4%BB%BB%E7%BD%91%E7%BB%9C"><span class="nav-text">信任网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="nav-text">对称密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#aes%E7%9A%84%E8%8B%A5%E5%B9%B2%E8%A6%81%E6%B1%82%E5%92%8C%E8%AF%84%E4%BC%B0%E5%87%86%E5%88%99"><span class="nav-text">AES的若干要求和评估准则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E5%A1%AB%E5%85%85%E4%B8%8E%E6%A8%A1%E5%BC%8F"><span class="nav-text">分组密码的填充与模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E5%AF%86%E7%A0%81"><span class="nav-text">流密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E4%BD%8D%E7%9A%84%E6%B5%8B%E8%AF%95"><span class="nav-text">随机位的测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0"><span class="nav-text">单向散列函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-text">性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-text">应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E"><span class="nav-text">碰撞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E7%9A%84%E7%94%9F%E6%97%A5%E6%94%BB%E5%87%BB"><span class="nav-text">对数字签名的生日攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="nav-text">不对称密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-text">公钥密码的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa%E7%AE%97%E6%B3%95"><span class="nav-text">RSA算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#euler%E5%87%BD%E6%95%B0"><span class="nav-text">Euler函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#euler%E5%AE%9A%E7%90%86"><span class="nav-text">Euler定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E6%AD%A5%E9%AA%A4"><span class="nav-text">RSA密钥对生成步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">RSA加密和解密步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%AE%9E%E4%BE%8B"><span class="nav-text">RSA密钥对生成实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-text">RSA的缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93pq%E6%AF%94%E8%BE%83%E6%8E%A5%E8%BF%91%E7%9A%84%E6%95%B0%E5%88%86%E8%A7%A3%E6%94%BB%E5%87%BB"><span class="nav-text">当p,q比较接近的数分解攻击</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB"><span class="nav-text">选择明文攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elgamal%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6"><span class="nav-text">ElGamal密码体制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#elgamal%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E6%AD%A5%E9%AA%A4"><span class="nav-text">ElGamal密钥对生成步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elgamal%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">ElGamal加密和解密步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elgamal%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E4%BE%8B%E5%AD%90"><span class="nav-text">ElGamal密钥对生成例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elgamal%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%E4%BE%8B%E5%AD%90"><span class="nav-text">ElGamal加密和解密例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#diffie-hellman%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2"><span class="nav-text">Diffie-Hellman密钥交换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dh%E5%AF%86%E9%92%A5%E5%8C%99%E6%96%B9%E6%A1%88%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-text">DH密钥匙方案实现步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dh%E5%AF%86%E9%92%A5%E5%8C%99%E4%BA%A4%E6%8D%A2%E6%96%B9%E6%A1%88%E5%AE%9E%E7%8E%B0%E4%BE%8B%E5%AD%90"><span class="nav-text">DH密钥匙交换方案实现例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dh%E5%AF%86%E9%92%A5%E5%8C%99%E6%96%B9%E6%A1%88%E7%9A%84%E7%AC%AC%E4%B8%89%E8%80%85%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95"><span class="nav-text">DH密钥匙方案的第三者攻击方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D"><span class="nav-text">数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88"><span class="nav-text">RSA签名方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elg%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88"><span class="nav-text">ELG签名方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C02"><span class="nav-text">实验02</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -312,7 +312,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-07 23:15:58" itemprop="dateModified" datetime="2023-04-07T23:15:58+08:00">2023-04-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -362,28 +362,29 @@
     <div class="post-body" itemprop="articleBody">
         <p>应用密码学学习总结，涉及密码学基本概念、古典密码、PGP安全电子邮件解决方案、对称加密、非对称加密、ElGamal密码体制、Diffie-Hellman密钥交换、数字签名等。</p>
 <span id="more"></span>
-<h1 id="概述">概述</h1>
-<h2 id="信息安全的三个基本的目标">信息安全的三个基本的目标</h2>
+<h1 id="应用密码学总结">应用密码学总结</h1>
+<h2 id="概述">概述</h2>
+<h3 id="信息安全的三个基本的目标">信息安全的三个基本的目标</h3>
 <ul>
 <li>保密性 Confidentiality 消息能够被安全的传送，即窃听者不能阅读发送的消息。</li>
 <li>完整性 Integrity 消息的接收者应该能够验证在传递的过程中消息没有被修改；入侵者不能用假消息代替合法的消息。</li>
 <li>可用性 Availability 即保证信息和信息系统随时为授权者提供服务，而不要出现非授权者滥用却对授权者拒绝服务的情况。</li>
 </ul>
-<h2 id="数据的安全基于密钥的保密而不是算法的保密">数据的安全基于密钥的保密，而不是算法的保密</h2>
-<h2 id="公钥密码使得无密钥传输的保密通信成为可能">公钥密码使得无密钥传输的保密通信成为可能</h2>
-<h2 id="密码学的基本概念">密码学的基本概念</h2>
+<h3 id="数据的安全基于密钥的保密而不是算法的保密">数据的安全基于密钥的保密，而不是算法的保密</h3>
+<h3 id="公钥密码使得无密钥传输的保密通信成为可能">公钥密码使得无密钥传输的保密通信成为可能</h3>
+<h3 id="密码学的基本概念">密码学的基本概念</h3>
 <p>密码学(Cryptology)：研究信息系统安全技术的科学。它包含两个分支：</p>
 <ul>
 <li>密码编码学(Cryptography)，对信息进行编码实现隐蔽信息的一门学问</li>
 <li>密码分析学(Cryptanalysis)，研究分析破译密码或伪造的学问。 两者相互对立，而又互相促进地向前发展。</li>
 </ul>
-<h2 id="密码算法分类-i">密码算法分类-I</h2>
+<h3 id="密码算法分类-i">密码算法分类-I</h3>
 <p>按照保密性依赖的基础分为:</p>
 <ul>
 <li>受限制的（Restricted)算法: 算法的保密性基于保持算法的秘密。</li>
 <li>基于密钥（Key-based)的算法: 算法的保密性基于对密钥的保密。</li>
 </ul>
-<h2 id="密码算法分类-ii">密码算法分类-II</h2>
+<h3 id="密码算法分类-ii">密码算法分类-II</h3>
 <p>按照密钥的特点分为：</p>
 <ul>
 <li>对称密码算法（Symmetric Cipher)：就是加密密钥和解密密钥相同，或实质上等同，即从一个易于推出另一个。又称秘密密钥算法或单密钥算法。 对称密钥密码又可分为流密码和分组密码
@@ -393,31 +394,31 @@
 </ul></li>
 <li>非对称密钥算法（Asymmetric Cipher)：加密密钥和解密密钥不相同，从一个很难推出另一个。又称公钥密钥算法（Public-key Cipher) 。</li>
 </ul>
-<h1 id="数论基础">数论基础</h1>
-<h2 id="互素">互素</h2>
+<h2 id="数论基础">数论基础</h2>
+<h3 id="互素">互素</h3>
 <p>如果a,b的最大公约数为1，则称a,b互素。(注. (a,b)表示a,b的最大公约数) (3,5)=1 a,b互素，a,b不一定是素数，例如(9,4)=1</p>
-<h2 id="模运算">模运算</h2>
-<h3 id="模加法">模加法</h3>
+<h3 id="模运算">模运算</h3>
+<h4 id="模加法">模加法</h4>
 <p>(a + b) mod m = ((a mod m) + (b mod m)) mod m 例: (11 + 15) mod 8 = ((11 mod 8) + (15 mod 8)) mod 8 = (3 + 7) mod 8 = 10 mod 8 = 2</p>
-<h3 id="模减法">模减法</h3>
+<h4 id="模减法">模减法</h4>
 <p>(a - b) mod m = ((a mod m) - (b mod m)) mod m 例: (15 - 1) mod 7 = ((15 mod 7) - (1 mod 7)) mod 7 = (1 - 1) mod 7 = 0 mod 7 = 0</p>
-<h3 id="模乘法">模乘法</h3>
+<h4 id="模乘法">模乘法</h4>
 <p>(a × b) mod m = ((a mod m) × (b mod m)) mod m 例: (7 × 9) mod 8 = ((7 mod 8) × (9 mod 8)) mod 8 = (7 × 1) mod 8 = 7 mod 8 = 7</p>
-<h2 id="逆元">逆元</h2>
-<h3 id="加法逆元">加法逆元</h3>
+<h3 id="逆元">逆元</h3>
+<h4 id="加法逆元">加法逆元</h4>
 <p>x的加法逆元y是满足x + y ≡ 0 mod m的数 例: 2 + 6 ≡ 0 mod 8, 6和2互为模8的加法逆元</p>
-<h3 id="乘法逆元">乘法逆元</h3>
+<h4 id="乘法逆元">乘法逆元</h4>
 <p>x的乘法逆元y是满足x × y ≡ 1 mod m 数。 例：2 × 4 ≡ 1 mod 7，2和4互为模7的乘法逆元</p>
-<h3 id="如果m是一个素数则对每一个0xm-都存在乘法逆元">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</h3>
+<h4 id="如果m是一个素数则对每一个0xm-都存在乘法逆元">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</h4>
 <p>例： 1 × 1 ≡1 mod 7 2 × 4 ≡1 mod 7 3 × 5 ≡1 mod 7 4 × 2 ≡1 mod 7 5 × 3 ≡1 mod 7 6 × 6 ≡1 mod 7 ​ …</p>
-<h3 id="一个定理">一个定理</h3>
+<h4 id="一个定理">一个定理</h4>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">设a, b, c是任意三个不全为零的整数,且</span><br><span class="line">                     a= bq + r                      (1)</span><br><span class="line">其中q是整数, 则(a, b)=(b, r).</span><br><span class="line">对(1)进一步地约束，令b&gt;0,将a除以b所得的商记为q, 余数为r , 则(1)成为</span><br><span class="line">                     a= bq + r, 0&lt;=r&lt;b              (2)</span><br><span class="line">r是a对模b的非负最小剩余。</span><br><span class="line">进一步 (a, b)=(|a|, |b|)=(b, a)</span><br><span class="line">由此我们得到求(a, b)的Euclid辗转相除法</span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/3f15c8e84962d30760085229d67a8a60.png" alt="Euclid"></p>
-<h3 id="解一次同余式">解一次同余式</h3>
+<h4 id="解一次同余式">解一次同余式</h4>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">一个定理:</span><br><span class="line">若 (a, m) = 1, 则一次同余式</span><br><span class="line">                 ax ≡ b (mod m)</span><br><span class="line">有唯一解</span><br><span class="line">例：19x ≡ 1(mod 48)</span><br><span class="line">因为(19, 48) = 1, 所以一次同余式有唯一解，即19对于模48的有唯一逆元。</span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/c75b8f5ca55cf1486266f36d7e76e924.png" alt="Solve a congruence"></p>
-<h1 id="古典密码">古典密码</h1>
-<h2 id="单表密码体制">单表密码体制</h2>
+<h2 id="古典密码">古典密码</h2>
+<h3 id="单表密码体制">单表密码体制</h3>
 <p>如果明文中不同的位置的同一明文字母在密文中对应的密文字母相同,则称其为单表密码体制。</p>
 <ul>
 <li>乘法密码算法</li>
@@ -430,10 +431,10 @@
 <ul>
 <li>语言的统计特性：频率特征；连接特征；重复特征</li>
 </ul>
-<h2 id="多表密码体制">多表密码体制</h2>
+<h3 id="多表密码体制">多表密码体制</h3>
 <p>如果明文中不同的位置的同一明文字母在密文中对应的密文字母不同,则称其为多表密码体制。</p>
-<h1 id="安全电子邮件方案">安全电子邮件方案</h1>
-<h2 id="pgp产生的背景">PGP产生的背景</h2>
+<h2 id="安全电子邮件方案">安全电子邮件方案</h2>
+<h3 id="pgp产生的背景">PGP产生的背景</h3>
 <p>你的电子邮件不安全，电子邮件在传输中使用的SMTP协议。</p>
 <ul>
 <li>无法保证邮件在传输过程中不被人偷看。</li>
@@ -441,7 +442,7 @@
 <li>无法确定邮件是否在传输过程中被篡改</li>
 <li>当邮件被发到错误地址，可能造成信息泄露</li>
 </ul>
-<h2 id="pgp提供了一个安全电子邮件解决方案">PGP提供了一个安全电子邮件解决方案</h2>
+<h3 id="pgp提供了一个安全电子邮件解决方案">PGP提供了一个安全电子邮件解决方案</h3>
 <p>PGP (Pretty Good Privacy) 具有以下的功能</p>
 <ul>
 <li>消息加密</li>
@@ -449,16 +450,16 @@
 <li>完整性确认</li>
 <li>数据压缩</li>
 </ul>
-<h3 id="pgp加密流程">PGP加密流程</h3>
+<h4 id="pgp加密流程">PGP加密流程</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b09aa8d21c3db8c63e087bfa93020877.png" alt="PGP encrypt"></p>
-<h3 id="pgp解密流程">PGP解密流程</h3>
+<h4 id="pgp解密流程">PGP解密流程</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/154124f32894f962838c70977cabdb26.png" alt="PGP decrypt"></p>
-<h3 id="pgp整合了对称加密和公钥加密的方案">PGP整合了对称加密和公钥加密的方案</h3>
+<h4 id="pgp整合了对称加密和公钥加密的方案">PGP整合了对称加密和公钥加密的方案</h4>
 <ul>
 <li>保持了对称加密算法速度快的特点</li>
 <li>具有公钥算法密钥分配方便的特点</li>
 </ul>
-<h2 id="pgp数字签名和hash函数">PGP数字签名和Hash函数</h2>
+<h3 id="pgp数字签名和hash函数">PGP数字签名和Hash函数</h3>
 <p>直接对明文进行数字签名一些问题</p>
 <ul>
 <li>速度非常慢</li>
@@ -471,15 +472,15 @@
 <li>PGP将签名和明文一同传输</li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e6d41a3a99acd12139a2e0614676f81a.png" alt="PGP digital signature"></p>
-<h2 id="公共密钥分发和证明模型">公共密钥分发和证明模型</h2>
-<h3 id="金字塔模型">金字塔模型</h3>
+<h3 id="公共密钥分发和证明模型">公共密钥分发和证明模型</h3>
+<h4 id="金字塔模型">金字塔模型</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b1237f6ee63cf73edcde1c110fbf3476.png" alt="pyramid model"></p>
-<h3 id="直接信任模型">直接信任模型</h3>
+<h4 id="直接信任模型">直接信任模型</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/15201e23f3b4a7444812eca45aeebec8.png" alt="direct trust model"></p>
-<h3 id="信任网络">信任网络</h3>
+<h4 id="信任网络">信任网络</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/eeadb6d1e2d99037708952168a9f2d54.png" alt="trust network"></p>
-<h1 id="对称密码">对称密码</h1>
-<h2 id="aes的若干要求和评估准则">AES的若干要求和评估准则</h2>
+<h2 id="对称密码">对称密码</h2>
+<h3 id="aes的若干要求和评估准则">AES的若干要求和评估准则</h3>
 <ul>
 <li>AES的基本要求：比DES快而且比DES安全，分组长度为128比特，密钥长度为128／192（超56比特）。</li>
 <li>安全性评估：算法输出的随机性好，抗密码分析能力强，并且有可靠的数学基础。</li>
@@ -494,7 +495,7 @@
 <li>算法必须能够用软件和硬件两种方法实现，并且有利于有效的固件实现；</li>
 <li>算法设计相对简单。</li>
 </ul>
-<h2 id="分组密码的填充与模式">分组密码的填充与模式</h2>
+<h3 id="分组密码的填充与模式">分组密码的填充与模式</h3>
 <p>（1）什么是填充，为什么需要填充</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f9013eaf183c39051322642f6ec35092.png" alt="padding"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a23e6ca46cd8f962fd8c8d3ea7c0b583.png" alt="no padding"></p>
@@ -552,17 +553,17 @@
 </ul>
 <p>安全性于不如CFB</p></li>
 </ul>
-<h2 id="流密码">流密码</h2>
+<h3 id="流密码">流密码</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/671d5585286d828bae248bbc87f1dac4.png" alt="vernam"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b5c90a3f672b9ff2547750220f26f073.png" alt="linear feedback shift register"></p>
-<h2 id="随机位的测试">随机位的测试</h2>
+<h3 id="随机位的测试">随机位的测试</h3>
 <ul>
 <li>单个位测试(monobit test) 目的：校验1和0的个数是否大致相等。</li>
 <li>扑克牌测试(poker test) 目的： 测试0至15的分布的随机随机性</li>
 <li>连续串测试 目的：测试连续串长度分布的随机性</li>
 </ul>
-<h1 id="单向散列函数">单向散列函数</h1>
-<h2 id="性质">性质</h2>
+<h2 id="单向散列函数">单向散列函数</h2>
+<h3 id="性质">性质</h3>
 <ul>
 <li>h(x)的输入x为任意长度</li>
 <li>h(x)的输出长度固定</li>
@@ -570,80 +571,80 @@
 <li>h(x)的计算具有单向性</li>
 <li>对于给定 x, 找到 y != x, 且 h(y) = h(x) 在计算不可行</li>
 </ul>
-<h2 id="应用">应用</h2>
+<h3 id="应用">应用</h3>
 <p>（1）使用Hash函数进行完整性验证的模型</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a1fb4b778d7cd76503d1ca6c6548b03d.png" alt="check integrity by hash"></p>
 <p>（2）PGP的公钥真实性验证</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/96d0427d8cd4ed4256a083ac85ecfde7.png" alt="PGP public key verify"></p>
-<h2 id="碰撞">碰撞</h2>
+<h3 id="碰撞">碰撞</h3>
 <p>如果 y != x, 且 h(x) = h(y), 则称为碰撞 对给定的 x, 要找到一个 y 满足 y != x, h(x) = h(y) 在计算上不可行, 则称为弱无碰撞 要找到任意一对数 x,y, y != x, 满足 h(x) = h(y), 在计算上不可行, 则称为强无碰撞(包含弱无撞)</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/87b98ae5aff37e728c5e5d17c452cb40.png" alt="hash collision"></p>
-<h2 id="对数字签名的生日攻击">对数字签名的生日攻击</h2>
+<h3 id="对数字签名的生日攻击">对数字签名的生日攻击</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d7008582105ce8d2542314a8e7bc4fc1.png" alt="birthday attack"></p>
-<h1 id="不对称密码">不对称密码</h1>
-<h2 id="公钥密码的特性">公钥密码的特性</h2>
+<h2 id="不对称密码">不对称密码</h2>
+<h3 id="公钥密码的特性">公钥密码的特性</h3>
 <ul>
 <li>特性一：加密和解密使用不同的钥匙</li>
 <li>特性二：从一个钥匙推出另一个钥匙在计算上不可行</li>
 <li>特性三：每个钥匙都可以做加密和解密</li>
 </ul>
-<h2 id="rsa算法">RSA算法</h2>
+<h3 id="rsa算法">RSA算法</h3>
 <p>RSA算法可用于加密、又可用于数字签字，易懂且易于实现，是目前仍然安全并且逐步被广泛应用的一种体制。</p>
-<h2 id="euler函数">Euler函数</h2>
+<h3 id="euler函数">Euler函数</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/43af4c780145132ce7e8c6716b20920e.png" alt="Euler function"></p>
-<h2 id="euler定理">Euler定理</h2>
+<h3 id="euler定理">Euler定理</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/29d401af406d98301da457fc64798f54.png" alt="Euler theorem"></p>
-<h2 id="rsa密钥对生成步骤">RSA密钥对生成步骤</h2>
+<h3 id="rsa密钥对生成步骤">RSA密钥对生成步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f765b45da28bc037280f9b0d0d1d0b88.png" alt="RSA key pair generation"></p>
-<h2 id="rsa加密和解密步骤">RSA加密和解密步骤</h2>
+<h3 id="rsa加密和解密步骤">RSA加密和解密步骤</h3>
 <p>加密消息前，首先将它分成比n小的数据分组，再对每个分组加密</p>
 <ul>
 <li>加密： <span class="math inline">\(C=M^e(mod\ n)\)</span></li>
 <li>解密： <span class="math inline">\(M=C^d(mod\ n)\)</span></li>
 </ul>
-<h2 id="rsa密钥对生成实例">RSA密钥对生成实例</h2>
+<h3 id="rsa密钥对生成实例">RSA密钥对生成实例</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/424075aa423829a0391a98bcc853b3dd.png" alt="RSA key pair generation example"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a524e12cd4e5320bdbea37769d0795a1.png" alt="RSA encrypt and decrypt example"></p>
-<h2 id="rsa的缺点">RSA的缺点</h2>
+<h3 id="rsa的缺点">RSA的缺点</h3>
 <p>受到素数产生技术的限制，产生密钥很麻烦。 分组长度太大，为保证安全性，n 至少也要 600比特以上，使运算代价很高，尤其是速度较慢；且随着大数分解技术的发展，这个长度还在增加，不利于数据格式的标准化</p>
-<h2 id="当pq比较接近的数分解攻击">当p,q比较接近的数分解攻击</h2>
+<h3 id="当pq比较接近的数分解攻击">当p,q比较接近的数分解攻击</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e1b350b3af660b9676912058b43da4e8.png" alt="decomposition attack 1"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/cb81f1e0fdca6c4789cbfa2c582f86ea.png" alt="decomposition attack 2"></p>
-<h2 id="选择明文攻击">选择明文攻击</h2>
+<h3 id="选择明文攻击">选择明文攻击</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/44f805ba13c49f0c8804035da24accc1.png" alt="select plaintext attack"></p>
 <p>从算法上无法解决这一问题，主要措施是采用好的公钥协议：</p>
 <ul>
 <li>工作过程中实体不轻易对其他实体任意产生的信息加解密，不对自己一无所知的信息签名</li>
 <li>对其他实体送来的随机文档签名时首先对文档作HASH处理</li>
 </ul>
-<h1 id="elgamal密码体制">ElGamal密码体制</h1>
+<h2 id="elgamal密码体制">ElGamal密码体制</h2>
 <p>由ElGamal[1984,1985]提出，是一种基于离散对数问题的双钥密码体制，既可用于加密，又可用于签字。</p>
-<h2 id="elgamal密钥对生成步骤">ElGamal密钥对生成步骤</h2>
+<h3 id="elgamal密钥对生成步骤">ElGamal密钥对生成步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/dfa9e6d2c54c514935d282d21d6bb40f.png" alt="ElGamal key pair gen"></p>
-<h2 id="elgamal加密和解密步骤">ElGamal加密和解密步骤</h2>
+<h3 id="elgamal加密和解密步骤">ElGamal加密和解密步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/bfc9dfa2e3d1a45ea98ed8deb13204b9.png" alt="ElGamal encrypt and decrypt"></p>
-<h2 id="elgamal密钥对生成例子">ElGamal密钥对生成例子</h2>
+<h3 id="elgamal密钥对生成例子">ElGamal密钥对生成例子</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b346d1cfd0a6c7e3c07a2b098197d9f4.png" alt="ElGamal key pair gen example"></p>
-<h2 id="elgamal加密和解密例子">ElGamal加密和解密例子</h2>
+<h3 id="elgamal加密和解密例子">ElGamal加密和解密例子</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a1b84050c50736c456c11f9d727f072a.png" alt="ElGamal encrypt and decrypt example"></p>
-<h1 id="diffie-hellman密钥交换">Diffie-Hellman密钥交换</h1>
+<h2 id="diffie-hellman密钥交换">Diffie-Hellman密钥交换</h2>
 <p>密钥交换方案:允许两个用户可以安全地建立一个秘密信息，用于后续的通讯过程 算法的安全性依赖于:有限域上计算离散对数的难度</p>
-<h2 id="dh密钥匙方案实现步骤">DH密钥匙方案实现步骤</h2>
+<h3 id="dh密钥匙方案实现步骤">DH密钥匙方案实现步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7f49ca12367df14dd0ea2b488fc97910.png" alt="DH key exchange"></p>
-<h2 id="dh密钥匙交换方案实现例子">DH密钥匙交换方案实现例子</h2>
+<h3 id="dh密钥匙交换方案实现例子">DH密钥匙交换方案实现例子</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7c5a06b231c6c9c9c179d34d3b245ea1.png" alt="DH key exchange example"></p>
-<h2 id="dh密钥匙方案的第三者攻击方法">DH密钥匙方案的第三者攻击方法</h2>
+<h3 id="dh密钥匙方案的第三者攻击方法">DH密钥匙方案的第三者攻击方法</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/87303aed7496f9dafae44487a9aa1d89.png" alt="DH third party attack"></p>
 <p>第三者攻击的方法的为什么可以成功呢? 问题在于：A和B在不安全的信道上通信, 那么双方如何能够知道通信的另一方的到底是谁呢? 是否能设计一种可以确认通信双方身份的DH密钥交换方案呢?</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/8c0c85ce951daa2fb2b8fa057c29debb.png" alt="DH key exchange with identity auth"></p>
-<h1 id="数字签名">数字签名</h1>
-<h2 id="rsa签名方案">RSA签名方案</h2>
+<h2 id="数字签名">数字签名</h2>
+<h3 id="rsa签名方案">RSA签名方案</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a8043e86475699d1aa460dba9191fca7.png" alt="RSA signature"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7c232e619e9ac36d6f139d942db9901e.png" alt="RSA signature example"></p>
-<h2 id="elg签名方案">ELG签名方案</h2>
+<h3 id="elg签名方案">ELG签名方案</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/faf924b5fdfa67b4fe0e78afc1151076.png" alt="ELG signature"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/8b85c54a331eac1c619bd48f4bed5c5a.png" alt="ELG signature example"></p>
-<h1 id="实验02">实验02</h1>
+<h2 id="实验02">实验02</h2>
 <p>（1）使用PGP软件，产生一对新的公钥/私钥，并在PGP服务器上注册</p>
 <p>思考：为什么不是由服务器统一产生公钥/私钥对呢，而是由客户端产生钥匙对呢？注册完成后，公钥/私钥存放在什么地方呢？私钥需要什么样的保护措施吗？</p>
 <ul>

@@ -2265,28 +2265,29 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
     <url>/posts/8ad7d8df/</url>
     <content><![CDATA[<p>应用密码学学习总结，涉及密码学基本概念、古典密码、PGP安全电子邮件解决方案、对称加密、非对称加密、ElGamal密码体制、Diffie-Hellman密钥交换、数字签名等。</p>
 <span id="more"></span>
-<h1 id="概述">概述</h1>
-<h2 id="信息安全的三个基本的目标">信息安全的三个基本的目标</h2>
+<h1 id="应用密码学总结">应用密码学总结</h1>
+<h2 id="概述">概述</h2>
+<h3 id="信息安全的三个基本的目标">信息安全的三个基本的目标</h3>
 <ul>
 <li>保密性 Confidentiality 消息能够被安全的传送，即窃听者不能阅读发送的消息。</li>
 <li>完整性 Integrity 消息的接收者应该能够验证在传递的过程中消息没有被修改；入侵者不能用假消息代替合法的消息。</li>
 <li>可用性 Availability 即保证信息和信息系统随时为授权者提供服务，而不要出现非授权者滥用却对授权者拒绝服务的情况。</li>
 </ul>
-<h2 id="数据的安全基于密钥的保密而不是算法的保密">数据的安全基于密钥的保密，而不是算法的保密</h2>
-<h2 id="公钥密码使得无密钥传输的保密通信成为可能">公钥密码使得无密钥传输的保密通信成为可能</h2>
-<h2 id="密码学的基本概念">密码学的基本概念</h2>
+<h3 id="数据的安全基于密钥的保密而不是算法的保密">数据的安全基于密钥的保密，而不是算法的保密</h3>
+<h3 id="公钥密码使得无密钥传输的保密通信成为可能">公钥密码使得无密钥传输的保密通信成为可能</h3>
+<h3 id="密码学的基本概念">密码学的基本概念</h3>
 <p>密码学(Cryptology)：研究信息系统安全技术的科学。它包含两个分支：</p>
 <ul>
 <li>密码编码学(Cryptography)，对信息进行编码实现隐蔽信息的一门学问</li>
 <li>密码分析学(Cryptanalysis)，研究分析破译密码或伪造的学问。 两者相互对立，而又互相促进地向前发展。</li>
 </ul>
-<h2 id="密码算法分类-i">密码算法分类-I</h2>
+<h3 id="密码算法分类-i">密码算法分类-I</h3>
 <p>按照保密性依赖的基础分为:</p>
 <ul>
 <li>受限制的（Restricted)算法: 算法的保密性基于保持算法的秘密。</li>
 <li>基于密钥（Key-based)的算法: 算法的保密性基于对密钥的保密。</li>
 </ul>
-<h2 id="密码算法分类-ii">密码算法分类-II</h2>
+<h3 id="密码算法分类-ii">密码算法分类-II</h3>
 <p>按照密钥的特点分为：</p>
 <ul>
 <li>对称密码算法（Symmetric Cipher)：就是加密密钥和解密密钥相同，或实质上等同，即从一个易于推出另一个。又称秘密密钥算法或单密钥算法。 对称密钥密码又可分为流密码和分组密码
@@ -2296,31 +2297,31 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 </ul></li>
 <li>非对称密钥算法（Asymmetric Cipher)：加密密钥和解密密钥不相同，从一个很难推出另一个。又称公钥密钥算法（Public-key Cipher) 。</li>
 </ul>
-<h1 id="数论基础">数论基础</h1>
-<h2 id="互素">互素</h2>
+<h2 id="数论基础">数论基础</h2>
+<h3 id="互素">互素</h3>
 <p>如果a,b的最大公约数为1，则称a,b互素。(注. (a,b)表示a,b的最大公约数) (3,5)=1 a,b互素，a,b不一定是素数，例如(9,4)=1</p>
-<h2 id="模运算">模运算</h2>
-<h3 id="模加法">模加法</h3>
+<h3 id="模运算">模运算</h3>
+<h4 id="模加法">模加法</h4>
 <p>(a + b) mod m = ((a mod m) + (b mod m)) mod m 例: (11 + 15) mod 8 = ((11 mod 8) + (15 mod 8)) mod 8 = (3 + 7) mod 8 = 10 mod 8 = 2</p>
-<h3 id="模减法">模减法</h3>
+<h4 id="模减法">模减法</h4>
 <p>(a - b) mod m = ((a mod m) - (b mod m)) mod m 例: (15 - 1) mod 7 = ((15 mod 7) - (1 mod 7)) mod 7 = (1 - 1) mod 7 = 0 mod 7 = 0</p>
-<h3 id="模乘法">模乘法</h3>
+<h4 id="模乘法">模乘法</h4>
 <p>(a × b) mod m = ((a mod m) × (b mod m)) mod m 例: (7 × 9) mod 8 = ((7 mod 8) × (9 mod 8)) mod 8 = (7 × 1) mod 8 = 7 mod 8 = 7</p>
-<h2 id="逆元">逆元</h2>
-<h3 id="加法逆元">加法逆元</h3>
+<h3 id="逆元">逆元</h3>
+<h4 id="加法逆元">加法逆元</h4>
 <p>x的加法逆元y是满足x + y ≡ 0 mod m的数 例: 2 + 6 ≡ 0 mod 8, 6和2互为模8的加法逆元</p>
-<h3 id="乘法逆元">乘法逆元</h3>
+<h4 id="乘法逆元">乘法逆元</h4>
 <p>x的乘法逆元y是满足x × y ≡ 1 mod m 数。 例：2 × 4 ≡ 1 mod 7，2和4互为模7的乘法逆元</p>
-<h3 id="如果m是一个素数则对每一个0xm-都存在乘法逆元">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</h3>
+<h4 id="如果m是一个素数则对每一个0xm-都存在乘法逆元">如果m是一个素数，则对每一个0&lt;x&lt;m, 都存在乘法逆元</h4>
 <p>例： 1 × 1 ≡1 mod 7 2 × 4 ≡1 mod 7 3 × 5 ≡1 mod 7 4 × 2 ≡1 mod 7 5 × 3 ≡1 mod 7 6 × 6 ≡1 mod 7 ​ …</p>
-<h3 id="一个定理">一个定理</h3>
+<h4 id="一个定理">一个定理</h4>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">设a, b, c是任意三个不全为零的整数,且</span><br><span class="line">                     a= bq + r                      (1)</span><br><span class="line">其中q是整数, 则(a, b)=(b, r).</span><br><span class="line">对(1)进一步地约束，令b&gt;0,将a除以b所得的商记为q, 余数为r , 则(1)成为</span><br><span class="line">                     a= bq + r, 0&lt;=r&lt;b              (2)</span><br><span class="line">r是a对模b的非负最小剩余。</span><br><span class="line">进一步 (a, b)=(|a|, |b|)=(b, a)</span><br><span class="line">由此我们得到求(a, b)的Euclid辗转相除法</span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/3f15c8e84962d30760085229d67a8a60.png" alt="Euclid" /></p>
-<h3 id="解一次同余式">解一次同余式</h3>
+<h4 id="解一次同余式">解一次同余式</h4>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">一个定理:</span><br><span class="line">若 (a, m) = 1, 则一次同余式</span><br><span class="line">                 ax ≡ b (mod m)</span><br><span class="line">有唯一解</span><br><span class="line">例：19x ≡ 1(mod 48)</span><br><span class="line">因为(19, 48) = 1, 所以一次同余式有唯一解，即19对于模48的有唯一逆元。</span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/c75b8f5ca55cf1486266f36d7e76e924.png" alt="Solve a congruence" /></p>
-<h1 id="古典密码">古典密码</h1>
-<h2 id="单表密码体制">单表密码体制</h2>
+<h2 id="古典密码">古典密码</h2>
+<h3 id="单表密码体制">单表密码体制</h3>
 <p>如果明文中不同的位置的同一明文字母在密文中对应的密文字母相同,则称其为单表密码体制。</p>
 <ul>
 <li>乘法密码算法</li>
@@ -2333,10 +2334,10 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <ul>
 <li>语言的统计特性：频率特征；连接特征；重复特征</li>
 </ul>
-<h2 id="多表密码体制">多表密码体制</h2>
+<h3 id="多表密码体制">多表密码体制</h3>
 <p>如果明文中不同的位置的同一明文字母在密文中对应的密文字母不同,则称其为多表密码体制。</p>
-<h1 id="安全电子邮件方案">安全电子邮件方案</h1>
-<h2 id="pgp产生的背景">PGP产生的背景</h2>
+<h2 id="安全电子邮件方案">安全电子邮件方案</h2>
+<h3 id="pgp产生的背景">PGP产生的背景</h3>
 <p>你的电子邮件不安全，电子邮件在传输中使用的SMTP协议。</p>
 <ul>
 <li>无法保证邮件在传输过程中不被人偷看。</li>
@@ -2344,7 +2345,7 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <li>无法确定邮件是否在传输过程中被篡改</li>
 <li>当邮件被发到错误地址，可能造成信息泄露</li>
 </ul>
-<h2 id="pgp提供了一个安全电子邮件解决方案">PGP提供了一个安全电子邮件解决方案</h2>
+<h3 id="pgp提供了一个安全电子邮件解决方案">PGP提供了一个安全电子邮件解决方案</h3>
 <p>PGP (Pretty Good Privacy) 具有以下的功能</p>
 <ul>
 <li>消息加密</li>
@@ -2352,16 +2353,16 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <li>完整性确认</li>
 <li>数据压缩</li>
 </ul>
-<h3 id="pgp加密流程">PGP加密流程</h3>
+<h4 id="pgp加密流程">PGP加密流程</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b09aa8d21c3db8c63e087bfa93020877.png" alt="PGP encrypt" /></p>
-<h3 id="pgp解密流程">PGP解密流程</h3>
+<h4 id="pgp解密流程">PGP解密流程</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/154124f32894f962838c70977cabdb26.png" alt="PGP decrypt" /></p>
-<h3 id="pgp整合了对称加密和公钥加密的方案">PGP整合了对称加密和公钥加密的方案</h3>
+<h4 id="pgp整合了对称加密和公钥加密的方案">PGP整合了对称加密和公钥加密的方案</h4>
 <ul>
 <li>保持了对称加密算法速度快的特点</li>
 <li>具有公钥算法密钥分配方便的特点</li>
 </ul>
-<h2 id="pgp数字签名和hash函数">PGP数字签名和Hash函数</h2>
+<h3 id="pgp数字签名和hash函数">PGP数字签名和Hash函数</h3>
 <p>直接对明文进行数字签名一些问题</p>
 <ul>
 <li>速度非常慢</li>
@@ -2374,15 +2375,15 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <li>PGP将签名和明文一同传输</li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e6d41a3a99acd12139a2e0614676f81a.png" alt="PGP digital signature" /></p>
-<h2 id="公共密钥分发和证明模型">公共密钥分发和证明模型</h2>
-<h3 id="金字塔模型">金字塔模型</h3>
+<h3 id="公共密钥分发和证明模型">公共密钥分发和证明模型</h3>
+<h4 id="金字塔模型">金字塔模型</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b1237f6ee63cf73edcde1c110fbf3476.png" alt="pyramid model" /></p>
-<h3 id="直接信任模型">直接信任模型</h3>
+<h4 id="直接信任模型">直接信任模型</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/15201e23f3b4a7444812eca45aeebec8.png" alt="direct trust model" /></p>
-<h3 id="信任网络">信任网络</h3>
+<h4 id="信任网络">信任网络</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/eeadb6d1e2d99037708952168a9f2d54.png" alt="trust network" /></p>
-<h1 id="对称密码">对称密码</h1>
-<h2 id="aes的若干要求和评估准则">AES的若干要求和评估准则</h2>
+<h2 id="对称密码">对称密码</h2>
+<h3 id="aes的若干要求和评估准则">AES的若干要求和评估准则</h3>
 <ul>
 <li>AES的基本要求：比DES快而且比DES安全，分组长度为128比特，密钥长度为128／192（超56比特）。</li>
 <li>安全性评估：算法输出的随机性好，抗密码分析能力强，并且有可靠的数学基础。</li>
@@ -2397,7 +2398,7 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <li>算法必须能够用软件和硬件两种方法实现，并且有利于有效的固件实现；</li>
 <li>算法设计相对简单。</li>
 </ul>
-<h2 id="分组密码的填充与模式">分组密码的填充与模式</h2>
+<h3 id="分组密码的填充与模式">分组密码的填充与模式</h3>
 <p>（1）什么是填充，为什么需要填充</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f9013eaf183c39051322642f6ec35092.png" alt="padding" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a23e6ca46cd8f962fd8c8d3ea7c0b583.png" alt="no padding" /></p>
@@ -2455,17 +2456,17 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 </ul>
 <p>安全性于不如CFB</p></li>
 </ul>
-<h2 id="流密码">流密码</h2>
+<h3 id="流密码">流密码</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/671d5585286d828bae248bbc87f1dac4.png" alt="vernam" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b5c90a3f672b9ff2547750220f26f073.png" alt="linear feedback shift register" /></p>
-<h2 id="随机位的测试">随机位的测试</h2>
+<h3 id="随机位的测试">随机位的测试</h3>
 <ul>
 <li>单个位测试(monobit test) 目的：校验1和0的个数是否大致相等。</li>
 <li>扑克牌测试(poker test) 目的： 测试0至15的分布的随机随机性</li>
 <li>连续串测试 目的：测试连续串长度分布的随机性</li>
 </ul>
-<h1 id="单向散列函数">单向散列函数</h1>
-<h2 id="性质">性质</h2>
+<h2 id="单向散列函数">单向散列函数</h2>
+<h3 id="性质">性质</h3>
 <ul>
 <li>h(x)的输入x为任意长度</li>
 <li>h(x)的输出长度固定</li>
@@ -2473,80 +2474,80 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <li>h(x)的计算具有单向性</li>
 <li>对于给定 x, 找到 y != x, 且 h(y) = h(x) 在计算不可行</li>
 </ul>
-<h2 id="应用">应用</h2>
+<h3 id="应用">应用</h3>
 <p>（1）使用Hash函数进行完整性验证的模型</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a1fb4b778d7cd76503d1ca6c6548b03d.png" alt="check integrity by hash" /></p>
 <p>（2）PGP的公钥真实性验证</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/96d0427d8cd4ed4256a083ac85ecfde7.png" alt="PGP public key verify" /></p>
-<h2 id="碰撞">碰撞</h2>
+<h3 id="碰撞">碰撞</h3>
 <p>如果 y != x, 且 h(x) = h(y), 则称为碰撞 对给定的 x, 要找到一个 y 满足 y != x, h(x) = h(y) 在计算上不可行, 则称为弱无碰撞 要找到任意一对数 x,y, y != x, 满足 h(x) = h(y), 在计算上不可行, 则称为强无碰撞(包含弱无撞)</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/87b98ae5aff37e728c5e5d17c452cb40.png" alt="hash collision" /></p>
-<h2 id="对数字签名的生日攻击">对数字签名的生日攻击</h2>
+<h3 id="对数字签名的生日攻击">对数字签名的生日攻击</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d7008582105ce8d2542314a8e7bc4fc1.png" alt="birthday attack" /></p>
-<h1 id="不对称密码">不对称密码</h1>
-<h2 id="公钥密码的特性">公钥密码的特性</h2>
+<h2 id="不对称密码">不对称密码</h2>
+<h3 id="公钥密码的特性">公钥密码的特性</h3>
 <ul>
 <li>特性一：加密和解密使用不同的钥匙</li>
 <li>特性二：从一个钥匙推出另一个钥匙在计算上不可行</li>
 <li>特性三：每个钥匙都可以做加密和解密</li>
 </ul>
-<h2 id="rsa算法">RSA算法</h2>
+<h3 id="rsa算法">RSA算法</h3>
 <p>RSA算法可用于加密、又可用于数字签字，易懂且易于实现，是目前仍然安全并且逐步被广泛应用的一种体制。</p>
-<h2 id="euler函数">Euler函数</h2>
+<h3 id="euler函数">Euler函数</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/43af4c780145132ce7e8c6716b20920e.png" alt="Euler function" /></p>
-<h2 id="euler定理">Euler定理</h2>
+<h3 id="euler定理">Euler定理</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/29d401af406d98301da457fc64798f54.png" alt="Euler theorem" /></p>
-<h2 id="rsa密钥对生成步骤">RSA密钥对生成步骤</h2>
+<h3 id="rsa密钥对生成步骤">RSA密钥对生成步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f765b45da28bc037280f9b0d0d1d0b88.png" alt="RSA key pair generation" /></p>
-<h2 id="rsa加密和解密步骤">RSA加密和解密步骤</h2>
+<h3 id="rsa加密和解密步骤">RSA加密和解密步骤</h3>
 <p>加密消息前，首先将它分成比n小的数据分组，再对每个分组加密</p>
 <ul>
 <li>加密： <span class="math inline">\(C=M^e(mod\ n)\)</span></li>
 <li>解密： <span class="math inline">\(M=C^d(mod\ n)\)</span></li>
 </ul>
-<h2 id="rsa密钥对生成实例">RSA密钥对生成实例</h2>
+<h3 id="rsa密钥对生成实例">RSA密钥对生成实例</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/424075aa423829a0391a98bcc853b3dd.png" alt="RSA key pair generation example" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a524e12cd4e5320bdbea37769d0795a1.png" alt="RSA encrypt and decrypt example" /></p>
-<h2 id="rsa的缺点">RSA的缺点</h2>
+<h3 id="rsa的缺点">RSA的缺点</h3>
 <p>受到素数产生技术的限制，产生密钥很麻烦。 分组长度太大，为保证安全性，n 至少也要 600比特以上，使运算代价很高，尤其是速度较慢；且随着大数分解技术的发展，这个长度还在增加，不利于数据格式的标准化</p>
-<h2 id="当pq比较接近的数分解攻击">当p,q比较接近的数分解攻击</h2>
+<h3 id="当pq比较接近的数分解攻击">当p,q比较接近的数分解攻击</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e1b350b3af660b9676912058b43da4e8.png" alt="decomposition attack 1" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/cb81f1e0fdca6c4789cbfa2c582f86ea.png" alt="decomposition attack 2" /></p>
-<h2 id="选择明文攻击">选择明文攻击</h2>
+<h3 id="选择明文攻击">选择明文攻击</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/44f805ba13c49f0c8804035da24accc1.png" alt="select plaintext attack" /></p>
 <p>从算法上无法解决这一问题，主要措施是采用好的公钥协议：</p>
 <ul>
 <li>工作过程中实体不轻易对其他实体任意产生的信息加解密，不对自己一无所知的信息签名</li>
 <li>对其他实体送来的随机文档签名时首先对文档作HASH处理</li>
 </ul>
-<h1 id="elgamal密码体制">ElGamal密码体制</h1>
+<h2 id="elgamal密码体制">ElGamal密码体制</h2>
 <p>由ElGamal[1984,1985]提出，是一种基于离散对数问题的双钥密码体制，既可用于加密，又可用于签字。</p>
-<h2 id="elgamal密钥对生成步骤">ElGamal密钥对生成步骤</h2>
+<h3 id="elgamal密钥对生成步骤">ElGamal密钥对生成步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/dfa9e6d2c54c514935d282d21d6bb40f.png" alt="ElGamal key pair gen" /></p>
-<h2 id="elgamal加密和解密步骤">ElGamal加密和解密步骤</h2>
+<h3 id="elgamal加密和解密步骤">ElGamal加密和解密步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/bfc9dfa2e3d1a45ea98ed8deb13204b9.png" alt="ElGamal encrypt and decrypt" /></p>
-<h2 id="elgamal密钥对生成例子">ElGamal密钥对生成例子</h2>
+<h3 id="elgamal密钥对生成例子">ElGamal密钥对生成例子</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b346d1cfd0a6c7e3c07a2b098197d9f4.png" alt="ElGamal key pair gen example" /></p>
-<h2 id="elgamal加密和解密例子">ElGamal加密和解密例子</h2>
+<h3 id="elgamal加密和解密例子">ElGamal加密和解密例子</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a1b84050c50736c456c11f9d727f072a.png" alt="ElGamal encrypt and decrypt example" /></p>
-<h1 id="diffie-hellman密钥交换">Diffie-Hellman密钥交换</h1>
+<h2 id="diffie-hellman密钥交换">Diffie-Hellman密钥交换</h2>
 <p>密钥交换方案:允许两个用户可以安全地建立一个秘密信息，用于后续的通讯过程 算法的安全性依赖于:有限域上计算离散对数的难度</p>
-<h2 id="dh密钥匙方案实现步骤">DH密钥匙方案实现步骤</h2>
+<h3 id="dh密钥匙方案实现步骤">DH密钥匙方案实现步骤</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7f49ca12367df14dd0ea2b488fc97910.png" alt="DH key exchange" /></p>
-<h2 id="dh密钥匙交换方案实现例子">DH密钥匙交换方案实现例子</h2>
+<h3 id="dh密钥匙交换方案实现例子">DH密钥匙交换方案实现例子</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7c5a06b231c6c9c9c179d34d3b245ea1.png" alt="DH key exchange example" /></p>
-<h2 id="dh密钥匙方案的第三者攻击方法">DH密钥匙方案的第三者攻击方法</h2>
+<h3 id="dh密钥匙方案的第三者攻击方法">DH密钥匙方案的第三者攻击方法</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/87303aed7496f9dafae44487a9aa1d89.png" alt="DH third party attack" /></p>
 <p>第三者攻击的方法的为什么可以成功呢? 问题在于：A和B在不安全的信道上通信, 那么双方如何能够知道通信的另一方的到底是谁呢? 是否能设计一种可以确认通信双方身份的DH密钥交换方案呢?</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/8c0c85ce951daa2fb2b8fa057c29debb.png" alt="DH key exchange with identity auth" /></p>
-<h1 id="数字签名">数字签名</h1>
-<h2 id="rsa签名方案">RSA签名方案</h2>
+<h2 id="数字签名">数字签名</h2>
+<h3 id="rsa签名方案">RSA签名方案</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a8043e86475699d1aa460dba9191fca7.png" alt="RSA signature" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/7c232e619e9ac36d6f139d942db9901e.png" alt="RSA signature example" /></p>
-<h2 id="elg签名方案">ELG签名方案</h2>
+<h3 id="elg签名方案">ELG签名方案</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/faf924b5fdfa67b4fe0e78afc1151076.png" alt="ELG signature" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/8b85c54a331eac1c619bd48f4bed5c5a.png" alt="ELG signature example" /></p>
-<h1 id="实验02">实验02</h1>
+<h2 id="实验02">实验02</h2>
 <p>（1）使用PGP软件，产生一对新的公钥/私钥，并在PGP服务器上注册</p>
 <p>思考：为什么不是由服务器统一产生公钥/私钥对呢，而是由客户端产生钥匙对呢？注册完成后，公钥/私钥存放在什么地方呢？私钥需要什么样的保护措施吗？</p>
 <ul>
@@ -3276,14 +3277,15 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
     <content><![CDATA[<p>Python 列表具有内置的 list.sort() 方法，该方法可就地修改列表。还有一个 sorted() 内置函数，可从迭代器构建新的排序列表。</p>
 <p>因为 Python3 中 sorted() 和 list.sort() 放弃了类似 C++ 中的 cmp 写法，本文将展示官方推荐替代解决方案，以实现自定义的两个参数的比较函数，并详细分析了 cmp_to_key 函数实现原理。</p>
 <span id="more"></span>
-<h1 id="排序基础">排序基础</h1>
+<h1 id="python-自定义比较函数">python 自定义比较函数</h1>
+<h2 id="排序基础">排序基础</h2>
 <p>一个简单的升序排序非常容易：只需调用 sorted() 函数即可。它返回一个新的排序列表：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted([5, 2, 3, 1, 4])</span></span><br><span class="line">[1, 2, 3, 4, 5]</span><br></pre></td></tr></table></figure>
 <p>你也可以使用 list.sort() 方法。它就地修改列表（并返回 None 以避免混淆）。通常，它不如 sorted() 方便（如果你不需要原始列表，则效率会略高一些）。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; a = [5, 2, 3, 1, 4]</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; a.sort()</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; a</span></span><br><span class="line">[1, 2, 3, 4, 5]</span><br></pre></td></tr></table></figure>
 <p>另一个区别是 list.sort() 方法仅为列表定义。而 sorted() 函数接受任何可迭代的对象。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted(&#123;1: <span class="string">&#x27;D&#x27;</span>, 2: <span class="string">&#x27;B&#x27;</span>, 3: <span class="string">&#x27;B&#x27;</span>, 4: <span class="string">&#x27;E&#x27;</span>, 5: <span class="string">&#x27;A&#x27;</span>&#125;)</span></span><br><span class="line">[1, 2, 3, 4, 5]</span><br></pre></td></tr></table></figure>
-<h1 id="key-functions">Key Functions</h1>
+<h2 id="key-functions">Key Functions</h2>
 <p>list.sort() 和 sorted() 都有一个 key 参数，用于指定在进行比较之前在每个列表元素上要调用的函数。例如，这是不区分大小写的字符串比较：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted(<span class="string">&quot;This is a test string from Andrew&quot;</span>.<span class="built_in">split</span>(), key=str.lower)</span></span><br><span class="line">[&#x27;a&#x27;, &#x27;Andrew&#x27;, &#x27;from&#x27;, &#x27;is&#x27;, &#x27;string&#x27;, &#x27;test&#x27;, &#x27;This&#x27;]</span><br></pre></td></tr></table></figure>
 <p><strong>key 参数的值应该是一个采用单个参数并返回用于排序目的的键的函数。</strong> 这种技术之所以快捷，是因为对于每个输入记录，key function 都只被调用一次。</p>
@@ -3292,21 +3294,21 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <p>具有命名属性的对象也可以使用相同的技术。例如：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; class Student:</span></span><br><span class="line">...     def __init__(self, name, grade, age):</span><br><span class="line">...         self.name = name</span><br><span class="line">...         self.grade = grade</span><br><span class="line">...         self.age = age</span><br><span class="line">...     def __repr__(self):</span><br><span class="line">...         return repr((self.name, self.grade, self.age))</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; student_objects = [</span></span><br><span class="line">...     Student(&#x27;john&#x27;, &#x27;A&#x27;, 15),</span><br><span class="line">...     Student(&#x27;jane&#x27;, &#x27;B&#x27;, 12),</span><br><span class="line">...     Student(&#x27;dave&#x27;, &#x27;B&#x27;, 10),</span><br><span class="line">... ]</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted(student_objects, key=lambda student: student.age)   <span class="comment"># sort by age</span></span></span><br><span class="line">[(&#x27;dave&#x27;, &#x27;B&#x27;, 10), (&#x27;jane&#x27;, &#x27;B&#x27;, 12), (&#x27;john&#x27;, &#x27;A&#x27;, 15)]</span><br></pre></td></tr></table></figure>
-<h1 id="为什么取消-cmp-参数">为什么取消 cmp 参数</h1>
+<h2 id="为什么取消-cmp-参数">为什么取消 cmp 参数</h2>
 <p>所有 Py2.x 版本都支持 cmp 参数来处理用户指定的比较功能。</p>
 <p>在 Py3.0 中，完全删除了 cmp 参数（这是简化和统一语言的较大工作的一部分，从而消除了丰富的比较与 <code>__cmp__()</code> 魔术方法之间的冲突）。</p>
-<h1 id="在-py2.x-中使用-cmp-参数">在 Py2.x 中使用 cmp 参数</h1>
+<h2 id="在-py2.x-中使用-cmp-参数">在 Py2.x 中使用 cmp 参数</h2>
 <p>Py2.x 中，sort 允许一个可选函数，可以进行比较。该函数应该接受两个参数进行比较，如果是小于等于的返回负值，如果相等则返回零，如果是大于等于的返回正值。例如，我们可以做：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; def numeric_compare(x, y):</span></span><br><span class="line">...     return x - y</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted([5, 2, 4, 1, 3], cmp=numeric_compare)</span></span><br><span class="line">[1, 2, 3, 4, 5]</span><br></pre></td></tr></table></figure>
 <p>或者，你可以通过以下方式反转比较顺序：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; def reverse_numeric(x, y):</span></span><br><span class="line">...     return y - x</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted([5, 2, 4, 1, 3], cmp=reverse_numeric)</span></span><br><span class="line">[5, 4, 3, 2, 1]</span><br></pre></td></tr></table></figure>
-<h1 id="使用-cmp_to_key-函数实现自定义比较函数">使用 <code>cmp_to_key</code> 函数实现自定义比较函数</h1>
+<h2 id="使用-cmp_to_key-函数实现自定义比较函数">使用 <code>cmp_to_key</code> 函数实现自定义比较函数</h2>
 <p>当将代码从 Python 2.x 移植到 3.x 时，如果你有使用自定义比较功能的函数，需要将其转换为 Key function，我们可以使用 functools 提供的 <code>cmp_to_key()</code> 来实现：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cmp_to_key</span>(<span class="params">mycmp</span>):</span><br><span class="line">    <span class="string">&#x27;Convert a cmp= function into a key= function&#x27;</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">K</span>:</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, obj, *args</span>):</span><br><span class="line">            self.obj = obj</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__lt__</span>(<span class="params">self, other</span>):</span><br><span class="line">            <span class="keyword">return</span> mycmp(self.obj, other.obj) &lt; <span class="number">0</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__gt__</span>(<span class="params">self, other</span>):</span><br><span class="line">            <span class="keyword">return</span> mycmp(self.obj, other.obj) &gt; <span class="number">0</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__eq__</span>(<span class="params">self, other</span>):</span><br><span class="line">            <span class="keyword">return</span> mycmp(self.obj, other.obj) == <span class="number">0</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__le__</span>(<span class="params">self, other</span>):</span><br><span class="line">            <span class="keyword">return</span> mycmp(self.obj, other.obj) &lt;= <span class="number">0</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__ge__</span>(<span class="params">self, other</span>):</span><br><span class="line">            <span class="keyword">return</span> mycmp(self.obj, other.obj) &gt;= <span class="number">0</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">__ne__</span>(<span class="params">self, other</span>):</span><br><span class="line">            <span class="keyword">return</span> mycmp(self.obj, other.obj) != <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> K</span><br></pre></td></tr></table></figure>
 <p>要转换为 Key Function，只需包装旧的比较函数：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; from functools import cmp_to_key</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; sorted([5, 2, 4, 1, 3], key=cmp_to_key(reverse_numeric))</span></span><br><span class="line">[5, 4, 3, 2, 1]</span><br></pre></td></tr></table></figure>
 <p>在 Python 3.2 中，<code>functools.cmp_to_key()</code> 函数已添加到标准库的 functools 模块中。</p>
-<h1 id="理解-cmp_to_key-函数">理解 cmp_to_key 函数</h1>
+<h2 id="理解-cmp_to_key-函数">理解 cmp_to_key 函数</h2>
 <p>如果你明白了 Key Function 的作用，那么再看 cmp_to_key 的代码就非常容易理解了。</p>
 <p>cmp_to_key 接收一个比较函数作为内部类实例比较时执行的函数，并返回这个类。根据 <code>key=com_to_key(mycmp)</code> 可以知道最终作为 Key Function 的是一个类，这个类就是 cmp_to_key 返回的类 <code>K</code>。因为 Key Function 是作用在可迭代对象的每个元素上的，那么这个类又是怎么作用到每个元素的呢。</p>
 <p>这里，你可能需要明确一点，Key Function 允许接受的来源不一定是函数，实际上它可以接受一切可调用对象，而类也是一个可调用对象。</p>
@@ -3316,7 +3318,7 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 </blockquote>
 <p>到此，我们可以知道 cmp_to_key 函数返回的类作用到每个元素的结果了，这个类的作用结果就是：创建一个 <code>K</code> 类的实例，这个实例接收当前作用元素进行初始化，返回初始化后的实例。</p>
 <p>在 K 类的实例间进行比较时，就会调用相应的特殊方法，如 <code>&lt;</code> 将调用 <code>__lt__</code> 方法，而 <code>K</code> 类实现的 <code>__lt__</code> 将使用我们自己定义的函数进行比较。</p>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a href="https://docs.python.org/3/howto/sorting.html#sortinghowto">https://docs.python.org/3/howto/sorting.html#sortinghowto</a></p>
 ]]></content>
       <categories>
@@ -3582,38 +3584,40 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
   <entry>
     <title>Ubuntu下安装拳皇97</title>
     <url>/posts/7de10289/</url>
-    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/47388022e4a3b798095c5d9db042a1a5.jpeg" alt="kof97" /></p>
+    <content><![CDATA[<p>本文将介绍在 Ubuntu 系统中如何通过 <a href="https://www.mamedev.org/">MAME</a> 模拟器安装拳皇97。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/47388022e4a3b798095c5d9db042a1a5.jpeg" alt="kof97" /></p>
 <span id="more"></span>
-<h1 id="系统环境">系统环境</h1>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID:	Ubuntu</span><br><span class="line">Description:	Ubuntu 18.04.3 LTS</span><br><span class="line">Release:	18.04</span><br><span class="line">Codename:	bionic</span><br></pre></td></tr></table></figure>
-<h1 id="安装-mame-模拟器">安装 <a href="https://www.mamedev.org/">MAME</a> 模拟器</h1>
+<h1 id="ubuntu下安装拳皇97">Ubuntu下安装拳皇97</h1>
+<h2 id="系统环境">系统环境</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description: Ubuntu 18.04.3 LTS</span><br><span class="line">Release: 18.04</span><br><span class="line">Codename: bionic</span><br></pre></td></tr></table></figure>
+<h2 id="安装-mame-模拟器">安装 <a href="https://www.mamedev.org/">MAME</a> 模拟器</h2>
 <p><a href="https://en.wikipedia.org/wiki/MAME">MAME</a>（最初是 Multiple Arcade Machine Emulator 的缩写）是一种免费的开源模拟器，旨在在现代个人计算机和其他平台上的软件中重新创建街机游戏系统的硬件。MAME 目的是通过防止老式游戏丢失或遗忘来保留游戏历史，并为模拟街机的内部工作提供参考，其实际玩游戏的能力被认为是“不错的副作用”。</p>
 <p>执行以下命令安装 MAME 模拟器：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt install mame</span></span><br></pre></td></tr></table></figure>
-<h1 id="测试-mame-是否安装成功">测试 MAME 是否安装成功</h1>
+<h2 id="测试-mame-是否安装成功">测试 MAME 是否安装成功</h2>
 <p>执行 <code>mame</code> 命令启动模拟器，如果启动后界面如下，说明模拟器安装成功，按 <code>ESC</code> 键可退出程序。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2938522a5e40a5dfd2608ebd476204c4.png" alt="mame" /></p>
-<h1 id="下载-kof97.zip-rom">下载 kof97.zip rom</h1>
+<h2 id="下载-kof97.zip-rom">下载 kof97.zip rom</h2>
 <p>因为大多数游戏数据都是存储于只读存储器，渐渐地不管这些文件原先是被存储于怎样的介质，读取后的文件都通称为 ROM 映像档或 ROM。在要运行某一特定的游戏时，MAME 就需要这些读取自原始街机的整组文件，这一整组的文件称之为“ROM 集合”，但是碍于法规 MAME 不会自带这些文件。</p>
 <p>所以想要在 MAME 中玩拳皇97还需要下载游戏的 rom 包，MAME 支持的游戏 rom 包可以到 <a href="https://www.planetemu.net/roms/mame-roms">https://www.planetemu.net/roms/mame-roms</a> 下载。</p>
 <p>这是拳皇97的 rom：<a href="https://www.planetemu.net/rom/mame-roms/kof97">kof97.zip</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6cda02f480b578316d17c0a5357a2e05.png" alt="download-kof97" /></p>
 <p>拳皇97风云再起的 rom: <a href="https://www.planetemu.net/rom/mame-roms/kof97pls">kof97pls.zip</a>，该 rom 依赖于 kof97.zip</p>
-<h1 id="下载-neogeo.zip">下载 neogeo.zip</h1>
+<h2 id="下载-neogeo.zip">下载 neogeo.zip</h2>
 <p>neogeo.zip 是玩所有 NEOGEO 公司出品的游戏所必需的 BIOS 文件，需要和其它游戏 ROM 一起放在模拟器的 roms 文件夹下。</p>
 <p>Mame 0.198 街机 BIOS 文件 neogeo.zip 进行了更新，新增 uni-bios_3_3.rom，sp1-u3.bin sp1-j3.bin 驱动。</p>
 <p><a href="https://source.mamecn.com/newrom2018/0.198mameBIOS/neogeo.zip">https://source.mamecn.com/newrom2018/0.198mameBIOS/neogeo.zip</a></p>
-<h1 id="将-kof97.zip-和-neogeo.zip-放到-mame-的-roms-目录下">将 kof97.zip 和 neogeo.zip 放到 MAME 的 roms 目录下</h1>
+<h2 id="将-kof97.zip-和-neogeo.zip-放到-mame-的-roms-目录下">将 kof97.zip 和 neogeo.zip 放到 MAME 的 roms 目录下</h2>
 <p>使用 apt 安装 MAME 时，默认会将模拟器安装在 <code>/usr/share/games/mame</code>，所以 MAME 的 roms 目录在 <code>/usr/share/games/mame/roms</code>，将 kof97.zip 和 neogeo.zip 都拷贝到 roms 目录下。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">wylu @ X555LJ <span class="keyword">in</span> /usr/share/games/mame/roms [23:28:54]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">cp</span> ~/Downloads/kof97.zip .</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">wylu @ X555LJ <span class="keyword">in</span> /usr/share/games/mame/roms [23:29:54]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">cp</span> ~/Downloads/neogeo.zip .</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">wylu @ X555LJ <span class="keyword">in</span> /usr/share/games/mame/roms [23:30:11]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ll</span></span><br><span class="line">total 30M</span><br><span class="line">-rw-r--r-- 1 root root  28M Feb  2 23:29 kof97.zip</span><br><span class="line">-rw-r--r-- 1 root root 1.7M Feb  2 23:30 neogeo.zip</span><br></pre></td></tr></table></figure>
-<h1 id="验证-rom-是否正确可用">验证 rom 是否正确可用</h1>
+<h2 id="验证-rom-是否正确可用">验证 rom 是否正确可用</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mame -verifyroms kof97</span></span><br><span class="line">romset kof97 [neogeo] is good</span><br><span class="line">1 romsets found, 1 were OK.</span><br></pre></td></tr></table></figure>
 <p>验证成功，如果提示你的 neogeo.zip 缺少文件导致无法运行，请尝试获取最新的 neogeo.zip 文件然后重试。</p>
-<h1 id="运行游戏">运行游戏</h1>
+<h2 id="运行游戏">运行游戏</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mame kof97</span></span><br></pre></td></tr></table></figure>
 <p>执行以上命令即可启动游戏，默认 MAME 运行时是全屏，使用组合键 <code>Alt + Enter</code> 可切换成窗口模式；按 <code>p</code> 键暂停游戏并释放鼠标；按 <code>Tab</code> 键可进行相应的设置，按 <code>Esc</code> 退出 MAME。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/fa2bd08f3fe5eed992ab014923140d8e.png" alt="run-kof97" /></p>
-<h1 id="配置视图长宽比aspect-ratio">配置视图长宽比（Aspect Ratio）</h1>
+<h2 id="配置视图长宽比aspect-ratio">配置视图长宽比（Aspect Ratio）</h2>
 <p>如果你成功运行了 kof97，并尝试进行设置，你会发现视图的长宽比始终为 4:3，且无法调整，导致整个视图看起来非常窄，为了能够调整长宽比，我查阅了许多资料，后来发现一个帖子，它基本上解决了我遇到的问题：</p>
 <p><a href="http://forum.arcadecontrols.com/index.php?topic=154130.0">Correct Aspect Ratio for vertical games on 16:9 screens??</a></p>
 <p>我的方法就是修改模拟器的配置文件，首先进入到 MAME 配置文件目录：</p>
@@ -3621,7 +3625,7 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <p>然后编辑 mame.ini 文件，在文件末尾加上如下配置：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">keepaspect              0</span><br><span class="line">unevenstretch           1</span><br><span class="line">autostretchxy           0</span><br></pre></td></tr></table></figure>
 <p>保存退出，最后重新运行游戏 <code>mame kof97</code></p>
-<h1 id="reference">Reference</h1>
+<h2 id="reference">Reference</h2>
 <p><a href="https://www.mamecn.com/jiejiyouxixiazaijieshao/13814.html">https://www.mamecn.com/jiejiyouxixiazaijieshao/13814.html</a></p>
 <p><a href="http://forum.arcadecontrols.com/index.php?topic=154130.0">http://forum.arcadecontrols.com/index.php?topic=154130.0</a></p>
 <p><a href="https://docs.mamedev.org/advanced/multiconfig.html">https://docs.mamedev.org/advanced/multiconfig.html</a></p>
@@ -6661,24 +6665,24 @@ f(n,m) = \left\{\begin{aligned}
 <p><strong>本文使用的是 shadowsocks 的 python 实现版本，没有 GUI，此外只涉及客户端配置，服务端可参考 <a href="https://github.com/shadowsocks/shadowsocks/blob/master/README.md">官方文档</a></strong></p>
 <p><strong>Github 主页：<a href="https://github.com/shadowsocks/shadowsocks">shadowsocks</a></strong></p>
 <p><strong>官网：<a href="https://shadowsocks.org/en/index.html">https://shadowsocks.org/en/index.html</a></strong></p>
-<h1 id="使用-shadowsocks-的前提">使用 shadowsocks 的前提</h1>
+<h2 id="使用-shadowsocks-的前提">使用 shadowsocks 的前提</h2>
 <ul>
 <li>一台在防火墙之外的服务器</li>
 <li>墙内主机需要安装 shadowsocks 本地端</li>
 <li>墙外服务器需要安装 shadowsocks 服务端</li>
 </ul>
-<h1 id="shadowsocks-基本原理">shadowsocks 基本原理</h1>
+<h2 id="shadowsocks-基本原理">shadowsocks 基本原理</h2>
 <p>Shadowsocks 是一个基于 <a href="https://tools.ietf.org/html/rfc1928">SOCKS5</a> 的安全拆分代理，由两部分组成，客户端和服务端。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">client &lt;---&gt; ss-local &lt;--[encrypted]--&gt; ss-remote &lt;---&gt; target</span><br></pre></td></tr></table></figure>
 <p>Shadowsocks 本地组件（ss-local）就像传统的 SOCKS5 服务器，为客户端提供代理服务。它将数据流和数据包从客户端加密并转发到 Shadowsocks 远程组件（ss-remote），后者解密并转发到目标。来自目标的回复同样被加密并由 ss-remote 中继回 ss-local，后者解密并最终返回到原始客户端。</p>
-<h1 id="安装-shadowsocks">安装 shadowsocks</h1>
+<h2 id="安装-shadowsocks">安装 shadowsocks</h2>
 <p>使用的是阿里的镜像源，执行安装命令</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt install shadowsocks</span><br></pre></td></tr></table></figure>
-<h1 id="查看版本号">查看版本号</h1>
+<h2 id="查看版本号">查看版本号</h2>
 <p>执行以下命令查看 shadowsocks 的版本</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sslocal --version</span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/625e5581421c3b9c67e88f3eb2f99b3a.png" alt="sslocal-version" /></p>
-<h1 id="配置-shadowsocks-客户端">配置 shadowsocks 客户端</h1>
+<h2 id="配置-shadowsocks-客户端">配置 shadowsocks 客户端</h2>
 <p><a href="https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File">Configuration via Config File</a> 通过配置文件进行配置</p>
 <p>修改 <code>/etc/shadowsocks/config.json</code> 配置（客户端配置），例如：</p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;my_server_ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">8388</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span><span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span><span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;mypassword&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span><span class="punctuation">:</span><span class="number">300</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-256-cfb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
@@ -6729,14 +6733,14 @@ f(n,m) = \left\{\begin{aligned}
 </tr>
 </tbody>
 </table>
-<h1 id="运行">运行</h1>
-<h2 id="前台运行">前台运行</h2>
+<h2 id="运行">运行</h2>
+<h3 id="前台运行">前台运行</h3>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
-<h2 id="后台运行">后台运行</h2>
+<h3 id="后台运行">后台运行</h3>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks.json -d start</span><br><span class="line">sslocal -c /etc/shadowsocks.json -d stop</span><br></pre></td></tr></table></figure>
 <p>是否使用 sudo 权限根据具体情况而定</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2b6d687c30da2cde582e2581e6163dc7.png" alt="run-ss" /></p>
-<h1 id="shadowsocks-代理模式">shadowsocks 代理模式</h1>
+<h2 id="shadowsocks-代理模式">shadowsocks 代理模式</h2>
 <p>启动后还不能直接翻墙，因为上面只是启动了代理服务器，但是网络请求并没有经过代理服务器，所以还需要配置代理服务，代理服务可分为部分代理和全局代理。</p>
 <p><strong>特别说明：这里所说的是 shadowsocks 的 PAC 模式和全局模式，另外 shadowsocks 的全局模式并不是整个系统所有软件都进行代理，而只是针对所有浏览器进行的全局代理。</strong></p>
 <ul>
@@ -6749,7 +6753,7 @@ f(n,m) = \left\{\begin{aligned}
 <li><p>区别</p>
 <p>简单地说，在全局模式下，所有网站默认走代理。而 PAC 模式是只有被墙的才会走代理，推荐使用 PAC 模式，如果 PAC 模式无法访问一些网站，就换全局模式试试，一般是因为 PAC 更新不及时（也就是 GFWList 更新不及时）导致的。</p></li>
 </ul>
-<h1 id="配置-ubuntu-使用-pac-模式">配置 Ubuntu 使用 PAC 模式</h1>
+<h2 id="配置-ubuntu-使用-pac-模式">配置 Ubuntu 使用 PAC 模式</h2>
 <p>配置 PAC 模式需要 pac 文件，这个 pac 文件可以自己编写也可以用工具生成，这里直接使用工具 GenPAC 来生成。</p>
 <p><strong>Github 主页: <a href="https://github.com/JinnLynn/GenPAC">GenPAC</a></strong></p>
 <p>GenPAC：基于 gfwlist 的多种代理软件配置文件生成工具，支持自定义规则，目前可生成的格式有 pac, dnsmasq, wingy</p>
@@ -6783,21 +6787,21 @@ f(n,m) = \left\{\begin{aligned}
 </ol>
 <p>以上只是针对浏览器的代理，而使用 privoxy 代理能把电脑上所有 http 请求都转发给 ss，这意味着在终端下也能使用 wget、curl 等命令访问墙外资源。</p>
 <p>关于 privoxy 的安装和使用可以参考：</p>
-<p><a href="https://www.jianshu.com/p/41378f4e14bc">https://www.jianshu.com/p/41378f4e14bc</a></p>
-<p>https://www.jianshu.com/p/e0b05cb7cd50</p>
+<p><a href="https://www.jianshu.com/p/41378f4e14bc" class="uri">https://www.jianshu.com/p/41378f4e14bc</a></p>
+<p><a href="https://www.jianshu.com/p/e0b05cb7cd50" class="uri">https://www.jianshu.com/p/e0b05cb7cd50</a></p>
 <p>配置手动代理可以参考：</p>
-<p><a href="https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/">https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/</a></p>
+<p><a href="https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/" class="uri">https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-proxy-on-ubuntu-18-04/</a></p>
 <blockquote>
 <p>shell 终端里执行的命令，发起的网络请求现在还不支持 socks5 代理，只支持 http/https 代理。使用 privoxy 代理，可以将 shell 发起的网络请求转发给 shadowsocks</p>
 </blockquote>
-<h1 id="autoproxy.pac-文件分析">autoproxy.pac 文件分析</h1>
+<h2 id="autoproxy.pac-文件分析">autoproxy.pac 文件分析</h2>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="string">&#x27;SOCKS5 127.0.0.1:1080&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> rules = [</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    用于添加自定义规则</span></span><br><span class="line"><span class="comment">    分析以下的js代码，可以知道rules元素，越靠前的优先级越高；</span></span><br><span class="line"><span class="comment">    即如果在rules[0]中匹配成功，则不再匹配，直接返回选择&quot;直连&quot;或者&quot;走代理&quot;</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    [</span><br><span class="line">        [],</span><br><span class="line">        []</span><br><span class="line">    ],</span><br><span class="line">    [</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        以rules[1]为例进行分析，其它类似；</span></span><br><span class="line"><span class="comment">        同样，在rules[1]中的元素也是越靠前的优先级越高；</span></span><br><span class="line"><span class="comment">        如果在rules[1][0]中匹配成功，则不再匹配，直接返回；</span></span><br><span class="line"><span class="comment">        分析代码可知，当匹配成功时：</span></span><br><span class="line"><span class="comment">            --如果该元素的索引为偶数，则返回字面值&#x27;DIRECT&#x27;，即选择直连</span></span><br><span class="line"><span class="comment">            --如果该元素的索引为奇数，则返回proxy变量的值，即选择使用代理</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        [],</span><br><span class="line">        []</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    以上规则如果没有一个匹配成功，根据代码分析，最终将返回字面值&#x27;DIRECT&#x27;，</span></span><br><span class="line"><span class="comment">    也就是选择直连；这也意味着如果某些URL被墙，而又没有加入到pac规则中，</span></span><br><span class="line"><span class="comment">    最终会以直连的方式访问，因为被墙所以肯定是访问不到的, 这时应该使用全局模式，</span></span><br><span class="line"><span class="comment">    或者在pac中添加规则。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> lastRule = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">FindProxyForURL</span>(<span class="params">url, host</span>) &#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    个人认为，如果这里直接返回proxy，应该就等同于全局模式了，</span></span><br><span class="line"><span class="comment">    此时，不管是什么URL，都会走代理</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; rules.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        ret = <span class="title function_">testHost</span>(host, i);</span><br><span class="line">        <span class="keyword">if</span> (ret != <span class="literal">undefined</span>)</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;DIRECT&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">testHost</span>(<span class="params">host, index</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; rules[index].<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; rules[index][i].<span class="property">length</span>; j++) &#123;</span><br><span class="line">            lastRule = rules[index][i][j];</span><br><span class="line">            <span class="keyword">if</span> (host == lastRule || host.<span class="title function_">endsWith</span>(<span class="string">&#x27;.&#x27;</span> + lastRule))</span><br><span class="line">                <span class="keyword">return</span> i % <span class="number">2</span> == <span class="number">0</span> ? <span class="string">&#x27;DIRECT&#x27;</span> : proxy;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    lastRule = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// REF: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">endsWith</span>) &#123;</span><br><span class="line">    <span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">endsWith</span> = <span class="keyword">function</span>(<span class="params">searchString, position</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> subjectString = <span class="variable language_">this</span>.<span class="title function_">toString</span>();</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> position !== <span class="string">&#x27;number&#x27;</span> || !<span class="built_in">isFinite</span>(position) || <span class="title class_">Math</span>.<span class="title function_">floor</span>(position) !== position || position &gt; subjectString.<span class="property">length</span>) &#123;</span><br><span class="line">            position = subjectString.<span class="property">length</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        position -= searchString.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">var</span> lastIndex = subjectString.<span class="title function_">indexOf</span>(searchString, position);</span><br><span class="line">        <span class="keyword">return</span> lastIndex !== -<span class="number">1</span> &amp;&amp; lastIndex === position;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>理解 pac 文件 rules 的含义后，就可以自行添加一些规则了。比如 PAC 模式下访问不了 Jetbrains 的插件网址 <a href="https://plugins.jetbrains.com">https://plugins.jetbrains.com</a>，因为在该 pac 文件中并没有与此 URL 匹配的规则，所以最后会以直连的方式访问，但是该网址已被墙，最终是无法访问的，我们可以把该域名添加到 pac 文件的规则列表中，该规则列表应是一个使用代理的列表，在添加规则后会以走代理的方式访问 Jetbrains 的插件网址。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6cda56daa540d379099a4c6b28bda0dc.png" alt="pac-file-rules" /></p>
-<h1 id="配置-ubuntu-使用-global-模式">配置 Ubuntu 使用 Global 模式</h1>
+<h2 id="配置-ubuntu-使用-global-模式">配置 Ubuntu 使用 Global 模式</h2>
 <p>要实现 Global 模式，需要使用 privoxy，并且配置系统网络代理使用手动模式。</p>
 <p>privoxy 能够实现不同代理之间的切换，使用它可以作为 SOCKS 代理和 HTTP、HTTPS 代理连接的桥梁，它能把所有的 http 请求（包括终端执行的命令，浏览器）转发给 shadowsocks，它就像是一个适配器，将 SOCKS 代理转为 HTTP 代理。</p>
-<h2 id="安装配置-privoxy">安装配置 privoxy</h2>
+<h3 id="安装配置-privoxy">安装配置 privoxy</h3>
 <ol type="1">
 <li>安装 privoxy</li>
 </ol>
@@ -6824,7 +6828,7 @@ f(n,m) = \left\{\begin{aligned}
 <li>测试</li>
 </ol>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1f1835b407e30a88de5ee111ac3dc678.png" alt="Global-mode-shell-test" /></p>
-<h2 id="配置系统网络代理">配置系统网络代理</h2>
+<h3 id="配置系统网络代理">配置系统网络代理</h3>
 <p>配置完 privoxy 后，终端发起的网络请求也能走 SOCKS5 代理了，但浏览器要使用全局模式还需要配置系统网络代理。</p>
 <p>默认浏览器默认使用系统代理，所以只需配置系统网络代理即可，具体配置过程如下：</p>
 <ol type="1">
@@ -6837,7 +6841,7 @@ f(n,m) = \left\{\begin{aligned}
 <li>Pac 和 Global 模式切换</li>
 </ol>
 <p>系统网络代理的自动 (Automatic) 模式和手动 (Manual) 模式都配置完成后，当选用 Automatic 则使用 Pac 模式，当选用 Manual 则使用 Global 模式。</p>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a href="https://shadowsocks.org/en/spec/Protocol.html">https://shadowsocks.org/en/spec/Protocol.html</a></p>
 <p><a href="https://github.com/shadowsocks/shadowsocks">https://github.com/shadowsocks/shadowsocks</a></p>
 <p><a href="https://github.com/JinnLynn/GenPAC">https://github.com/JinnLynn/GenPAC</a></p>
@@ -9340,11 +9344,12 @@ O(n) + O(nlogn) = O(nlogn)
     <url>/posts/e0424f3f/</url>
     <content><![CDATA[<p>本文将介绍一些针对 NexT 主题的个性化配置。</p>
 <span id="more"></span>
-<h1 id="环境及版本声明">环境及版本声明</h1>
+<h1 id="next主题进阶配置">NexT主题进阶配置</h1>
+<h2 id="环境及版本声明">环境及版本声明</h2>
 <p>本文基于以下环境及版本：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo:</span> <span class="number">3.8</span><span class="number">.0</span></span><br><span class="line"><span class="attr">hexo-cli:</span> <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">NexT:</span> <span class="number">7.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">OS:</span> <span class="string">Ubuntu</span> <span class="number">18.04</span> <span class="string">LTS</span> <span class="string">x86_64</span></span><br></pre></td></tr></table></figure>
 <p><strong>若主题版本不一致，下面的配置方法可能不适用。</strong></p>
-<h1 id="设置-rss">设置 RSS</h1>
+<h2 id="设置-rss">设置 RSS</h2>
 <p>NexT 中 RSS 有三个设置选项，满足特定的使用场景：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># false：禁用 RSS，不在页面上显示 RSS 连接.</span></span><br><span class="line"><span class="comment"># 留空：使用Hexo生成订阅源并自动插入链接。你可能需要先安装插件: `npm install hexo-generator-feed --save`.</span></span><br><span class="line"><span class="comment"># 具体的链接地址：适用于已烧制过 Feed 的情形.</span></span><br><span class="line"><span class="attr">rss:</span></span><br></pre></td></tr></table></figure>
 <p>具体操作如下：</p>
@@ -9354,85 +9359,85 @@ O(n) + O(nlogn) = O(nlogn)
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">rss:</span> <span class="string">/atom.xml</span></span><br></pre></td></tr></table></figure>
 <p>重新生成、启动服务器显示如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6a863e31d62150fa37aecbccc3dbe9d0.png" alt="RSS" /></p>
-<h1 id="添加-tags-页面">添加 tags 页面</h1>
+<h2 id="添加-tags-页面">添加 tags 页面</h2>
 <p>新建「标签」页面，并在菜单中显示「标签」链接。「标签」页面将展示站点的所有标签，若你的所有文章都未包含标签，此页面将是空的。下面是一篇包含标签的文章的例子：</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: QuickSort</span><br><span class="line">date: 2019-04-13 17:49:09</span><br><span class="line">tags: [Java, Sort]</span><br><span class="line">categories:</span><br><span class="line"><span class="section">- [Algorithm, Sort]</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">QuickSort Demo</span><br></pre></td></tr></table></figure>
-<h2 id="新建页面">新建页面</h2>
+<h3 id="新建页面">新建页面</h3>
 <p>在终端窗口下，定位到 Hexo 站点目录下。使用 hexo new page 新建一个页面，命名为 tags ：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hexo new page tags</span></span><br><span class="line">INFO  Created: ~/VScode/hexo/source/tags/index.md</span><br></pre></td></tr></table></figure>
-<h2 id="设置页面类型">设置页面类型</h2>
+<h3 id="设置页面类型">设置页面类型</h3>
 <p>编辑刚刚新建的页面（source/tags/index.md），将页面的类型设置为 tags ，主题将自动为这个页面显示标签云。页面内容如下：</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: 2019-04-13 17:56:13</span><br><span class="line"><span class="section">type: &quot;tags&quot;</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<h2 id="修改菜单">修改菜单</h2>
+<h3 id="修改菜单">修改菜单</h3>
 <p>在菜单中添加链接。编辑 <code>主题配置文件</code>，添加 tags 到 menu 中，如下:</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">home</span></span><br><span class="line">  <span class="attr">tags:</span> <span class="string">/tags/</span> <span class="string">||</span> <span class="string">tags</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">/archives/</span> <span class="string">||</span> <span class="string">archive</span></span><br></pre></td></tr></table></figure>
-<h2 id="注意">注意</h2>
+<h3 id="注意">注意</h3>
 <p>如果没有设置页面类型，默认情况下「标签」页面 会被当成普通页面，我们文章的标签信息不会出现在「标签」页面中，例如：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f669e97e808a65a5a1d88e7c84502951.png" alt="default-tags-page" /></p>
 <p>在设置了页面类型后，再打开：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/67f906fe63b6197deae058150503d296.png" alt="tags-page" /></p>
 <p><strong>如果有集成评论服务，页面也会带有评论。若需要关闭的话，请添加字段 comments 并将值设置为 false，如：</strong></p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: 2019-04-13 17:56:13</span><br><span class="line">type: &quot;tags&quot;</span><br><span class="line"><span class="section">comments: false</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<h1 id="添加-categories-页面">添加 categories 页面</h1>
+<h2 id="添加-categories-页面">添加 categories 页面</h2>
 <p>与 "添加 tags 页面" 类似</p>
-<h2 id="新建页面-1">新建页面</h2>
+<h3 id="新建页面-1">新建页面</h3>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">hexo new page categories</span></span><br><span class="line">INFO  Created: ~/VScode/hexo/source/categories/index.md</span><br></pre></td></tr></table></figure>
-<h2 id="设置页面类型-1">设置页面类型</h2>
+<h3 id="设置页面类型-1">设置页面类型</h3>
 <p>编辑刚刚新建的页面（source/categories/index.md），将页面的类型设置为 categories ，主题将自动为这个页面显示分类。页面内容如下：</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2019-04-13 17:57:40</span><br><span class="line"><span class="section">type: &quot;categories&quot;</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<h2 id="修改菜单-1">修改菜单</h2>
+<h3 id="修改菜单-1">修改菜单</h3>
 <p>在菜单中添加链接。编辑 <code>主题配置文件</code>，添加 tags 到 menu 中，如下:</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">home</span></span><br><span class="line">  <span class="attr">categories:</span> <span class="string">/categories/</span> <span class="string">||</span> <span class="string">th</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">/archives/</span> <span class="string">||</span> <span class="string">archive</span></span><br></pre></td></tr></table></figure>
-<h2 id="注意-1">注意</h2>
+<h3 id="注意-1">注意</h3>
 <p>如果没有设置页面类型，则文章的分类信息不会出现在「分类」页面中，下面是设置了页面类型后的示例：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d5b66158ea1099b3f0a3f5b1928f815d.png" alt="categories-page" /></p>
 <p><strong>如果有集成评论服务，页面也会带有评论。若需要关闭的话，请添加字段 comments 并将值设置为 false</strong></p>
-<h1 id="设置阅读全文">设置阅读全文</h1>
+<h2 id="设置阅读全文">设置阅读全文</h2>
 <p>在首页显示一篇文章的部分内容，并提供一个链接跳转到全文页面是一个常见的需求。NexT 提供三种方式来控制文章在首页的显示方式。也就是说，在首页显示文章的摘录并显示 阅读全文 按钮，可以通过以下方法实现：</p>
-<h2 id="使用----more---">使用 <code>&lt;!-- more --&gt;</code></h2>
+<h3 id="使用----more---">使用 <code>&lt;!-- more --&gt;</code></h3>
 <p>在文章中嵌入 <code>&lt;!-- more --&gt;</code> 标记，Hexo 会将其之上的内容作为首页预览内容，这是 Hexo 提供的方式</p>
-<h2 id="使用-description">使用 description</h2>
+<h3 id="使用-description">使用 description</h3>
 <p>在文章的 <code>front-matter</code> 中添加 <code>description</code>，并提供文章摘录</p>
-<h2 id="使用-next-配置">使用 NexT 配置</h2>
+<h3 id="使用-next-配置">使用 NexT 配置</h3>
 <p>如果需要自动形成摘要，则将 <code>auto_excerpt</code> 下的 <code>enable</code> 设置成 <code>true</code>，默认截取的长度为 150 字符，可以根据需要在 <code>主题配置文件</code> 中自行设定：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 自动将页面滚动到&lt;!-- more --&gt;标记下的部分.</span></span><br><span class="line"><span class="attr">scroll_to_more:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在Cookie中自动保存每个帖子/页面上的滚动位置.</span></span><br><span class="line"><span class="attr">save_scroll:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动摘录 description 作为主页的预览内容.</span></span><br><span class="line"><span class="attr">excerpt_description:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动摘录（不推荐）.</span></span><br><span class="line"><span class="attr">auto_excerpt:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">length:</span> <span class="number">150</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Read more button</span></span><br><span class="line"><span class="comment"># 如果为true，则会在摘录部分显示read more按钮.</span></span><br><span class="line"><span class="attr">read_more_btn:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>Hexo 建议使用 <code>&lt;!-- more --&gt;</code>（即第一种方式），除了可以精确控制需要显示的摘录内容以外，可以让 Hexo 中的插件更好的识别。</p>
 </blockquote>
-<h1 id="设置文章置顶">设置文章置顶</h1>
-<h2 id="默认顺序">默认顺序</h2>
+<h2 id="设置文章置顶">设置文章置顶</h2>
+<h3 id="默认顺序">默认顺序</h3>
 <p>Hexo 默认主页文章按日期降序。</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Home page setting</span></span><br><span class="line"><span class="comment"># path: 博客主页根路径. (default = &#x27;&#x27;)</span></span><br><span class="line"><span class="comment"># per_page: 每页显示文章数量. (0 = 禁用分页)</span></span><br><span class="line"><span class="comment"># order_by: 文章排序. (默认按日期降序)</span></span><br><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-date</span></span><br></pre></td></tr></table></figure>
-<h2 id="安装-hexo-generator-index-pin-top">安装 <a href="https://github.com/netcan/hexo-generator-index-pin-top">hexo-generator-index-pin-top</a></h2>
+<h3 id="安装-hexo-generator-index-pin-top">安装 <a href="https://github.com/netcan/hexo-generator-index-pin-top">hexo-generator-index-pin-top</a></h3>
 <p>首先是卸载默认排序插件，安装新插件，新插件支持文章置顶：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">npm uninstall hexo-generator-index --save</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">npm install hexo-generator-index-pin-top --save</span></span><br></pre></td></tr></table></figure>
-<h2 id="置顶文章">置顶文章</h2>
+<h3 id="置顶文章">置顶文章</h3>
 <p>在需要置顶的文章的 <code>front-matter</code> 中设置 <code>top: 1</code> 即可实现文章置顶功能，并且数字越大文章越靠前，如：</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hello World</span><br><span class="line"><span class="section">top: 1</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<h2 id="添加置顶图标">添加置顶图标</h2>
+<h3 id="添加置顶图标">添加置顶图标</h3>
 <p>上面置顶文章会文章排在前面，但是不会有任何有关 "置顶" 的标识。我们可以修改 NexT 主题的<code>/themes/next/layout/_macro/post.swig</code> 文件，在 <code>&lt;div class="post-meta"&gt;</code> 下加入 "置顶" 标识，如图标和文字描述：</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;% if post.top %&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-thumb-tack&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">7D26CD</span>&gt;</span>&#123;&#123; __(&#x27;post.sticky&#x27;) &#125;&#125;<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-divider&quot;</span>&gt;</span>|<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
 <p>此时的效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0f970802dea04d4ad860483537326452.png" alt="sticky" /></p>
-<h1 id="设置代码块高亮">设置代码块高亮</h1>
+<h2 id="设置代码块高亮">设置代码块高亮</h2>
 <p>NexT 使用 <a href="https://github.com/chriskempson/tomorrow-theme">Tomorrow Theme</a> 作为代码高亮，共有5款主题供你选择。 NexT 默认使用的是 白色的 normal 主题，可选的值有 normal，night，night blue，night bright，night eighties，对应的展示效果可到 <a href="https://github.com/chriskempson/tomorrow-theme">Tomorrow Theme</a> 查看：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Code Highlight theme</span></span><br><span class="line"><span class="comment"># Available values: normal | night | night eighties | night blue | night bright</span></span><br><span class="line"><span class="comment"># https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line"><span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br></pre></td></tr></table></figure>
-<h1 id="启用代码块复制功能">启用代码块复制功能</h1>
+<h2 id="启用代码块复制功能">启用代码块复制功能</h2>
 <p>编辑 <code>主题配置文件</code>，启用 <code>codeblock</code> 模块，如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Manual define the border radius in codeblock, leave it blank for the default value: 1</span></span><br><span class="line">  <span class="attr">border_radius:</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Style: only &#x27;flat&#x27; is currently available, leave it blank if you prefer default theme</span></span><br><span class="line">    <span class="attr">style:</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/94da904774ea7c6622d75349f186d611.png" alt="codeblock-copy" /></p>
 <p>设置 <code>copy_button: true</code>，启用复制按钮；同时设置 <code>show_result: true</code>，显示代码复制结果。</p>
-<h1 id="修改文章链接样式">修改文章链接样式</h1>
+<h2 id="修改文章链接样式">修改文章链接样式</h2>
 <p>打开文件 <code>/themes/next/source/css/_common/components/post/post.styl</code>，在末尾添加以下 CSS 样式:</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.post-body</span> <span class="selector-tag">p</span> <span class="selector-tag">a</span>&#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#0593d3</span>;</span><br><span class="line">  <span class="attribute">border-bottom</span>: none;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#0593d3</span>;</span><br><span class="line">  &amp;<span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#fc6423</span>;</span><br><span class="line">    <span class="attribute">border-bottom</span>: none;</span><br><span class="line">    <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#fc6423</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>颜色可自定义，在这里选中状态为橙色，链接样式为蓝色，效果如下:</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/ccca2b9227cb2d7c89beba1691a931ce.png" alt="link-style" /></p>
-<h1 id="修改文章底部标签样式">修改文章底部标签样式</h1>
+<h2 id="修改文章底部标签样式">修改文章底部标签样式</h2>
 <p>打开模板文件 <code>/themes/next/layout/_macro/post.swig</code>，找到 <code>for tag in post.tags</code> 部分，将 <code>#</code> 换成 <code>&lt;i class="fa fa-tag"&gt;&lt;/i&gt;</code>，如下:</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;% for tag in post.tags %&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&#123;&#123; url_for(tag.path) &#125;&#125;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;tag&quot;</span>&gt;</span> <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-tag&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> &#123;&#123; tag.name &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
 <p>修改后，效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6f19e3d7fa72f87f770c3a3d9b20b093.png" alt="bottom-tags-style" /></p>
-<h1 id="统一添加文章结束标记">统一添加文章结束标记</h1>
+<h2 id="统一添加文章结束标记">统一添加文章结束标记</h2>
 <p>在 <code>/themes/next/layout/_macro</code> 下新建 <code>passage-end-tag.swig</code> 文件，并添加以下代码：</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;text-align:center;color: #ccc;font-size:14px;&quot;</span>&gt;</span>-------------本文结束 <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-heart&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> 感谢阅读-------------<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>打开 <code>/themes/next/layout/_macro/post.swig</code> 文件，在 <code>END POST BODY</code> 后面引入 <code>passage-end-tag.swig</code>，如下：</p>
@@ -9441,7 +9446,7 @@ O(n) + O(nlogn) = O(nlogn)
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 文章结束标记</span></span><br><span class="line"><span class="attr">passage_end_tag:</span></span><br><span class="line">  <span class="comment"># 是否显示文章结束标记</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <p>该配置为自定义配置，与上面的代码配套使用，方便通过简单的配置来启用或者关闭文章结束标记。显示效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0a8565a0f258b56d9a3594deaa6227e0.png" alt="passage-end-tag" /></p>
-<h1 id="添加版权信息">添加版权信息</h1>
+<h2 id="添加版权信息">添加版权信息</h2>
 <p>编辑 <code>主题配置文件</code>，修改如下配置：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Creative Commons 4.0 International License.</span></span><br><span class="line"><span class="comment"># See: https://creativecommons.org/share-your-work/licensing-types-examples</span></span><br><span class="line"><span class="comment"># 许可证的可用值: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero</span></span><br><span class="line"><span class="comment"># 如果你喜欢CC许可证的翻译版本，可以设置 lanuage 的值.</span></span><br><span class="line"><span class="comment"># CC许可证有39种语言版本，你可以根据需要找到特定的正确的缩写.</span></span><br><span class="line"><span class="attr">creative_commons:</span></span><br><span class="line">  <span class="attr">license:</span> <span class="string">by-nc-sa</span></span><br><span class="line">  <span class="comment"># 是否在侧边栏显示版权信息</span></span><br><span class="line">  <span class="attr">sidebar:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 是否在文章底部显示版权信息</span></span><br><span class="line">  <span class="attr">post:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 可以设置CC许可证的翻译版本</span></span><br><span class="line">  <span class="attr">language:</span></span><br></pre></td></tr></table></figure>
 <p><code>by-nc-sa</code> 表示 <code>署名-非商业性使用-相同方式共享</code>，更加详细的解释请查阅官网 <a href="https://creativecommons.org/licenses/?lang=zh">creativecommons.org</a></p>
@@ -9450,7 +9455,7 @@ O(n) + O(nlogn) = O(nlogn)
 <p>设置 <code>post: true</code> 后，显示效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/03a34a8a35a4f2a94968102af15ad386.png" alt="CC-passage-bottom" /></p>
 <p>如果需要自定义文章底部版权信息的，可以自行修改 /themes/next/layout/_partials/post/post-copyright.swig 文件。</p>
-<h1 id="设置打赏功能">设置打赏功能</h1>
+<h2 id="设置打赏功能">设置打赏功能</h2>
 <p>首先将你的 <code>WeChat Pay</code> / <code>Alipay</code> / <code>Bitcoin</code> 的收款二维码图片放到 <code>/themes/next/source/images</code> 文件夹下，或者上传到图床并获取它们的绝对 HTTP 地址。</p>
 <p>编辑 <code>站点配置文件</code>，启用打赏功能，例如选择使用微信支付和支付宝：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Reward (Donate)</span></span><br><span class="line"><span class="attr">reward_settings:</span></span><br><span class="line">  <span class="comment"># 如果为true，则默认会在每篇文章底部显示打赏.</span></span><br><span class="line">  <span class="comment"># 你可以通过在 Front-matter 中设置 `reward: true | false` 在特定文章中显示或隐藏打赏.</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">animation:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">comment:</span> <span class="string">坚持原创技术分享，您的支持将鼓励我继续创作！</span></span><br><span class="line"></span><br><span class="line"><span class="attr">reward:</span></span><br><span class="line">  <span class="attr">wechatpay:</span> <span class="string">/images/wechatpay.jpg</span></span><br><span class="line">  <span class="attr">alipay:</span> <span class="string">/images/alipay.jpg</span></span><br><span class="line">  <span class="comment">#bitcoin: /images/bitcoin.png</span></span><br></pre></td></tr></table></figure>
@@ -9458,28 +9463,28 @@ O(n) + O(nlogn) = O(nlogn)
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/524e8f2608583b918cc133a50a8cf912.png" alt="reward" /></p>
 <p>点击打赏按钮：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/cf295270c65c6b1970adfbbd65fe95ee.png" alt="click-reward" /></p>
-<h1 id="设置站点背景">设置站点背景</h1>
+<h2 id="设置站点背景">设置站点背景</h2>
 <p>NexT 默认提供3种背景配置，但都需要安装依赖。<strong>以下配置均不修改 <code>vendors:</code> 下的内容。</strong></p>
-<h2 id="canvas-nest-背景">Canvas-nest 背景</h2>
-<h3 id="step-1">Step 1</h3>
+<h3 id="canvas-nest-背景">Canvas-nest 背景</h3>
+<h4 id="step-1">Step 1</h4>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h3 id="step-2">Step 2</h3>
+<h4 id="step-2">Step 2</h4>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-canvas-nest source/lib/canvas-nest</span><br></pre></td></tr></table></figure>
-<h3 id="step-3">Step 3</h3>
+<h4 id="step-3">Step 3</h4>
 <p>编辑 <code>主题配置文件</code>，启用 <code>cavas_nest</code> 模块，如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Canvas-nest</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-canvas-nest</span></span><br><span class="line"><span class="attr">canvas_nest:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">onmobile:</span> <span class="literal">false</span> <span class="comment"># 是否在手机上显示</span></span><br><span class="line">  <span class="attr">color:</span> <span class="string">&quot;0,0,255&quot;</span> <span class="comment"># RGB颜色值, 用 &#x27;,&#x27; 分隔</span></span><br><span class="line">  <span class="attr">opacity:</span> <span class="number">0.5</span> <span class="comment"># 线条透明度: 0~1</span></span><br><span class="line">  <span class="attr">zIndex:</span> <span class="number">-1</span> <span class="comment"># 背景的 z-index 属性值</span></span><br><span class="line">  <span class="attr">count:</span> <span class="number">99</span> <span class="comment"># 线条数量</span></span><br></pre></td></tr></table></figure>
 <p>在 <strong>站点根目录下</strong> 启动服务器，显示效果如下（其它设置可根据需要自行修改）：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/b4ff0844867fb472858a5aa828bc7747.png" alt="canvas-nest" /></p>
-<h2 id="javascript-3d-library-背景">JavaScript 3D library 背景</h2>
-<h3 id="step-1-1">Step 1</h3>
+<h3 id="javascript-3d-library-背景">JavaScript 3D library 背景</h3>
+<h4 id="step-1-1">Step 1</h4>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h3 id="step-2-1">Step 2</h3>
+<h4 id="step-2-1">Step 2</h4>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-three source/lib/three</span><br></pre></td></tr></table></figure>
-<h3 id="step-3-1">Step 3</h3>
+<h4 id="step-3-1">Step 3</h4>
 <p>编辑 <code>主题配置文件</code>，设 <code>three_waves</code>，<code>canvas_lines</code>，<code>canvas_sphere</code> 其中一项为 <code>true</code>，如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># JavaScript 3D library.</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-three</span></span><br><span class="line"><span class="comment"># three_waves</span></span><br><span class="line"><span class="attr">three_waves:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># canvas_lines</span></span><br><span class="line"><span class="attr">canvas_lines:</span> <span class="literal">false</span></span><br><span class="line"><span class="comment"># canvas_sphere</span></span><br><span class="line"><span class="attr">canvas_sphere:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
 <p>在 <strong>站点根目录下</strong> 启动服务器，<code>three_waves</code> 显示效果如下：</p>
@@ -9488,95 +9493,95 @@ O(n) + O(nlogn) = O(nlogn)
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/3520b20f81c09c280f976da05a6f2f64.png" alt="canvas-lines" /></p>
 <p><code>canvas_sphere</code> 效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/dca998ed8e376cf7116969be13262790.png" alt="canvas-sphere" /></p>
-<h2 id="canvas-ribbon-背景">Canvas-ribbon 背景</h2>
-<h3 id="step-1-2">Step 1</h3>
+<h3 id="canvas-ribbon-背景">Canvas-ribbon 背景</h3>
+<h4 id="step-1-2">Step 1</h4>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h3 id="step-2-2">Step 2</h3>
+<h4 id="step-2-2">Step 2</h4>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-canvas-ribbon source/lib/canvas-ribbon</span><br></pre></td></tr></table></figure>
-<h3 id="step-3-2">Step 3</h3>
+<h4 id="step-3-2">Step 3</h4>
 <p>编辑 <code>主题配置文件</code>，启用 <code>canvas_ribbon</code> 模块，如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Canvas-ribbon</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-canvas-ribbon</span></span><br><span class="line"><span class="comment"># size: ribbon的宽度.</span></span><br><span class="line"><span class="comment"># alpha: ribbon的透明度.</span></span><br><span class="line"><span class="comment"># zIndex: ribbon的显示级别.</span></span><br><span class="line"><span class="attr">canvas_ribbon:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">size:</span> <span class="number">300</span></span><br><span class="line">  <span class="attr">alpha:</span> <span class="number">0.6</span></span><br><span class="line">  <span class="attr">zIndex:</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
 <p>在 <strong>站点根目录下</strong> 启动服务器，显示效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/07c4f937823e9d2878bd8f2399c0fc6a.png" alt="canvas-ribbon" /></p>
-<h1 id="设置左上角或右上角-github-图标">设置左上角或右上角 github 图标</h1>
-<h2 id="开启默认设置">开启默认设置</h2>
+<h2 id="设置左上角或右上角-github-图标">设置左上角或右上角 github 图标</h2>
+<h3 id="开启默认设置">开启默认设置</h3>
 <p>NexT 支持通过配置开启右上角 github 图标，编辑 <code>主题配置文件</code>，启用 github-banner 如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># `Follow me on GitHub` banner in the top-right corner.</span></span><br><span class="line"><span class="attr">github_banner:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 点击即跳转到该链接，自行设定</span></span><br><span class="line">  <span class="attr">permalink:</span> <span class="string">https://github.com/yourname</span></span><br><span class="line">  <span class="comment"># 当鼠标悬浮于上方时显示的文本</span></span><br><span class="line">  <span class="attr">title:</span> <span class="string">Follow</span> <span class="string">me</span> <span class="string">on</span> <span class="string">GitHub</span></span><br></pre></td></tr></table></figure>
 <p>效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/083b63ce1740296767946e649baaf23c.png" alt="github-banner" /></p>
-<h2 id="进阶自定义设置">进阶自定义设置</h2>
+<h3 id="进阶自定义设置">进阶自定义设置</h3>
 <p>自定义配置使其可以使用 <a href="https://github.blog/2008-12-19-github-ribbons/">GitHub Ribbons</a> 和 <a href="http://tholman.com/github-corners/">GitHub Corners</a> 中的任何一款图标。</p>
 <p>修改 <code>/themes/next/layout/_partials/github-banners.swig</code> 文件内容如下：</p>
 <p><a href="https://github.com/wylu/cdn/blob/master/next/swig/github-banner.swig">github-banner.swig</a></p>
 <p>同时编辑 <code>站点配置文件</code>，修改 <code>github_banner</code> 部分如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># `Follow me on GitHub` banner in the top-left or top-right corner.</span></span><br><span class="line"><span class="comment"># `Fork me on GitHub` banner in the top-left or top-right corner.</span></span><br><span class="line"><span class="attr">github_banner:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">permalink:</span> <span class="string">https://github.com/wylu</span></span><br><span class="line">  <span class="attr">title:</span> <span class="string">Follow</span> <span class="string">me</span> <span class="string">on</span> <span class="string">GitHub</span></span><br><span class="line">  <span class="comment"># Available values of ribbons:</span></span><br><span class="line">  <span class="comment"># See: https://github.blog/2008-12-19-github-ribbons/</span></span><br><span class="line">  <span class="comment"># ribbons-left-red | ribbons-left-green | ribbons-left-darkblue</span></span><br><span class="line">  <span class="comment"># ribbons-left-orange | ribbons-left-gray | ribbons-left-white</span></span><br><span class="line">  <span class="comment"># ribbons-right-red | ribbons-right-green | ribbons-right-darkblue</span></span><br><span class="line">  <span class="comment"># ribbons-right-orange | ribbons-right-gray | ribbons-right-white</span></span><br><span class="line">  <span class="comment"># Available values of corners:</span></span><br><span class="line">  <span class="comment"># See: http://tholman.com/github-corners/</span></span><br><span class="line">  <span class="comment"># corners-right-black | corners-right-green | corners-right-red</span></span><br><span class="line">  <span class="comment"># corners-right-blue | corners-right-white</span></span><br><span class="line">  <span class="comment"># corners-left-black | corners-left-green | corners-left-red</span></span><br><span class="line">  <span class="comment"># corners-left-blue | corners-left-white</span></span><br><span class="line">  <span class="comment"># If not set, it will use NexT default style.</span></span><br><span class="line">  <span class="attr">type:</span></span><br><span class="line">  <span class="comment"># You can set size of banner.</span></span><br><span class="line">  <span class="comment"># Default values for ribbons: width = height = 120</span></span><br><span class="line">  <span class="comment"># Default values for corners: width = height = 80</span></span><br><span class="line">  <span class="attr">size:</span></span><br><span class="line">  <span class="comment"># whether to display on the mobile side.</span></span><br><span class="line">  <span class="comment"># If use left banner, you should better set it &quot;false&quot; as the banner will cover menu button.</span></span><br><span class="line">  <span class="attr">mobile:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <p>这样你就可以通过 <code>type</code> 随意切换 banner 的样式了。</p>
-<h1 id="设置侧栏阅读进度百分比">设置侧栏阅读进度百分比</h1>
+<h2 id="设置侧栏阅读进度百分比">设置侧栏阅读进度百分比</h2>
 <p>编辑 <code>站点配置文件</code>，修改 <code>back2top</code> 部分如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">back2top:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Back to top in sidebar.</span></span><br><span class="line">  <span class="attr">sidebar:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Scroll percent label in b2t button.</span></span><br><span class="line">  <span class="attr">scrollpercent:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/ac3db59f21c3bbf42b7a6dbfef8ab20e.png" alt="sidebar-reading-progress" /></p>
-<h1 id="设置顶部阅读进度条">设置顶部阅读进度条</h1>
-<h2 id="step-1-3">Step 1</h2>
+<h2 id="设置顶部阅读进度条">设置顶部阅读进度条</h2>
+<h3 id="step-1-3">Step 1</h3>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h2 id="step-2-3">Step 2</h2>
+<h3 id="step-2-3">Step 2</h3>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-reading-progress source/lib/reading_progress</span><br></pre></td></tr></table></figure>
-<h2 id="step-3-3">Step 3</h2>
+<h3 id="step-3-3">Step 3</h3>
 <p>编辑 <code>主题配置文件</code>，启用 <code>reading_progress</code> 模块，如下：</p>
 <p><strong>注意：不是<code>vendors:</code>下的<code>reading_progress</code></strong></p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Reading progress bar</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-reading-progress</span></span><br><span class="line"><span class="attr">reading_progress:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">color:</span> <span class="string">&quot;#37c6c0&quot;</span></span><br><span class="line">  <span class="attr">height:</span> <span class="string">2px</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/dc42eca74ccfbedb9cbba2ae0cbad195.png" alt="top-reading-progress" /></p>
-<h1 id="设置顶部页面加载进度条">设置顶部页面加载进度条</h1>
-<h2 id="step-1-4">Step 1</h2>
+<h2 id="设置顶部页面加载进度条">设置顶部页面加载进度条</h2>
+<h3 id="step-1-4">Step 1</h3>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h2 id="step-2-4">Step 2</h2>
+<h3 id="step-2-4">Step 2</h3>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-pace source/lib/pace</span><br></pre></td></tr></table></figure>
-<h2 id="step-3-4">Step 3</h2>
+<h3 id="step-3-4">Step 3</h3>
 <p>编辑 <code>主题配置文件</code>，启用 <code>pace</code> 模块，如下：</p>
 <p><strong>注意：不是<code>vendors:</code>下的<code>pace</code></strong></p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Progress bar in the top during page loading.</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-pace</span></span><br><span class="line"><span class="attr">pace:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># Themes list:</span></span><br><span class="line"><span class="comment"># pace-theme-big-counter | pace-theme-bounce | pace-theme-barber-shop | pace-theme-center-atom</span></span><br><span class="line"><span class="comment"># pace-theme-center-circle | pace-theme-center-radar | pace-theme-center-simple | pace-theme-corner-indicator</span></span><br><span class="line"><span class="comment"># pace-theme-fill-left | pace-theme-flash | pace-theme-loading-bar | pace-theme-mac-osx | pace-theme-minimal</span></span><br><span class="line"><span class="attr">pace_theme:</span> <span class="string">pace-theme-minimal</span></span><br></pre></td></tr></table></figure>
-<h1 id="设置阅读位置标记功能">设置阅读位置标记功能</h1>
+<h2 id="设置阅读位置标记功能">设置阅读位置标记功能</h2>
 <blockquote>
 <p>Bookmark 是一个插件，允许用户保存他们的阅读位置。只需单击页面左上角的书签图标（如书签）即可保存阅读位置，当他们下次访问您的博客时，他们可以通过单击主页上的书签图标继续读取最后一个位置。</p>
 </blockquote>
 <p><strong>注意：实测当站点语言设置为 <code>en</code> 时，该功能不能正常使用，若设置为 <code>zh-CN</code> 可以正常使用，其它语言未测试。</strong></p>
-<h2 id="step-1-5">Step 1</h2>
+<h3 id="step-1-5">Step 1</h3>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h2 id="step-2-5">Step 2</h2>
+<h3 id="step-2-5">Step 2</h3>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-bookmark.git source/lib/bookmark</span><br></pre></td></tr></table></figure>
-<h2 id="step-3-5">Step 3</h2>
+<h3 id="step-3-5">Step 3</h3>
 <p>编辑 <code>主题配置文件</code>，启用 <code>bookmark</code> 模块，如下：</p>
 <p><strong>注意：不是 <code>vendors:</code> 下的 <code>bookmark</code></strong></p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Bookmark Support</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-bookmark</span></span><br><span class="line"><span class="attr">bookmark:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># If auto, save the reading position when closing the page or clicking the bookmark-icon.</span></span><br><span class="line">  <span class="comment"># If manual, only save it by clicking the bookmark-icon.</span></span><br><span class="line">  <span class="attr">save:</span> <span class="string">auto</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/490e68c798058d770101c3c669e38d40.png" alt="bookmark-save-reading-position" /></p>
-<h1 id="启用数学公式渲染引擎">启用数学公式渲染引擎</h1>
+<h2 id="启用数学公式渲染引擎">启用数学公式渲染引擎</h2>
 <p>编辑 <code>主题配置文件</code>，修改 <code>bookmark</code> 配置，如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Math Equations Render Support</span></span><br><span class="line"><span class="attr">math:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Default (true) will load mathjax / katex script on demand.</span></span><br><span class="line">  <span class="comment"># That is it only render those page which has `mathjax: true` in Front Matter.</span></span><br><span class="line">  <span class="comment"># If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">engine:</span> <span class="string">mathjax</span></span><br><span class="line">  <span class="comment">#engine: katex</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># hexo-rendering-pandoc (or hexo-renderer-kramed) needed to full MathJax support.</span></span><br><span class="line">  <span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">cdn:</span> <span class="string">//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML</span></span><br><span class="line">    <span class="comment">#cdn: //cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># See: https://mhchem.github.io/MathJax-mhchem/</span></span><br><span class="line">    <span class="comment">#mhchem: //cdn.jsdelivr.net/npm/mathjax-mhchem@3</span></span><br><span class="line">    <span class="comment">#mhchem: //cdnjs.cloudflare.com/ajax/libs/mathjax-mhchem/3.3.0</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># hexo-renderer-markdown-it-plus (or hexo-renderer-markdown-it with markdown-it-katex plugin) needed to full Katex support.</span></span><br><span class="line">  <span class="attr">katex:</span></span><br><span class="line">    <span class="attr">cdn:</span> <span class="string">//cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css</span></span><br><span class="line">    <span class="comment">#cdn: //cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">copy_tex:</span></span><br><span class="line">      <span class="comment"># See: https://github.com/KaTeX/KaTeX/tree/master/contrib/copy-tex</span></span><br><span class="line">      <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">copy_tex_js:</span> <span class="string">//cdn.jsdelivr.net/npm/katex@0/dist/contrib/copy-tex.min.js</span></span><br><span class="line">      <span class="attr">copy_tex_css:</span> <span class="string">//cdn.jsdelivr.net/npm/katex@0/dist/contrib/copy-tex.min.css</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a0d0c6eae1a5bac306c2ec902a1494b3.png" alt="math-equations-render" /></p>
 <p>设置 <code>enable: true</code>，即启用引擎渲染数学公式。<code>per_page</code> 表示是否自动渲染每一页，如果为 <code>true</code> 则只渲染 <code>front-matter</code> 中包含 <code>mathjax: true</code> 的文章。例如：</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hello World</span><br><span class="line">date: 2019-04-12 17:49:09</span><br><span class="line">top: 1</span><br><span class="line"><span class="section">mathjax: true</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
 <p>要想更好的支持 mathjax 需要安装 hexo-rendering-pandoc (或者 hexo-renderer-kramed)，详见 <a href="https://wylu.github.io/posts/78c745f0/">Hexo相关问题和优化</a> 中有关数学公式渲染的说明。</p>
-<h1 id="设置字数统计和预计阅读时间">设置字数统计和预计阅读时间</h1>
+<h2 id="设置字数统计和预计阅读时间">设置字数统计和预计阅读时间</h2>
 <p>包括文章字数统计、预计阅读时间，和页面底部站点总字数统计、总阅读时间预计。</p>
 <blockquote>
 <p>Symbols count and time to read of articles.</p>
 <p>Better than <code>hexo-reading-time</code> and faster than <code>hexo-worcount</code>. No external dependencies.</p>
 </blockquote>
 <p>插件 <code>hexo-symbols-count-time</code> 的使用说明详见 <a href="https://github.com/theme-next/hexo-symbols-count-time">https://github.com/theme-next/hexo-symbols-count-time</a></p>
-<h2 id="step-1-6">Step 1</h2>
+<h3 id="step-1-6">Step 1</h3>
 <p>进入到工程目录下，安装 Hexo 插件：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-symbols-count-time --save</span><br></pre></td></tr></table></figure>
-<h2 id="step-2-6">Step 2</h2>
+<h3 id="step-2-6">Step 2</h3>
 <p>编辑 <code>站点配置文件</code>，添加如下内容：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Hexo plugin: hexo-symbols-count-time</span></span><br><span class="line"><span class="comment"># https://github.com/theme-next/hexo-symbols-count-time</span></span><br><span class="line"><span class="attr">symbols_count_time:</span></span><br><span class="line">  <span class="attr">symbols:</span> <span class="literal">true</span> <span class="comment"># 文章字数统计</span></span><br><span class="line">  <span class="attr">time:</span> <span class="literal">true</span> <span class="comment"># 文章预计阅读时间</span></span><br><span class="line">  <span class="attr">total_symbols:</span> <span class="literal">true</span> <span class="comment"># 页面底部站点总字数统计</span></span><br><span class="line">  <span class="attr">total_time:</span> <span class="literal">true</span> <span class="comment"># 页面底部站点总阅读时间预计</span></span><br></pre></td></tr></table></figure>
-<h2 id="step-3-6">Step 3</h2>
+<h3 id="step-3-6">Step 3</h3>
 <p>此插件集成在 NexT 主题中，在 Hexo <code>站点配置文件</code> 中启用插件后，你可以调整 NexT 配置中的选项，查看 <code>主题配置文件</code>，配置如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Post wordcount display settings</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/hexo-symbols-count-time</span></span><br><span class="line"><span class="attr">symbols_count_time:</span></span><br><span class="line">  <span class="attr">separated_meta:</span> <span class="literal">true</span> <span class="comment"># 文章统计结果是否独立一行显示</span></span><br><span class="line">  <span class="attr">item_text_post:</span> <span class="literal">true</span> <span class="comment"># 是否展示文章统计结果的文本</span></span><br><span class="line">  <span class="attr">item_text_total:</span> <span class="literal">true</span> <span class="comment"># 是否展示站点统计结果的文本</span></span><br><span class="line">  <span class="attr">awl:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">wpm:</span> <span class="number">275</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/dc963651272ae5d65985ca42a954c633.png" alt="paper-symbols-count-time" /></p>
@@ -9602,16 +9607,16 @@ O(n) + O(nlogn) = O(nlogn)
 <blockquote>
 <p>中国用户注意事项：因为中文平均字长约为 1.5，如果你大多数情况下用中文写帖子（没有混合英文），建议将 awl 设置为 2，将 wpm 设置为 300。但是，如果你通常将你的帖子与英语混合，那么 awl 到 4 和 wpm 到 275 就会很好。</p>
 </blockquote>
-<h1 id="添加-live2d-看板娘-萌宠">添加 Live2D 看板娘 萌宠</h1>
+<h2 id="添加-live2d-看板娘-萌宠">添加 Live2D 看板娘 萌宠</h2>
 <p>插件 <code>hexo-helper-live2d</code> 的使用说明详见 <a href="https://github.com/EYHN/hexo-helper-live2d">https://github.com/EYHN/hexo-helper-live2d</a></p>
 <p><strong>详细配置过程及说明推荐参考 Miaia 的博客 <a href="https://11.tt/posts/2018/how-to-play-with-live2d-on-hexo/">用Live2D让看板喵入住你的Hexo博客吧(<sup>o</sup>)/~</a></strong></p>
-<h2 id="step-1-7">Step 1</h2>
+<h3 id="step-1-7">Step 1</h3>
 <p>进入到工程目录下，安装 Hexo 插件：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-helper-live2d --save</span><br></pre></td></tr></table></figure>
-<h2 id="step-2-7">Step 2</h2>
+<h3 id="step-2-7">Step 2</h3>
 <p>在 <a href="https://huaji8.top/post/live2d-plugin-2.0/">插件作者的博客</a> 中挑选一个模型，记录该模型的名字。模型资源名称为 <code>live2d-widget-model-模型名称</code>，例如选择模型 <code>shizuku</code> ，则其对应的 Live2D 资源名称为 <code>live2d-widget-model-shizuku</code>，然后直接在站点根目录下安装该模型，命令如下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install live2d-widget-model-shizuku --save</span><br></pre></td></tr></table></figure>
-<h2 id="step-3-7">Step 3</h2>
+<h3 id="step-3-7">Step 3</h3>
 <p>编辑 <code>站点配置文件</code>，添加如下内容：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Hexo plugin: hexo-helper-live2d</span></span><br><span class="line"><span class="comment">## https://github.com/EYHN/hexo-helper-live2d</span></span><br><span class="line"><span class="attr">live2d:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">pluginRootPath:</span> <span class="string">live2dw/</span> <span class="comment"># Root path of plugin to be on the site (Relative)</span></span><br><span class="line">  <span class="attr">pluginJsPath:</span> <span class="string">lib/</span> <span class="comment"># JavaScript path related to plugin&#x27;s root (Relative)</span></span><br><span class="line">  <span class="attr">pluginModelPath:</span> <span class="string">assets/</span> <span class="comment"># Relative model path related to plugin&#x27;s root (Relative)</span></span><br><span class="line">  <span class="attr">scriptFrom:</span> <span class="string">local</span> <span class="comment"># Default</span></span><br><span class="line">  <span class="comment">#scriptFrom: jsdelivr # jsdelivr CDN</span></span><br><span class="line">  <span class="comment">#scriptFrom: unpkg # unpkg CDN</span></span><br><span class="line">  <span class="comment">#scriptFrom: https://cdn.jsdelivr.net/npm/live2d-widget@3.x/lib/L2Dwidget.min.js # Your custom url</span></span><br><span class="line">  <span class="attr">tagMode:</span> <span class="literal">false</span> <span class="comment"># Whether only to replace live2d tag instead of inject to all pages</span></span><br><span class="line">  <span class="attr">log:</span> <span class="literal">false</span> <span class="comment"># Whether to show logs in console</span></span><br><span class="line">  <span class="attr">model:</span></span><br><span class="line">    <span class="attr">use:</span> <span class="string">live2d-widget-model-shizuku</span> <span class="comment"># npm-module package name</span></span><br><span class="line">    <span class="comment">#use: wanko # folder name in (hexo base dir)/live2d_models/</span></span><br><span class="line">    <span class="comment">#use: ./wives/wanko # folder path relative to hexo base dir</span></span><br><span class="line">    <span class="comment">#use: https://cdn.jsdelivr.net/npm/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json # Your custom url</span></span><br><span class="line">    <span class="attr">scale:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">hHeadPos:</span> <span class="number">0.5</span></span><br><span class="line">    <span class="attr">vHeadPos:</span> <span class="number">0.618</span></span><br><span class="line">  <span class="attr">display:</span></span><br><span class="line">    <span class="attr">superSample:</span> <span class="number">2</span></span><br><span class="line">    <span class="attr">width:</span> <span class="number">150</span></span><br><span class="line">    <span class="attr">height:</span> <span class="number">300</span></span><br><span class="line">    <span class="attr">position:</span> <span class="string">right</span></span><br><span class="line">    <span class="attr">hOffset:</span> <span class="number">0</span></span><br><span class="line">    <span class="attr">vOffset:</span> <span class="number">-10</span></span><br><span class="line">  <span class="attr">mobile:</span></span><br><span class="line">    <span class="attr">show:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">scale:</span> <span class="number">0.05</span></span><br><span class="line">  <span class="attr">react:</span></span><br><span class="line">    <span class="attr">opacityDefault:</span> <span class="number">0.7</span></span><br><span class="line">    <span class="attr">opacityOnHover:</span> <span class="number">0.2</span></span><br></pre></td></tr></table></figure>
 <p>执行命令 <code>hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</code>，效果如下：</p>
@@ -9780,14 +9785,14 @@ O(n) + O(nlogn) = O(nlogn)
 </tbody>
 </table>
 <p><a href="https://l2dwidget.js.org/docs/class/src/index.js~L2Dwidget.html">官方API文档</a></p>
-<h1 id="添加文章分享按钮">添加文章分享按钮</h1>
-<h2 id="step-1-8">Step 1</h2>
+<h2 id="添加文章分享按钮">添加文章分享按钮</h2>
+<h3 id="step-1-8">Step 1</h3>
 <p>进入到 NexT 主题目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd themes/next</span><br></pre></td></tr></table></figure>
-<h2 id="step-2-8">Step 2</h2>
+<h3 id="step-2-8">Step 2</h3>
 <p>安装模块到 source/lib 目录下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/theme-next/theme-next-needmoreshare2 source/lib/needsharebutton</span><br></pre></td></tr></table></figure>
-<h2 id="step-3-8">Step 3</h2>
+<h3 id="step-3-8">Step 3</h3>
 <p>编辑 <code>主题配置文件</code>，启用 <code>needmoreshare2</code> 模块，如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># NeedMoreShare2</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-needmoreshare2</span></span><br><span class="line"><span class="comment"># iconStyle: default | box</span></span><br><span class="line"><span class="comment"># boxForm: horizontal | vertical</span></span><br><span class="line"><span class="comment"># position: top / middle / bottom + Left / Center / Right</span></span><br><span class="line"><span class="comment"># networks:</span></span><br><span class="line"><span class="comment"># Weibo,Wechat,Douban,QQZone,Twitter,Facebook,Linkedin,Mailto,Reddit,Delicious,StumbleUpon,Pinterest,</span></span><br><span class="line"><span class="comment"># GooglePlus,Tumblr,GoogleBookmarks,Newsvine,Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru</span></span><br><span class="line"><span class="attr">needmoreshare2:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">postbottom:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">options:</span></span><br><span class="line">      <span class="attr">iconStyle:</span> <span class="string">default</span></span><br><span class="line">      <span class="attr">boxForm:</span> <span class="string">horizontal</span></span><br><span class="line">      <span class="attr">position:</span> <span class="string">bottomCenter</span></span><br><span class="line">      <span class="attr">networks:</span> <span class="string">Weibo,Wechat,Douban,QQZone,Twitter,Facebook</span></span><br><span class="line">  <span class="attr">float:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">options:</span></span><br><span class="line">      <span class="attr">iconStyle:</span> <span class="string">default</span></span><br><span class="line">      <span class="attr">boxForm:</span> <span class="string">horizontal</span></span><br><span class="line">      <span class="attr">position:</span> <span class="string">middleRight</span></span><br><span class="line">      <span class="attr">networks:</span> <span class="string">Weibo,Wechat,Douban,QQZone,Twitter,Facebook</span></span><br></pre></td></tr></table></figure>
 <p>启用 <code>postbottom</code> 分享按钮，点击按钮效果如下：</p>
@@ -9795,28 +9800,28 @@ O(n) + O(nlogn) = O(nlogn)
 <p>启用 <code>float</code> 分享按钮，点击按钮效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/92b05a5daf72d55ec9e6b146cc1af68b.png" alt="share-post-float" /></p>
 <p><strong>这两个分享按钮可同时启用，也可以单独使用其中一个，其它参数配置效果可自行测试。</strong></p>
-<h1 id="设置网页底部信息">设置网页底部信息</h1>
+<h2 id="设置网页底部信息">设置网页底部信息</h2>
 <p>查看 <code>主题配置文件</code>，默认 <code>footer</code> 配置如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">footer:</span></span><br><span class="line">  <span class="comment"># Specify the date when the site was setup. If not defined, current year will be used.</span></span><br><span class="line">  <span class="comment">#since: 2015</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Icon between year and copyright info.</span></span><br><span class="line">  <span class="attr">icon:</span></span><br><span class="line">    <span class="comment"># Icon name in fontawesome, see: https://fontawesome.com/v4.7.0/icons/</span></span><br><span class="line">    <span class="comment"># `heart` is recommended with animation in red (#ff0000).</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">user</span></span><br><span class="line">    <span class="comment"># If you want to animate the icon, set it to true.</span></span><br><span class="line">    <span class="attr">animated:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Change the color of icon, using Hex Code.</span></span><br><span class="line">    <span class="attr">color:</span> <span class="string">&quot;#808080&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># If not defined, `author` from Hexo main config will be used.</span></span><br><span class="line">  <span class="attr">copyright:</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">powered:</span></span><br><span class="line">    <span class="comment"># Hexo link (Powered by Hexo).</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Version info of Hexo after Hexo link (vX.X.X).</span></span><br><span class="line">    <span class="attr">version:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">theme:</span></span><br><span class="line">    <span class="comment"># Theme &amp; scheme info link (Theme - NexT.scheme).</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Version info of NexT after scheme info (vX.X.X).</span></span><br><span class="line">    <span class="attr">version:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Beian icp information for Chinese users. In China, every legal website should have a beian icp in website footer.</span></span><br><span class="line">  <span class="comment"># http://www.beian.miit.gov.cn</span></span><br><span class="line">  <span class="attr">beian:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">icp:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Any custom text can be defined here.</span></span><br><span class="line">  <span class="comment">#custom_text: Hosted by &lt;a href=&quot;https://pages.coding.me&quot; class=&quot;theme-link&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;Coding Pages&lt;/a&gt;</span></span><br></pre></td></tr></table></figure>
 <p>默认效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f987c4b47567eff37c0877720631c457.png" alt="default-site-footer" /></p>
 <p><strong>注意：默认是没有 <code>站点总字数</code> 和 <code>站点阅读时长</code> 的，这里有相关显示是因为上面启用了统计功能。</strong></p>
-<h2 id="设置建站时间">设置建站时间</h2>
+<h3 id="设置建站时间">设置建站时间</h3>
 <p>编辑 <code>footer</code> 下的 <code>since</code> 配置如下，例如建站时间为2019，则：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">footer:</span></span><br><span class="line">  <span class="comment"># 指定建站日期，若没有定义则使用当前的年份作为建站日期。</span></span><br><span class="line">  <span class="attr">since:</span> <span class="number">2019</span></span><br></pre></td></tr></table></figure>
-<h2 id="设置版权所有者">设置版权所有者</h2>
+<h3 id="设置版权所有者">设置版权所有者</h3>
 <p>编辑 <code>footer</code> 下的 <code>copyright</code> 配置如下，例如版权所有者为 wylu，则：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">footer:</span></span><br><span class="line">  <span class="comment"># 如果没有定义, 则站点作者的配置会用于此处。</span></span><br><span class="line">  <span class="attr">copyright:</span> <span class="string">wylu</span></span><br></pre></td></tr></table></figure>
-<h2 id="设置建站时间和版权所有者之间的图标">设置建站时间和版权所有者之间的图标</h2>
+<h3 id="设置建站时间和版权所有者之间的图标">设置建站时间和版权所有者之间的图标</h3>
 <p>编辑 <code>footer</code> 下的 <code>icon</code> 配置如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">footer:</span></span><br><span class="line">  <span class="comment"># Icon between year and copyright info.</span></span><br><span class="line">  <span class="attr">icon:</span></span><br><span class="line">    <span class="comment"># Icon name in fontawesome, see: https://fontawesome.com/v4.7.0/icons/</span></span><br><span class="line">    <span class="comment"># `heart` is recommended with animation in red (#ff0000).</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">heart</span></span><br><span class="line">    <span class="comment"># If you want to animate the icon, set it to true.</span></span><br><span class="line">    <span class="attr">animated:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Change the color of icon, using Hex Code.</span></span><br><span class="line">    <span class="attr">color:</span> <span class="string">&quot;#ff0000&quot;</span></span><br></pre></td></tr></table></figure>
 <p>这里使用 <code>fa-heart</code> 的图标，并且启用动画和设置 icon 的颜色为红色。</p>
-<h2 id="隐藏-hexo-和-next-信息">隐藏 Hexo 和 NexT 信息</h2>
+<h3 id="隐藏-hexo-和-next-信息">隐藏 Hexo 和 NexT 信息</h3>
 <p>编辑 <code>footer</code> 下的 <code>powered</code> 和 <code>theme</code> 配置如下：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">footer:</span></span><br><span class="line">  <span class="attr">powered:</span></span><br><span class="line">    <span class="comment"># Hexo link (Powered by Hexo).</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Version info of Hexo after Hexo link (vX.X.X).</span></span><br><span class="line">    <span class="attr">version:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">theme:</span></span><br><span class="line">    <span class="comment"># Theme &amp; scheme info link (Theme - NexT.scheme).</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Version info of NexT after scheme info (vX.X.X).</span></span><br><span class="line">    <span class="attr">version:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <p>修改完配置后，效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e9dc63201adb508ccd88d00ecd633e99.png" alt="custom-site-footer" /></p>
-<h1 id="添加站点运行时间">添加站点运行时间</h1>
+<h2 id="添加站点运行时间">添加站点运行时间</h2>
 <p>在 <code>/themes/next/layout/_custom</code> 文件夹下新建一个名称为 <code>site-runtime.swig</code> 的文件，并添加内容如下：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;div id=<span class="string">&quot;site-runtime&quot;</span>&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-item-icon&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-clock-o&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;runtime&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">&lt;/div&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">language</span>=<span class="string">&quot;javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">function</span> <span class="title function_">isPC</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> userAgentInfo = navigator.<span class="property">userAgent</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> agents = [<span class="string">&quot;Android&quot;</span>, <span class="string">&quot;iPhone&quot;</span>, <span class="string">&quot;SymbianOS&quot;</span>, <span class="string">&quot;Windows Phone&quot;</span>, <span class="string">&quot;iPad&quot;</span>, <span class="string">&quot;iPod&quot;</span>];</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; agents.<span class="property">length</span>; i++) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">if</span> (userAgentInfo.<span class="title function_">indexOf</span>(agents[i]) &gt; <span class="number">0</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="keyword">return</span> <span class="literal">false</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">return</span> <span class="literal">true</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">function</span> <span class="title function_">siteTime</span>(<span class="params">openOnPC, start</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">window</span>.<span class="built_in">setTimeout</span>(<span class="string">&quot;siteTime(openOnPC, start)&quot;</span>, <span class="number">1000</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> seconds = <span class="number">1000</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> minutes = seconds * <span class="number">60</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> hours = minutes * <span class="number">60</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> days = hours * <span class="number">24</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> years = days * <span class="number">365</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#123;% <span class="keyword">if</span> theme.<span class="property">footer</span>.<span class="property">runtime</span>.<span class="property">start</span> %&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      start = <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="string">&quot;&#123;&#123; theme.footer.runtime.start &#125;&#125;&quot;</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#123;% endif %&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> now = <span class="keyword">new</span> <span class="title class_">Date</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> year = now.<span class="title function_">getFullYear</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> month = now.<span class="title function_">getMonth</span>() + <span class="number">1</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> date = now.<span class="title function_">getDate</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> hour = now.<span class="title function_">getHours</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> minute = now.<span class="title function_">getMinutes</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> second = now.<span class="title function_">getSeconds</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> diff = now - start;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> diffYears = <span class="title class_">Math</span>.<span class="title function_">floor</span>(diff / years);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> diffDays = <span class="title class_">Math</span>.<span class="title function_">floor</span>((diff / days) - diffYears * <span class="number">365</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> diffHours = <span class="title class_">Math</span>.<span class="title function_">floor</span>((diff - (diffYears * <span class="number">365</span> + diffDays) * days) / hours);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> diffMinutes = <span class="title class_">Math</span>.<span class="title function_">floor</span>((diff - (diffYears * <span class="number">365</span> + diffDays) * days - diffHours * hours) / minutes);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">var</span> diffSeconds = <span class="title class_">Math</span>.<span class="title function_">floor</span>((diff - (diffYears * <span class="number">365</span> + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">if</span> (openOnPC) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;runtime&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;Running: &quot;</span> + diffYears + <span class="string">&quot; years &quot;</span> + diffDays + <span class="string">&quot; days &quot;</span> + diffHours + <span class="string">&quot; hours &quot;</span> + diffMinutes + <span class="string">&quot; mins &quot;</span> + diffSeconds + <span class="string">&quot; secs&quot;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125; <span class="keyword">else</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;runtime&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;Running: &quot;</span> + diffYears + <span class="string">&quot;y &quot;</span> + diffDays + <span class="string">&quot;d &quot;</span> + diffHours + <span class="string">&quot;h &quot;</span> + diffMinutes + <span class="string">&quot;m &quot;</span> + diffSeconds + <span class="string">&quot;s&quot;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">var</span> showOnMobile = &#123;&#123; theme.<span class="property">footer</span>.<span class="property">runtime</span>.<span class="property">mobile</span> &#125;&#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">var</span> openOnPC = <span class="title function_">isPC</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">var</span> start = <span class="keyword">new</span> <span class="title class_">Date</span>();</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">siteTime</span>(openOnPC, start);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">if</span> (!openOnPC &amp;&amp; !showOnMobile) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;site-runtime&#x27;</span>).<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 <p>编辑文件 <code>/themes/next/layout/_partials/footer.swig</code>，在文件底部添加如下内容：</p>
@@ -9825,25 +9830,25 @@ O(n) + O(nlogn) = O(nlogn)
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Site Runtime</span></span><br><span class="line"><span class="attr">runtime:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># The time of the site started running. If not defined, current time of local time zone will be used.</span></span><br><span class="line">  <span class="comment"># You can specify the time zone by adding the `+HOURS` or `-HOURS` format time zone.</span></span><br><span class="line">  <span class="comment"># If not specify the time zone, it will use `+0000` as default.</span></span><br><span class="line">  <span class="comment"># ex: &quot;2015-06-08 07:24:13 +0800&quot;, `+0800` specify that it is the time in the East Eight Time Zone.</span></span><br><span class="line">  <span class="attr">start:</span> <span class="number">2015-06-08 08:00:00</span> <span class="string">+0800</span></span><br><span class="line">  <span class="comment"># Whether to show on the mobile side</span></span><br><span class="line">  <span class="attr">mobile:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2db816845000ffe330f38f9d7c6a5afe.png" alt="site-runtime" /></p>
 <p><strong>注意：<code>runtime</code> 必须在 <code>footer</code> 下才能正常工作，与 <code>footer</code> 下的 <code>theme</code> 是平级关系，该配置支持设置是否在移动端显示，不支持修改展示文本语言。对于要修改展示文本语言的，可以直接修改 <code>site-runtime.swig</code> 文件。</strong></p>
-<h1 id="添加鼠标点击效果">添加鼠标点击效果</h1>
-<h2 id="爱心点击效果">爱心点击效果</h2>
+<h2 id="添加鼠标点击效果">添加鼠标点击效果</h2>
+<h3 id="爱心点击效果">爱心点击效果</h3>
 <p>在 <code>/themes/next/source/js/src</code> 下新建文件 <code>love.js</code>，接着把该 <a href="http://7u2ss1.com1.z0.glb.clouddn.com/love.js">链接</a> 下的 js 代码复制到 <code>love.js</code> 文件中。如果链接失效，可以到 <a href="https://github.com/wylu/cdn/blob/master/next/js/love.js">博主Github</a> 复制。如果没有 <code>src</code> 目录，则自行手动创建。</p>
-<h2 id="烟花点击效果">烟花点击效果</h2>
+<h3 id="烟花点击效果">烟花点击效果</h3>
 <p>在 <code>/themes/next/source/js/src</code> 下新建文件 <code>fireworks.js</code>，接着把该 <a href="https://github.com/wylu/cdn/blob/master/next/js/fireworks.js">链接</a> 下的 js 代码复制到 <code>fireworks.js</code> 文件中。</p>
-<h2 id="新建-click-animation.swig">新建 <code>click-animation.swig</code></h2>
+<h3 id="新建-click-animation.swig">新建 <code>click-animation.swig</code></h3>
 <p>在 <code>/themes/next/layout/_custom</code> 文件夹下新建文件 <code>click-animation.swig</code>，并添加如下代码：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% if theme.click_animation.enable %&#125;</span><br><span class="line">  &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">    function isPC() &#123;</span><br><span class="line">      var userAgentInfo = navigator.userAgent;</span><br><span class="line">      var agents = [&quot;Android&quot;, &quot;iPhone&quot;, &quot;SymbianOS&quot;, &quot;Windows Phone&quot;, &quot;iPad&quot;, &quot;iPod&quot;];</span><br><span class="line">      for (var i = 0; i &lt; agents.length; i++) &#123;</span><br><span class="line">        if (userAgentInfo.indexOf(agents[i]) &gt; 0) &#123;</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return true;</span><br><span class="line">    &#125;</span><br><span class="line">    var showOnMobile = &#123;&#123; theme.click_animation.mobile &#125;&#125;;</span><br><span class="line">    var openOnPC = isPC();</span><br><span class="line"></span><br><span class="line">    &#123;% if theme.click_animation.style == &quot;love&quot; %&#125;</span><br><span class="line">      if (openOnPC || showOnMobile) $.getScript(&quot;/js/src/love.js&quot;);</span><br><span class="line">    &#123;% elseif theme.click_animation.style == &quot;fireworks&quot; %&#125;</span><br><span class="line">      if (openOnPC || showOnMobile) &#123;</span><br><span class="line">        var newCanvas = $(&#x27;&lt;canvas class=&quot;fireworks&quot; style=&quot;position: fixed; left: 0; top: 0; z-index: 1; pointer-events: none;&quot;&gt;&lt;/canvas&gt;&#x27;);</span><br><span class="line">        $(&quot;body&quot;).append(newCanvas);</span><br><span class="line">        $.getScript(&quot;http://cdn.bootcss.com/animejs/2.2.0/anime.min.js&quot;).done(function (script, textstatus) &#123;</span><br><span class="line">          if (textstatus == &quot;success&quot; &amp;&amp; typeof(anime) != undefined) &#123;</span><br><span class="line">            $.getScript(&quot;/js/src/fireworks.js&quot;);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &lt;/script&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="修改-_layout.swig">修改 <code>_layout.swig</code></h2>
+<h3 id="修改-_layout.swig">修改 <code>_layout.swig</code></h3>
 <p>在 <code>/themes/next/layout/_layout.swig</code> 文件 <code>&lt;body&gt;</code> 标签内的底部添加如下代码：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% include &#x27;_custom/click-animation.swig&#x27; %&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="添加自定义配置项">添加自定义配置项</h2>
+<h3 id="添加自定义配置项">添加自定义配置项</h3>
 <p>编辑 <code>主题配置文件</code>，在文件末尾添加如下配置：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Mouse Click Animation.</span></span><br><span class="line"><span class="attr">click_animation:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Available values of style: love | fireworks</span></span><br><span class="line">  <span class="comment"># If not define, there will be no click animation even enabled.</span></span><br><span class="line">  <span class="attr">style:</span> <span class="string">love</span></span><br><span class="line">  <span class="comment"># Whether to show on the mobile side</span></span><br><span class="line">  <span class="attr">mobile:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
 <p>当 <code>style: love</code> 时，效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/cdaa3218fa2b5c59ce814312ee7702a2.png" alt="click-love" /></p>
 <p>当 <code>style: fireworks</code> 时，效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/10cb612abdc1c2cbc7adbdcf601b13e9.png" alt="click-fireworks" /></p>
-<h1 id="添加自定义404页面">添加自定义404页面</h1>
+<h2 id="添加自定义404页面">添加自定义404页面</h2>
 <p>参考 MOxFIVE 博客 <a href="http://moxfive.xyz/2015/10/16/hexo-404-page/">在 Hexo 中创建匹配主题的404页面</a></p>
 <p>在站点根目录下，执行如下命令创建404页面：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page 404</span><br></pre></td></tr></table></figure>
@@ -9851,7 +9856,7 @@ O(n) + O(nlogn) = O(nlogn)
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 404</span><br><span class="line">date: 2019-05-07 22:30:57</span><br><span class="line">comments: false</span><br><span class="line"><span class="section">permalink: /404</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">center</span>&gt;</span></span>404 Not Found</span><br><span class="line">对不起，您所访问的页面不存在或者已删除</span><br><span class="line">[<span class="string">点击此处</span>](<span class="link">https://wylu.github.io</span>)返回首页</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="bullet">*</span> 我的Github：[<span class="string">http://github.com/wylu</span>](<span class="link">http://github.com/wylu</span>)</span><br><span class="line"><span class="bullet">*</span> 我的CSDN：[<span class="string">https://blog.csdn.net/qq_32767041</span>](<span class="link">https://blog.csdn.net/qq_32767041</span>)</span><br><span class="line"><span class="bullet">*</span> 给我留言：[<span class="string">https://wylu.github.io/guestbook/</span>](<span class="link">https://wylu.github.io/guestbook/</span>)</span><br></pre></td></tr></table></figure>
 <p>在本地打开链接 <a href="http://localhost:4000/404.html">http://localhost:4000/404.html</a> ，如果能看到如下效果，则表示配置成功。<strong>需要注意的是，在本地测试时，当你尝试跳转到一个不存在的页面时，不会显示自定义的404页面，但是当我们将页面部署到 GithubPages 时，它就会使用我们自定义的404页面。</strong></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d5c6e4f654644fda640cf55779020b41.png" alt="404-page" /></p>
-<h1 id="添加图片放大预览功能">添加图片放大预览功能</h1>
+<h2 id="添加图片放大预览功能">添加图片放大预览功能</h2>
 <p>利用 Fancybox 能放大查看图片。</p>
 <p>有 <a href="https://github.com/theme-next/theme-next-fancybox">Fancybox2</a> 和 <a href="https://github.com/theme-next/theme-next-fancybox3">Fancybox3</a> 两个版本，这里使用 Fancybox3。</p>
 <p>如果已经有 fancybox2 的，需要在站点根目录下执行下列命令进行删除：</p>
@@ -9878,31 +9883,32 @@ O(n) + O(nlogn) = O(nlogn)
     <url>/posts/a2725fd8/</url>
     <content><![CDATA[<p>本文将介绍一些关于 NexT 侧边栏的配置。</p>
 <span id="more"></span>
-<h1 id="环境及版本声明">环境及版本声明</h1>
+<h1 id="next侧边栏配置">NexT侧边栏配置</h1>
+<h2 id="环境及版本声明">环境及版本声明</h2>
 <p>本文基于以下环境及版本：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo:</span> <span class="number">3.8</span><span class="number">.0</span></span><br><span class="line"><span class="attr">hexo-cli:</span> <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">NexT:</span> <span class="number">7.1</span><span class="number">.0</span></span><br><span class="line"><span class="attr">OS:</span> <span class="string">Ubuntu</span> <span class="number">18.04</span> <span class="string">LTS</span> <span class="string">x86_64</span></span><br></pre></td></tr></table></figure>
-<h1 id="设置侧边栏">设置侧边栏</h1>
+<h2 id="设置侧边栏">设置侧边栏</h2>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sidebar:</span></span><br><span class="line">  <span class="comment"># 侧边栏位置, 可选值: left | right (仅适用于 Pisces | Gemini).</span></span><br><span class="line">  <span class="attr">position:</span> <span class="string">left</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 手动定义侧边栏宽度. 如果注释，将默认为：</span></span><br><span class="line">  <span class="comment"># Muse | Mist: 320</span></span><br><span class="line">  <span class="comment"># Pisces | Gemini: 240</span></span><br><span class="line">  <span class="comment">#width: 300</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 侧边栏显示, 可选值 (仅适用于 Muse | Mist):</span></span><br><span class="line">  <span class="comment">#  - post    默认行为，在文章页面（拥有目录列表）时显示</span></span><br><span class="line">  <span class="comment">#  - always  在所有页面中都显示</span></span><br><span class="line">  <span class="comment">#  - hide    在所有页面中都隐藏（可以手动展开）</span></span><br><span class="line">  <span class="comment">#  - remove  完全移除</span></span><br><span class="line">  <span class="attr">display:</span> <span class="string">post</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 侧边栏相对于顶部菜单栏的偏移量（以像素为单位） (仅适用于 Pisces | Gemini).</span></span><br><span class="line">  <span class="attr">offset:</span> <span class="number">12</span></span><br><span class="line">  <span class="comment"># 在窄视图上启用侧边栏 (仅适用于 Muse | Mist).</span></span><br><span class="line">  <span class="attr">onmobile:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 点击页面的任何空白部分关闭侧边栏 (仅适用于 Muse | Mist).</span></span><br><span class="line">  <span class="attr">dimmer:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h1 id="设置返回顶部">设置返回顶部</h1>
+<h2 id="设置返回顶部">设置返回顶部</h2>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">back2top:</span></span><br><span class="line">  <span class="comment"># 是否启用点击返回顶部按钮</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 是否在侧边栏显示点击返回顶部按钮</span></span><br><span class="line">  <span class="attr">sidebar:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 是否在返回顶部按钮显示已滚动百分比</span></span><br><span class="line">  <span class="attr">scrollpercent:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h1 id="设置头像">设置头像</h1>
+<h2 id="设置头像">设置头像</h2>
 <p>NexT 默认不会在侧边栏展示头像，你可以在 <code>主题配置文件</code> 中修改。</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Sidebar Avatar</span></span><br><span class="line"><span class="attr">avatar:</span></span><br><span class="line">  <span class="comment"># 头像资源路径，可以在主题目录下，也可以在站点目录，还可以是网络链接</span></span><br><span class="line">  <span class="comment"># 将头像放至主题目录下 (source/images): /images/avatar.gif</span></span><br><span class="line">  <span class="comment"># 将头像放至站点目录下 (source/uploads): /uploads/avatar.gif</span></span><br><span class="line">  <span class="comment"># 或者任何头像URL: http(s)://example.com/avatar.png</span></span><br><span class="line">  <span class="attr">url:</span> <span class="comment">#/images/avatar.gif</span></span><br><span class="line">  <span class="comment"># 如果为 true, 头像将会显示为圆形.</span></span><br><span class="line">  <span class="attr">rounded:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 头像透明度，取值从0到1,1表示完全不透明.</span></span><br><span class="line">  <span class="attr">opacity:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment"># 如果为 true, 当光标移动至头像时，头像会旋转.</span></span><br><span class="line">  <span class="attr">rotated:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h1 id="设置作者昵称">设置作者昵称</h1>
+<h2 id="设置作者昵称">设置作者昵称</h2>
 <p>编辑 <code>站点配置文件</code>，设置 author 为你的昵称。</p>
-<h1 id="设置站点描述">设置站点描述</h1>
+<h2 id="设置站点描述">设置站点描述</h2>
 <p>编辑 <code>站点配置文件</code>，设置 description 字段为你的站点描述，站点描述也可以是你喜欢的一句签名</p>
-<h1 id="设置社交链接">设置社交链接</h1>
+<h2 id="设置社交链接">设置社交链接</h2>
 <p>侧栏社交链接的修改包含两个部分，第一是链接，第二是链接图标。两者配置均在 <code>主题配置文件</code> 中。</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Social Links</span></span><br><span class="line"><span class="comment"># Usage: `Key: permalink || icon`</span></span><br><span class="line"><span class="comment"># Key 是向最终用户显示的链接标签.</span></span><br><span class="line"><span class="comment"># `||` 分隔符之前的值是目标的永久链接.</span></span><br><span class="line"><span class="comment"># `||` 分隔符后面的值是FontAwesome图标的名称。如果未指定图标（带或不带分隔符），则将加载globe图标.</span></span><br><span class="line"><span class="attr">social:</span></span><br><span class="line">  <span class="comment">#GitHub: https://github.com/yourname || github</span></span><br><span class="line">  <span class="comment">#E-Mail: mailto:yourname@gmail.com || envelope</span></span><br><span class="line">  <span class="comment">#Weibo: https://weibo.com/yourname || weibo</span></span><br><span class="line">  <span class="comment">#Google: https://plus.google.com/yourname || google</span></span><br><span class="line">  <span class="comment">#Twitter: https://twitter.com/yourname || twitter</span></span><br><span class="line">  <span class="comment">#FB Page: https://www.facebook.com/yourname || facebook</span></span><br><span class="line">  <span class="comment">#VK Group: https://vk.com/yourname || vk</span></span><br><span class="line">  <span class="comment">#StackOverflow: https://stackoverflow.com/yourname || stack-overflow</span></span><br><span class="line">  <span class="comment">#YouTube: https://youtube.com/yourname || youtube</span></span><br><span class="line">  <span class="comment">#Instagram: https://instagram.com/yourname || instagram</span></span><br><span class="line">  <span class="comment">#Skype: skype:yourname?call|chat || skype</span></span><br><span class="line"></span><br><span class="line"><span class="attr">social_icons:</span></span><br><span class="line">  <span class="comment"># 是否启用社交链接图标</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 是否只显示社交链接图标</span></span><br><span class="line">  <span class="attr">icons_only:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 是否显示具有转换效果的社交链接图标</span></span><br><span class="line">  <span class="attr">transition:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
 <p>NexT 内置了多个网站的链接，可以取消想要添加链接的注释，也可以自定义，例如：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">social:</span></span><br><span class="line">    <span class="attr">Github:</span> <span class="string">https://github.com/wylu</span> <span class="string">||</span> <span class="string">github</span></span><br><span class="line">    <span class="attr">CSDN:</span> <span class="string">https://blog.csdn.net/qq_32767041</span> <span class="string">||</span> <span class="string">book</span></span><br></pre></td></tr></table></figure>
-<h1 id="设置友情链接">设置友情链接</h1>
+<h2 id="设置友情链接">设置友情链接</h2>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Blog rolls</span></span><br><span class="line"><span class="comment"># NexT默认会在links_title之前显示链接图标，你可以使用FontAwesome的其它图标</span></span><br><span class="line"><span class="attr">links_icon:</span> <span class="string">link</span></span><br><span class="line"><span class="comment"># NexT默认使用Links作为blogroll的名称，你可以自行修改</span></span><br><span class="line"><span class="attr">links_title:</span> <span class="string">Links</span></span><br><span class="line"><span class="comment"># NexT默认所有blogrolls都以块显示，你可以改为内联</span></span><br><span class="line"><span class="attr">links_layout:</span> <span class="string">block</span></span><br><span class="line"><span class="comment">#links_layout: inline</span></span><br><span class="line"><span class="attr">links:</span></span><br><span class="line">  <span class="comment"># 此处添加你的友情链接</span></span><br><span class="line">  <span class="comment">#Title: http://example.com</span></span><br></pre></td></tr></table></figure>
 <p>例如：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">links_icon:</span> <span class="string">link</span></span><br><span class="line"><span class="attr">links_title:</span> <span class="string">福利链接</span></span><br><span class="line"><span class="attr">links_layout:</span> <span class="string">inline</span></span><br><span class="line"><span class="attr">links:</span></span><br><span class="line">  <span class="attr">Title1:</span> <span class="string">http://example.com</span></span><br><span class="line">  <span class="attr">Title2:</span> <span class="string">http://example.com</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/d4f899906a03a62ae6bb2da4d3d98174.png" alt="links" /></p>
-<h1 id="设置文章目录">设置文章目录</h1>
+<h2 id="设置文章目录">设置文章目录</h2>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Table Of Contents in the Sidebar</span></span><br><span class="line"><span class="attr">toc:</span></span><br><span class="line">  <span class="comment"># 是否启用侧边栏文章目录.</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 是否自动将列表编号添加到TOC.</span></span><br><span class="line">  <span class="attr">number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 如果为true，如果标题宽度大于侧边栏宽度，则所有单词将放在下一行.</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 如果为true，将显示帖子中的所有TOC级别，而不是其中的激活部分.</span></span><br><span class="line">  <span class="attr">expand_all:</span> <span class="literal">false</span></span><br><span class="line">  <span class="comment"># 生成的TOC的最大深度. 你可以在一个帖子中通过Front Matter中的`toc_max_depth`设置它.</span></span><br><span class="line">  <span class="attr">max_depth:</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
