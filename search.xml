@@ -8,6 +8,92 @@
 ]]></content>
   </entry>
   <entry>
+    <title>CentOS 搭建 DNS 服务</title>
+    <url>/posts/b769518c/</url>
+    <content><![CDATA[<p>本文介绍了在 CentOS 上使用 BIND (Berkeley Internet Name Domain) 搭建 DNS 服务的步骤。首先需要下载 DNS 服务软件，然后配置主配置文件和区域文件，接着配置正向解析数据文件和反向解析数据文件，设置文件权限，检查配置文件是否配置正确，最后启动 DNS 服务并测试解析。</p>
+<span id="more"></span>
+<h1 id="centos-搭建-dns-服务">CentOS 搭建 DNS 服务</h1>
+<p>可以使用 BIND (Berkeley Internet Name Domain) 来搭建 DNS 服务。以下是在 CentOS 上搭建 BIND 的步骤：</p>
+<h2 id="下载-dns-服务软件">下载 DNS 服务软件</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">服务端需安装bind-chroot软件</span></span><br><span class="line">yun install -y bind-chroot</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">客户端需下载bind-utils（需要使用nslookup命令）</span></span><br><span class="line">yum install -y bind-utils</span><br></pre></td></tr></table></figure>
+<h2 id="配置主配置文件">配置主配置文件</h2>
+<p><a href="https://bind9.readthedocs.io/en/v9_18_8/reference.html#configuration-reference">https://bind9.readthedocs.io/en/v9_18_8/reference.html#configuration-reference</a></p>
+<p>编辑 /etc/named.conf 文件，修改以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">options &#123;</span><br><span class="line">        // 配置DNS服务监听的IP地址（可以写成any）和端口（默认53，确保该端口没有被占用）</span><br><span class="line">        listen-on port 53 &#123; any; &#125;;</span><br><span class="line">        // 允许任何网段的主机访问DNS服务</span><br><span class="line">        allow-query     &#123; any; &#125;;</span><br><span class="line"></span><br><span class="line">        dnssec-enable no;</span><br><span class="line">        dnssec-validation no;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><a href="https://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-bind-namedconf.html">https://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-bind-namedconf.html</a></p>
+<h2 id="配置区域文件">配置区域文件</h2>
+<p>编辑 /etc/named.rfc1912.zones 文件，添加以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">zone &quot;wylu.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;wylu.com.localhost&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;170.128.10.in-addr.arpa&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;wylu.com.loopback&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="配置正向解析数据文件">配置正向解析数据文件</h2>
+<p>拷贝一份正向解析数据文件的模板，然后进行编辑：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/named</span><br><span class="line">cp -a named.localhost wylu.com.localhost</span><br><span class="line">vim wylu.com.localhost</span><br></pre></td></tr></table></figure>
+<p>添加如下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  wylu.com. rname.invalid. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      www.wylu.com.</span><br><span class="line">www     A       10.128.170.235</span><br><span class="line">email   A       10.128.170.235</span><br></pre></td></tr></table></figure>
+<h2 id="配置反向解析数据文件">配置反向解析数据文件</h2>
+<p>拷贝一份正向解析数据文件的模板，然后进行编辑：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/named</span><br><span class="line">cp -a named.loopback wylu.com.loopback</span><br><span class="line">vim wylu.com.loopback</span><br></pre></td></tr></table></figure>
+<p>添加如下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  wylu.com. rname.invalid. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      www.wylu.com.</span><br><span class="line">235     PTR     www.wylu.com.</span><br></pre></td></tr></table></figure>
+<h2 id="设置文件权限">设置文件权限</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chown named:named wylu.com.localhost wylu.com.loopback</span><br></pre></td></tr></table></figure>
+<p><strong>注意：请确保 wylu.com.localhost 和 wylu.com.loopback 文件的属主和属组为 named。</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# ls -alh</span><br><span class="line">total 28K</span><br><span class="line">drwxrwx--T.  5 root  named  178 Mar 22 18:52 .</span><br><span class="line">drwxr-xr-x. 22 root  root  4.0K Mar 22 17:34 ..</span><br><span class="line">drwxrwx---.  2 named named   23 Mar 22 17:45 data</span><br><span class="line">drwxrwx---.  2 named named   60 Mar 22 18:52 dynamic</span><br><span class="line">-rw-r-----.  1 root  named 2.3K Nov  8 19:18 named.ca</span><br><span class="line">-rw-r-----.  1 root  named  152 Nov  8 19:18 named.empty</span><br><span class="line">-rw-r-----.  1 root  named  152 Nov  8 19:18 named.localhost</span><br><span class="line">-rw-r-----.  1 root  named  168 Nov  8 19:18 named.loopback</span><br><span class="line">drwxrwx---.  2 named named    6 Nov  8 19:18 slaves</span><br><span class="line">-rw-r--r--.  1 root  root   429 Mar 22 18:51 wylu.com.localhost</span><br><span class="line">-rw-r--r--.  1 root  root   397 Mar 22 17:44 wylu.com.loopback</span><br></pre></td></tr></table></figure>
+<p>否则启动服务时会产生如下错误提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone 170.128.10.in-addr.arpa/IN: loading from master file wylu.com.loopback failed: permission denied</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone 170.128.10.in-addr.arpa/IN: not loaded due to errors.</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone wylu.com/IN: loading from master file wylu.com.localhost failed: permission denied</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone wylu.com/IN: not loaded due to errors.</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: all zones loaded</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: running</span><br></pre></td></tr></table></figure>
+<h2 id="检查配置文件是否配置正确">检查配置文件是否配置正确</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# named-checkconf -z /etc/named.conf</span><br><span class="line">zone localhost.localdomain/IN: loaded serial 0</span><br><span class="line">zone localhost/IN: loaded serial 0</span><br><span class="line">zone 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa/IN: loaded serial 0</span><br><span class="line">zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0</span><br><span class="line">zone 0.in-addr.arpa/IN: loaded serial 0</span><br><span class="line">zone wylu.com/IN: loaded serial 0</span><br><span class="line">zone 170.128.10.in-addr.arpa/IN: loaded serial 0</span><br></pre></td></tr></table></figure>
+<p>如上输出表示配置文件没问题。</p>
+<h2 id="启动-dns-服务">启动 DNS 服务</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关闭防火墙服务</span></span><br><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl disable firewalld</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">临时禁用 SELinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">永久禁用 SELinux</span></span><br><span class="line">vim /etc/selinux/config</span><br><span class="line">SELINUX=disabled</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动 DNS 服务</span></span><br><span class="line">systemctl start named</span><br><span class="line">systemctl enable named</span><br></pre></td></tr></table></figure>
+<p>查看 DNS 服务监听情况：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# netstat -anupl | grep 53</span><br><span class="line">udp        0      0 172.17.0.1:53           0.0.0.0:*           2111795/named</span><br><span class="line">udp        0      0 10.128.170.235:53       0.0.0.0:*           2111795/named</span><br><span class="line">udp        0      0 127.0.0.1:53            0.0.0.0:*           2111795/named</span><br><span class="line">udp6       0      0 ::1:53                  :::*                2111795/named</span><br></pre></td></tr></table></figure>
+<h2 id="测试解析">测试解析</h2>
+<h3 id="正向解析">正向解析</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# nslookup email.wylu.com 10.128.170.235</span><br><span class="line">Server:         10.128.170.235</span><br><span class="line">Address:        10.128.170.235#53</span><br><span class="line"></span><br><span class="line">Name:   email.wylu.com</span><br><span class="line">Address: 10.128.170.235</span><br></pre></td></tr></table></figure>
+<h3 id="反向解析">反向解析</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# nslookup 10.128.170.235 10.128.170.235</span><br><span class="line">235.170.128.10.in-addr.arpa     name = www.wylu.com.</span><br></pre></td></tr></table></figure>
+<h2 id="references">References</h2>
+<h3 id="cp--a-选项作用">cp -a 选项作用</h3>
+<p>cp -a 是 cp 命令的一个选项，用于复制文件和目录，并保留所有的属性和权限。具体来说，-a 选项等价于以下三个选项的组合：</p>
+<ul>
+<li><code>-p</code> 选项：保留文件的权限、所有者和时间戳。</li>
+<li><code>-R</code> 选项：递归复制目录及其内容。</li>
+<li><code>-d</code> 选项：保留符号链接的属性。</li>
+</ul>
+<p>使用 cp -a 命令可以在复制文件和目录时保留所有的属性和权限，包括文件的所有者、组、权限、时间戳等。这对于备份和迁移文件和目录非常有用。 例如，要将目录 /home/user1 复制到目录 /home/user2，可以使用以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp -a /home/user1 /home/user2</span><br></pre></td></tr></table></figure>
+<p>这将递归地复制 /home/user1 目录及其所有内容到 /home/user2 目录，并保留所有的属性和权限。</p>
+<h3 id="禁用-selinux">禁用 SELinux</h3>
+<p>SELinux（Security-Enhanced Linux）是一个安全子系统，用于限制进程和用户的访问权限，以提高系统的安全性。但是，在某些情况下，SELinux 可能会导致一些问题，例如阻止某些进程或服务的正常运行。如果你需要关闭 SELinux，可以按照以下步骤操作：</p>
+<h3 id="检查-selinux-的状态">检查 SELinux 的状态</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sestatus</span><br></pre></td></tr></table></figure>
+<p>如果 SELinux 处于启用状态，将显示以下输出：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# sestatus</span><br><span class="line">SELinux status:                 enabled</span><br><span class="line">SELinuxfs mount:                /sys/fs/selinux</span><br><span class="line">SELinux root directory:         /etc/selinux</span><br><span class="line">Loaded policy name:             targeted</span><br><span class="line">Current mode:                   enforcing</span><br><span class="line">Mode from config file:          enforcing</span><br><span class="line">Policy MLS status:              enabled</span><br><span class="line">Policy deny_unknown status:     allowed</span><br><span class="line">Memory protection checking:     actual (secure)</span><br><span class="line">Max kernel policy version:      33</span><br></pre></td></tr></table></figure>
+<h3 id="临时禁用-selinux">临时禁用 SELinux</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">setenforce 0</span><br></pre></td></tr></table></figure>
+<p>这将把 SELinux 的模式从强制模式（enforcing）切换到宽容模式（permissive），并在控制台上显示警告信息。在宽容模式下，SELinux 仍然会记录违规行为，但不会阻止它们。</p>
+<h3 id="永久禁用-selinux">永久禁用 SELinux</h3>
+<p>要永久禁用 SELinux，需要编辑 /etc/selinux/config 文件，并将 SELINUX 的值设置为 disabled。可以使用以下命令打开该文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /etc/selinux/config</span><br></pre></td></tr></table></figure>
+<p>找到以下行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELINUX=enforcing</span><br></pre></td></tr></table></figure>
+<p>将其改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<p>保存并关闭文件。</p>
+<h3 id="重启系统">重启系统</h3>
+<p>为了使 SELinux 的更改生效，需要重启系统：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<p>在系统重新启动后，SELinux 将被永久禁用。</p>
+]]></content>
+      <categories>
+        <category>os</category>
+        <category>centos</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>二进制部署 k8s 集群 1.23.6 版本</title>
     <url>/posts/b4d8958f/</url>
     <content><![CDATA[<p>通过本文的指导，读者可以了解如何通过二进制的方式部署 Kubernetes 1.23.6 版本集群。二进制部署可以加深对 Kubernetes 各组件的理解，可以灵活地将各个组件部署到不同的机器，以满足自身的要求。但是需要注意的是，二进制部署需要手动配置各个组件，需要一定的技术水平和经验。</p>
@@ -11043,7 +11129,7 @@ O(n) + O(nlogn) = O(nlogn)
 </tr>
 </tbody>
 </table>
-<p>默认情况下，访问网址为： http://localhost:4000/</p>
+<p>默认情况下，访问网址为： <a href="http://localhost:4000/" class="uri">http://localhost:4000/</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/74c5b2fc485f1dd4b8fb4fecea4a0d0b.png" alt="Hexo Default Demo" /></p>
 <h1 id="新建文章">新建文章</h1>
 <p>下面命令可以创建一篇新文章：</p>
