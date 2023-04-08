@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/a898790949e41995ed079ca741392e54.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/610268fb2fd2c6b3c7e5d46182643a3a.png">
 <meta property="article:published_time" content="2020-07-16T14:28:26.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-08T15:07:56.023Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="rabbitmq">
 <meta property="article:tag" content="haproxy">
@@ -166,7 +166,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E"><span class="nav-text">部署说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%8F%90"><span class="nav-text">前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-text">RabbitMQ 集群模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-text">集群节点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-text">环境准备</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-text">集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%BC%8F"><span class="nav-text">普通模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-hosts"><span class="nav-text">配置 hosts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-hostname"><span class="nav-text">配置 hostname</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-erlang-cookie"><span class="nav-text">配置 erlang cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E8%8A%82%E7%82%B9"><span class="nav-text">重启节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-rabbitmq-server"><span class="nav-text">启动 rabbitmq-server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E8%8A%82%E7%82%B9%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4"><span class="nav-text">将节点加入集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="nav-text">查看集群状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7"><span class="nav-text">创建管理用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8-rabbitmq-management"><span class="nav-text">启用 rabbitmq management</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E6%A8%A1%E5%BC%8F"><span class="nav-text">镜像模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E9%98%9F%E5%88%97"><span class="nav-text">镜像队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E7%AD%96%E7%95%A5"><span class="nav-text">配置镜像策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%B7%BB%E5%8A%A0%E7%AD%96%E7%95%A5"><span class="nav-text">通过控制台添加策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%B7%BB%E5%8A%A0%E7%AD%96%E7%95%A5"><span class="nav-text">通过命令行添加策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5%E6%98%AF%E5%90%A6%E7%94%9F%E6%95%88"><span class="nav-text">测试策略是否生效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#haproxy-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-text">HAProxy 负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87-1"><span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-haproxy-%E9%85%8D%E7%BD%AE"><span class="nav-text">验证 HAProxy 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-haproxy"><span class="nav-text">运行 HAProxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#haproxy-statistics"><span class="nav-text">HAProxy Statistics</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rabbitmq%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-text">RabbitMQ高可用集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E"><span class="nav-text">部署说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E6%8F%90"><span class="nav-text">前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rabbitmq-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-text">RabbitMQ 集群模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="nav-text">集群节点类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-text">环境准备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="nav-text">集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%BC%8F"><span class="nav-text">普通模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-hosts"><span class="nav-text">配置 hosts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-hostname"><span class="nav-text">配置 hostname</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-erlang-cookie"><span class="nav-text">配置 erlang cookie</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E8%8A%82%E7%82%B9"><span class="nav-text">重启节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-rabbitmq-server"><span class="nav-text">启动 rabbitmq-server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E8%8A%82%E7%82%B9%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4"><span class="nav-text">将节点加入集群</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="nav-text">查看集群状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7"><span class="nav-text">创建管理用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E7%94%A8-rabbitmq-management"><span class="nav-text">启用 rabbitmq management</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E6%A8%A1%E5%BC%8F"><span class="nav-text">镜像模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E9%98%9F%E5%88%97"><span class="nav-text">镜像队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E7%AD%96%E7%95%A5"><span class="nav-text">配置镜像策略</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%B7%BB%E5%8A%A0%E7%AD%96%E7%95%A5"><span class="nav-text">通过控制台添加策略</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%B7%BB%E5%8A%A0%E7%AD%96%E7%95%A5"><span class="nav-text">通过命令行添加策略</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5%E6%98%AF%E5%90%A6%E7%94%9F%E6%95%88"><span class="nav-text">测试策略是否生效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#haproxy-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-text">HAProxy 负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87-1"><span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-haproxy-%E9%85%8D%E7%BD%AE"><span class="nav-text">验证 HAProxy 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-haproxy"><span class="nav-text">运行 HAProxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#haproxy-statistics"><span class="nav-text">HAProxy Statistics</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -275,7 +275,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 23:07:56" itemprop="dateModified" datetime="2023-04-08T23:07:56+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -331,11 +331,12 @@
 <li>RabbitMQ 镜像模式的策略如何配置？</li>
 </ul>
 <span id="more"></span>
-<h1 id="部署说明">部署说明</h1>
+<h1 id="rabbitmq高可用集群搭建">RabbitMQ高可用集群搭建</h1>
+<h2 id="部署说明">部署说明</h2>
 <p>下面将以一个示例说明多机部署一个高可用 RabbitMQ 集群的流程。</p>
-<h2 id="前提">前提</h2>
+<h3 id="前提">前提</h3>
 <p>在部署集群前，必须在将成为集群成员的每个节点上安装 RabbitMQ，并确保每个节点之间能相互访问。</p>
-<h2 id="rabbitmq-集群模式">RabbitMQ 集群模式</h2>
+<h3 id="rabbitmq-集群模式">RabbitMQ 集群模式</h3>
 <ul>
 <li><p>普通模式（默认的集群模式）</p>
 <p>以两个节点 node1、node2 为例来进行说明。</p>
@@ -346,7 +347,7 @@
 <p>该模式解决了普通模式中的问题，其实质和普通模式不同之处在于，消息实体会主动在镜像节点间同步，而不是在客户端取数据时临时拉取。该模式带来的副作用也很明显，除了降低系统性能外，如果镜像队列数量过多，加之大量的消息进入，集群内部的网络带宽将会被这种同步通讯大大消耗掉。所以在对可靠性要求较高的场合中适用。</p>
 <p>要实现镜像模式，需要先搭建一个普通集群模式，在这个模式的基础上再配置策略以实现高可用。</p></li>
 </ul>
-<h2 id="集群节点类型">集群节点类型</h2>
+<h3 id="集群节点类型">集群节点类型</h3>
 <ul>
 <li>内存（ram）节点</li>
 <li>磁盘（disk）节点</li>
@@ -355,7 +356,7 @@
 <p>在大多数情况下，您希望所有节点都是磁盘节点。 RAM 节点是一种特殊情况，可用于提高 queue、exchange 或 binding 流失率较高的群集的性能。 RAM 节点不提供更高的消息速率。如有疑问，请仅使用磁盘节点。</p>
 <p>由于 RAM 节点仅将内部数据库表存储在RAM中，因此它们必须在启动时从对等节点同步它们。这意味着一个群集必须至少包含一个磁盘节点。因此，不可能手动删除集群中最后剩余的磁盘节点。</p>
 <p>在 RabbitMQ 集群中，当磁盘节点宕掉且集群中无其他可用的磁盘节点时，集群将无法写入新的队列元数据信息。</p>
-<h2 id="环境准备">环境准备</h2>
+<h3 id="环境准备">环境准备</h3>
 <ul>
 <li><p>系统系统：CentOS7 64位</p></li>
 <li><p>三台服务器：192.168.0.231/232/233</p></li>
@@ -391,12 +392,12 @@
 </tbody>
 </table></li>
 </ul>
-<h1 id="集群搭建">集群搭建</h1>
-<h2 id="普通模式">普通模式</h2>
-<h3 id="配置-hosts">配置 hosts</h3>
+<h2 id="集群搭建">集群搭建</h2>
+<h3 id="普通模式">普通模式</h3>
+<h4 id="配置-hosts">配置 hosts</h4>
 <p><code>vim /etc/hosts</code> 编辑三个节点的 hosts 文件，在文件末尾添加如下内容：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">192.168.0.231 node231</span><br><span class="line">192.168.0.232 node232</span><br><span class="line">192.168.0.233 node233</span><br></pre></td></tr></table></figure>
-<h3 id="配置-hostname">配置 hostname</h3>
+<h4 id="配置-hostname">配置 hostname</h4>
 <ul>
 <li><p>node231</p>
 <p><code>vim /etc/hostname</code> 编辑主机名如下：</p>
@@ -420,16 +421,16 @@
 <p>重启 network</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart network</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h3 id="配置-erlang-cookie">配置 erlang cookie</h3>
+<h4 id="配置-erlang-cookie">配置 erlang cookie</h4>
 <p>RabbitMQ 集群是基于 erlang 进行同步的，在 erlang 的集群中各节点同步需要一个相同的 cookie，所以必须保证各节点 cookie 一致，不然节点之间就无法通信。这个 cookie 默认存放在 <code>/var/lib/rabbitmq/.erlang.cookie</code> 中。</p>
 <p>在任意一个节点中 copy <code>.erlang.cookie</code> 文件到其它所有节点，如在 node1 上进行 copy :</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node231 ~]# scp /var/lib/rabbitmq/.erlang.cookie root@192.168.0.232:/var/lib/rabbitmq/</span><br><span class="line">[root@node231 ~]# scp /var/lib/rabbitmq/.erlang.cookie root@192.168.0.233:/var/lib/rabbitmq/</span><br></pre></td></tr></table></figure>
-<h3 id="重启节点">重启节点</h3>
+<h4 id="重启节点">重启节点</h4>
 <p><strong>如果后面执行 <code>rabbitmqctl stop_app</code> 失败，需要重启 node231、node232、node233 使配置生效。</strong></p>
-<h3 id="启动-rabbitmq-server">启动 rabbitmq-server</h3>
+<h4 id="启动-rabbitmq-server">启动 rabbitmq-server</h4>
 <p>分别启动 node231、node232、node233 的 rabbitmq-server：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node231 ~]# systemctl start rabbitmq-server</span><br><span class="line">[root@node232 ~]# systemctl start rabbitmq-server</span><br><span class="line">[root@node233 ~]# systemctl start rabbitmq-server</span><br></pre></td></tr></table></figure>
-<h3 id="将节点加入集群">将节点加入集群</h3>
+<h4 id="将节点加入集群">将节点加入集群</h4>
 <p>将 node232、node233 节点加入 node231 节点集群中，<strong>在 node232、node233 中分别执行以下命令：</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl stop_app</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl join_cluster rabbit@node231</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl start_app</span></span><br></pre></td></tr></table></figure>
 <ul>
@@ -438,10 +439,10 @@
 <li><p>如果想要更改节点类型，可以使用命令 <code>rabbitmqctl change_cluster_node_type disc(ram)</code>，修改节点类型前需要先 <code>rabbitmqctl stop_app</code>。</p>
 <p>(Note: disk and disc are used interchangeably)</p></li>
 </ul>
-<h3 id="查看集群状态">查看集群状态</h3>
+<h4 id="查看集群状态">查看集群状态</h4>
 <p>任意节点执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl cluster_status</span></span><br></pre></td></tr></table></figure>
-<h3 id="创建管理用户">创建管理用户</h3>
+<h4 id="创建管理用户">创建管理用户</h4>
 <p>如果在主机名变更前就已经创建过用户的，仍需要重新重新创建，因为主机名的变更，之前创建的用户无法登录 web 管理系统。</p>
 <p>以下操作在 node231 下执行：</p>
 <ul>
@@ -455,21 +456,21 @@
 <li><p>设置用户权限</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node231 ~]# set_permissions -p testvhost admin &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h3 id="启用-rabbitmq-management">启用 rabbitmq management</h3>
+<h4 id="启用-rabbitmq-management">启用 rabbitmq management</h4>
 <p>在 node231 上启用 rabbitmq management</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node231 ~]# rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
-<p>在浏览器中访问 http://192.168.0.231:15672，使用 "admin/password" 即可登录。</p>
+<p>在浏览器中访问 <a target="_blank" rel="external nofollow noopener noreferrer" href="http://192.168.0.231:15672" class="uri">http://192.168.0.231:15672</a>，使用 "admin/password" 即可登录。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/aa2b806e6f5fe277c99c51f62c909671.png" alt="web-management"></p>
-<h2 id="镜像模式">镜像模式</h2>
+<h3 id="镜像模式">镜像模式</h3>
 <p>上面已经完成 RabbitMQ 默认集群模式，但并不保证队列的高可用性，尽管 Exchanges、Bindings 这些可以复制到集群里的任何一个节点，但是队列内容不会复制。所以集群中的节点宕机后将直接导致队列无法应用或消息丢失，要想队列在节点宕机或故障时也能正常应用，需要复制队列内容到集群中的每个节点，这就要使用镜像队列了。</p>
-<h3 id="镜像队列">镜像队列</h3>
+<h4 id="镜像队列">镜像队列</h4>
 <p>默认情况下，RabbitMQ 集群中 queue 的内容位于单个节点（声明该 queue 的节点）上。这与 exchanges 和 bindings 相反，exchanges 和 bindings 始终可以被视为在所有节点上。可以选择使 queue 跨多个节点进行镜像。</p>
 <p>每个镜像队列由一个 master 和一个或多个镜像（mirrors）组成。master 托管在一个通常称为主节点的节点上。每个队列都有其自己的主节点。给定队列的所有操作都首先应用于队列的主节点，然后传播到镜像节点。这涉及排队发布，向消费者传递消息，跟踪来自消费者的确认等。</p>
 <p>队列镜像意味着节点的集群。发布到队列的消息将复制到所有镜像。无论消费者连接到哪个节点，最终都会被连接到主节点，镜像节点都会丢弃已在主节点上确认的消息。因此，队列镜像可提高可用性，但不会在节点之间分配负载（所有参与的节点均完成所有工作）。</p>
 <p>如果承载队列主节点发生故障，则最早的镜像将在同步后提升为新的主节点。根据队列镜像参数，也可以升级不同步的镜像。</p>
-<h3 id="配置镜像策略">配置镜像策略</h3>
+<h4 id="配置镜像策略">配置镜像策略</h4>
 <p>使用策略（policiy）配置镜像参数。 一个策略按名称（使用正则表达式模式）匹配一个或多个队列，并且包含一个定义（可选参数的映射），该定义被添加到匹配队列的全部属性中。</p>
-<h4 id="通过控制台添加策略">通过控制台添加策略</h4>
+<h5 id="通过控制台添加策略">通过控制台添加策略</h5>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f690c8e9ed28c2bc2c120bdd360d6db9.png" alt="add-policy"></p>
 <p>如果其他节点也启用了 <code>rabbitmq_management</code>，此时其他节点的控制台，可以看到上面添加的这个策略，如图所示：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/9f8d54c88f312999ebda6a3563895be5.png" alt="show-policies"></p>
@@ -494,7 +495,7 @@
 <li><code>automatic</code>：自动同步。当一个新镜像加入时，队列会自动同步。队列同步是一个阻塞操作。</li>
 </ul></li>
 </ul>
-<h4 id="通过命令行添加策略">通过命令行添加策略</h4>
+<h5 id="通过命令行添加策略">通过命令行添加策略</h5>
 <ul>
 <li><p>设置</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl set_policy [-p &lt;vhost&gt;] [--priority &lt;priority&gt;] [--apply-to &lt;apply-to&gt;] &lt;name&gt; &lt;pattern&gt;  &lt;definition&gt;</span><br></pre></td></tr></table></figure></li>
@@ -507,16 +508,16 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl set_policy -p testvhost testha <span class="string">&quot;^&quot;</span> <span class="string">&#x27;&#123;&quot;ha-mode&quot;:&quot;all&quot;,&quot;ha-sync-mode&quot;:&quot;automatic&quot;&#125;&#x27;</span></span></span><br><span class="line">Setting policy &quot;testha&quot; for pattern &quot;^&quot; to &quot;&#123;&quot;ha-mode&quot;:&quot;all&quot;,&quot;ha-sync-mode&quot;:&quot;automatic&quot;&#125;&quot; with priority &quot;0&quot; for vhost &quot;testvhost&quot; ...</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl list_policies -p testvhost</span></span><br><span class="line">Listing policies for vhost &quot;testvhost&quot; ...</span><br><span class="line">vhost   name    pattern apply-to        definition      priority</span><br><span class="line">testvhost       testha  ^       all     &#123;&quot;ha-mode&quot;:&quot;all&quot;,&quot;ha-sync-mode&quot;:&quot;automatic&quot;&#125;    0</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rabbitmqctl clear_policy -p testvhost testha</span></span><br><span class="line">Clearing policy &quot;testha&quot; on vhost &quot;testvhost&quot; ...</span><br></pre></td></tr></table></figure>
-<h3 id="测试策略是否生效">测试策略是否生效</h3>
+<h4 id="测试策略是否生效">测试策略是否生效</h4>
 <p>在控制台的队列页面上，镜像队列将展示策略名称和其他副本（镜像）数量。以下是一个名为 three_replicas 的队列的示例，该队列具有一个 master（主节点）和两个镜像节点。</p>
 <p>添加队列：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/f87d9375a9966279b88a875b17f7a0f6.png" alt="add-queue"></p>
 <p>查看队列：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/68f6f3b13a8ac482762e9ebc18bcb15c.png" alt="show-queues"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a898790949e41995ed079ca741392e54.png" alt="queue-detail"></p>
-<h1 id="haproxy-负载均衡">HAProxy 负载均衡</h1>
+<h2 id="haproxy-负载均衡">HAProxy 负载均衡</h2>
 <p>HAProxy 是由 C 语言编写的免费的开源软件，它快速而高效，可为基于TCP和HTTP的应用程序提供高可用、高性能的负载平衡器和代理服务器。</p>
-<h2 id="环境准备-1">环境准备</h2>
+<h3 id="环境准备-1">环境准备</h3>
 <table>
 <thead>
 <tr class="header">
@@ -535,23 +536,23 @@
 </tr>
 </tbody>
 </table>
-<h2 id="安装">安装</h2>
+<h3 id="安装">安装</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt install haproxy</span></span><br></pre></td></tr></table></figure>
-<h2 id="配置">配置</h2>
+<h3 id="配置">配置</h3>
 <p><code>vim /etc/haproxy/haproxy.cfg</code> 编辑 haproxy 配置文件，修改如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">global</span><br><span class="line">    maxconn 512</span><br><span class="line">    stats socket /tmp/haproxy</span><br><span class="line"></span><br><span class="line">defaults</span><br><span class="line">    log global</span><br><span class="line">    mode http</span><br><span class="line">    option abortonclose</span><br><span class="line">    compression algo gzip</span><br><span class="line">    compression type text/html text/plain application/json</span><br><span class="line">    timeout connect 5000ms</span><br><span class="line"></span><br><span class="line">listen stats</span><br><span class="line">    bind *:8888</span><br><span class="line">    mode http</span><br><span class="line">    log 127.0.0.1 local3 err</span><br><span class="line">    stats refresh 60s</span><br><span class="line">    stats uri /stats</span><br><span class="line">    stats realm Haproxy\ Manager</span><br><span class="line">    stats auth admin:password</span><br><span class="line">    stats hide-version</span><br><span class="line">    stats admin if TRUE</span><br><span class="line"></span><br><span class="line">listen rabbitmq_cluster</span><br><span class="line">    bind *:5672</span><br><span class="line">    mode tcp</span><br><span class="line">    option tcpka</span><br><span class="line">    balance roundrobin</span><br><span class="line">    server rabbit1 192.168.0.231:5672 check inter 1000 rise 2 fall 3 weight 1</span><br><span class="line">    server rabbit2 192.168.0.232:5672 check inter 1000 rise 2 fall 3 weight 1</span><br><span class="line">    server rabbit3 192.168.0.233:5672 check inter 1000 rise 2 fall 3 weight 1</span><br></pre></td></tr></table></figure>
-<h2 id="验证-haproxy-配置">验证 HAProxy 配置</h2>
+<h3 id="验证-haproxy-配置">验证 HAProxy 配置</h3>
 <p>修改配置后，在启动 HAProxy 前，应先运行以下命令验证配置文件语法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">haproxy -f /etc/haproxy/haproxy.cfg -c -V</span></span><br><span class="line">Configuration file is valid</span><br></pre></td></tr></table></figure>
 <p>如果收到错误消，请务必先修复，然后再继续。</p>
-<h2 id="运行-haproxy">运行 HAProxy</h2>
+<h3 id="运行-haproxy">运行 HAProxy</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">systemctl restart haproxy</span></span><br></pre></td></tr></table></figure>
 <p>查看状态：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">systemctl status haproxy</span></span><br></pre></td></tr></table></figure>
-<h2 id="haproxy-statistics">HAProxy Statistics</h2>
-<p>浏览器访问 http://192.168.0.235:8888/stats，输入配置中的用户名和密码登录：</p>
+<h3 id="haproxy-statistics">HAProxy Statistics</h3>
+<p>浏览器访问 <a target="_blank" rel="external nofollow noopener noreferrer" href="http://192.168.0.235:8888/stats，输入配置中的用户名和密码登录" class="uri">http://192.168.0.235:8888/stats，输入配置中的用户名和密码登录</a>：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/610268fb2fd2c6b3c7e5d46182643a3a.png" alt="haproxy-statistics"></p>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.rabbitmq.com/clustering.html">https://www.rabbitmq.com/clustering.html</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.rabbitmq.com/ha.html">https://www.rabbitmq.com/ha.html</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.rabbitmq.com/parameters.html#policies">https://www.rabbitmq.com/parameters.html#policies</a></p>
@@ -650,14 +651,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

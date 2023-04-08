@@ -34,7 +34,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/1e024a483acf652e219e88cdc4f51272.png">
 <meta property="article:published_time" content="2019-05-23T14:51:48.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-08T14:57:37.973Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#https-url-%E5%92%8C-ssh-url"><span class="nav-text">HTTPS URL 和 SSH URL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E6%AC%A1%E8%BF%90%E8%A1%8C-git-%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">初次运行 Git 前的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">Git 环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="nav-text">配置用户信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF"><span class="nav-text">查看配置信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%B7%B2%E6%9C%89-ssh-key"><span class="nav-text">检查是否已有 SSH Key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90-ssh-key"><span class="nav-text">生成 SSH key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-ssh-key-%E5%88%B0-github"><span class="nav-text">添加 SSH Key 到 Github</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-ssh-key"><span class="nav-text">测试 SSH key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git%E9%85%8D%E7%BD%AEssh-key"><span class="nav-text">Git配置SSH Key</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#https-url-%E5%92%8C-ssh-url"><span class="nav-text">HTTPS URL 和 SSH URL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E6%AC%A1%E8%BF%90%E8%A1%8C-git-%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">初次运行 Git 前的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">Git 环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="nav-text">配置用户信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF"><span class="nav-text">查看配置信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%B7%B2%E6%9C%89-ssh-key"><span class="nav-text">检查是否已有 SSH Key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90-ssh-key"><span class="nav-text">生成 SSH key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-ssh-key-%E5%88%B0-github"><span class="nav-text">添加 SSH Key 到 Github</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-ssh-key"><span class="nav-text">测试 SSH key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +268,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 22:57:37" itemprop="dateModified" datetime="2023-04-08T22:57:37+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -318,7 +318,8 @@
     <div class="post-body" itemprop="articleBody">
         <p>记录 Git 配置 SSH-Key 的过程，方便以后查阅。</p>
 <span id="more"></span>
-<h1 id="https-url-和-ssh-url">HTTPS URL 和 SSH URL</h1>
+<h1 id="git配置ssh-key">Git配置SSH Key</h1>
+<h2 id="https-url-和-ssh-url">HTTPS URL 和 SSH URL</h2>
 <p>在使用 git clone 项目时，可以使用仓库的 HTTPS URL 也可以 使用 SSH URL</p>
 <ul>
 <li><p>HTTPS URL，例如：</p>
@@ -327,30 +328,30 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git@github.com:&lt;username&gt;/&lt;repo name&gt;.git</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>这两种方式的主要区别在于：使用 HTTPS URL 克隆时，每次 fetch 和 push 代码都需要输入账号和密码，而使用 SSH URL 在配置好 SSH Key 后，每次 fetch 和 push 代码都不需要输入账号和密码。</p>
-<h1 id="初次运行-git-前的配置">初次运行 Git 前的配置</h1>
-<h2 id="git-环境变量">Git 环境变量</h2>
+<h2 id="初次运行-git-前的配置">初次运行 Git 前的配置</h2>
+<h3 id="git-环境变量">Git 环境变量</h3>
 <p>Git 提供了一个叫做 <code>git config</code> 的工具，专门用来配置或读取相应的工作环境变量。而正是由这些环境变量，决定了 Git 在各个环节的具体工作方式和行为。这些变量可以存放在以下三个不同的地方：</p>
 <ul>
 <li><code>/etc/gitconfig</code> 文件：系统中对所有用户都普遍适用的配置。若使用 <code>git config</code> 时用 <code>--system</code> 选项，读写的就是这个文件。</li>
 <li><code>~/.gitconfig</code> 文件：用户目录下的配置文件只适用于该用户。若使用 <code>git config</code> 时用 <code>--global</code> 选项，读写的就是这个文件。</li>
 <li>当前项目的 Git 目录中的配置文件（也就是工作目录中的 <code>.git/config</code> 文件）：这里的配置仅仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 <code>.git/config</code> 里的配置会覆盖 <code>/etc/gitconfig</code> 中的同名变量。</li>
 </ul>
-<h2 id="配置用户信息">配置用户信息</h2>
+<h3 id="配置用户信息">配置用户信息</h3>
 <p>初次运行 Git 前需要配置用户信息，一个是你个人的用户名称，一个是你的电子邮件地址。这两条配置很重要，每次 Git 提交时都会引用这两条信息，说明是谁提交了更新，所以会随更新内容一起被永久纳入历史记录：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git config --global user.name <span class="string">&quot;John Doe&quot;</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git config --global user.email johndoe@example.com</span></span><br></pre></td></tr></table></figure>
 <p>如果用了 <code>--global</code> 选项，那么更改的配置文件就是位于你用户主目录下的 <code>~/.gitconfig</code> 文件，以后你所有的项目都会默认使用这里配置的用户信息。如果要在某个特定的项目中使用其他名字或者邮箱，只要去掉 <code>--global</code> 选项重新配置即可，新的设定保存在当前项目的 <code>.git/config</code> 文件里。</p>
-<h2 id="查看配置信息">查看配置信息</h2>
+<h3 id="查看配置信息">查看配置信息</h3>
 <p>要检查已有的配置信息，可以使用 <code>git config --list</code> 命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git config --list</span></span><br><span class="line">user.name=Scott Chacon</span><br><span class="line">user.email=schacon@gmail.com</span><br><span class="line">color.status=auto</span><br><span class="line">color.branch=auto</span><br><span class="line">color.interactive=auto</span><br><span class="line">color.diff=auto</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>有时候会看到重复的变量名，那就说明它们来自不同的配置文件（比如 <code>/etc/gitconfig</code> 和 <code>~/.gitconfig</code> ），不过最终 Git 实际采用的是最后一个。</p>
 <p>也可以直接查阅某个环境变量的设定，只要把特定的环境变量名称跟在后面即可，例如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git config user.name</span></span><br><span class="line">Scott Chacon</span><br></pre></td></tr></table></figure>
-<h1 id="检查是否已有-ssh-key">检查是否已有 SSH Key</h1>
+<h2 id="检查是否已有-ssh-key">检查是否已有 SSH Key</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> ~/.ssh</span></span><br></pre></td></tr></table></figure>
 <p>执行 <code>ls</code> 或 <code>ll</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span></span></span><br><span class="line">id_rsa  id_rsa.pub  known_hosts</span><br></pre></td></tr></table></figure>
 <p>看是否存在 id_rsa 和 id_rsa.pub 文件（或者是其它文件名），如果存在说明已有 ssh key，可以直接跳过生成密钥，其中 id_rsa 为私钥，id_rsa.pub 为公钥。</p>
-<h1 id="生成-ssh-key">生成 SSH key</h1>
+<h2 id="生成-ssh-key">生成 SSH key</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span></span><br></pre></td></tr></table></figure>
 <table>
 <thead>
@@ -382,12 +383,12 @@
 <p>连续两次回车确认后，如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (~/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in ~/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in ~/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:1qRb99eh19t8bqtivWkuxpNLnwKzXIg1e1u2JASyMfU your_email@example.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|        ..       |</span><br><span class="line">|       + ..      |</span><br><span class="line">|        = oE     |</span><br><span class="line">|       . * .     |</span><br><span class="line">|        S B .  . |</span><br><span class="line">|       o B = =. +|</span><br><span class="line">|        o B.O.o.+|</span><br><span class="line">|         o.@.++o=|</span><br><span class="line">|          o.OBo=*|</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
 <p>看到以上 save 成功的提示，说明 SSH Key 已经创建成功，提示已经说明密钥文件已保存在 <code>~/.ssh</code> 文件夹下。</p>
-<h1 id="添加-ssh-key-到-github">添加 SSH Key 到 Github</h1>
+<h2 id="添加-ssh-key-到-github">添加 SSH Key 到 Github</h2>
 <p>登录 github，点击头像，点击 Settings 进入设置页面。</p>
 <p>然后点击菜单栏的 SSH Key 进入页面添加 SSH Key。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1e024a483acf652e219e88cdc4f51272.png" alt="github-ssh-keys"></p>
 <p>点击 New SSH Key 按钮后进行 Key 的填写，其中 Title 随意， Key 为刚刚生成的公钥，公钥在文件 id_rsa.pub 文件中，直接 copy 文件中的内容粘贴即可。</p>
-<h1 id="测试-ssh-key">测试 SSH key</h1>
+<h2 id="测试-ssh-key">测试 SSH key</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ssh -T git@github.com</span></span><br></pre></td></tr></table></figure>
 <p>当执行以上代码时，会有一段警告，如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (207.97.227.239)&#x27; can&#x27;t be established.</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:<span class="built_in">df</span>:a6:48.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Are you sure you want to <span class="built_in">continue</span> connecting (<span class="built_in">yes</span>/no)?</span></span><br></pre></td></tr></table></figure>
@@ -396,7 +397,7 @@
 <p>当然如果你密码输错了，会再要求你输入，直到对了为止。注意：输入密码时如果输错一个字符就会不正确，使用删除键是无法更正的。正确输入密码后你会看到下面这段话，如：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi username! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
 <p>如果用户名是正确的，你已经成功设置 SSH 密钥。如果你看到 "access denied" ，者表示拒绝访问，那么你就需要使用 HTTPS 去访问，而不是 SSH 。</p>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://git-scm.com/book/zh/v1/%E8%B5%B7%E6%AD%A5-%E5%88%9D%E6%AC%A1%E8%BF%90%E8%A1%8C-Git-%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE">https://git-scm.com/book/zh/v1/%E8%B5%B7%E6%AD%A5-%E5%88%9D%E6%AC%A1%E8%BF%90%E8%A1%8C-Git-%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cnblogs.com/ayseeing/p/3572582.html">https://www.cnblogs.com/ayseeing/p/3572582.html</a></p>
 
@@ -417,6 +418,12 @@
         <div class="popular-posts-date">2020-01-06</div>
       <div class="popular-posts-title"><a href="/posts/e186bfe8/" rel="bookmark">Git在同一机器下配置多个github账号</a></div>
         <div class="popular-posts-excerpt"><p></p><p>大多数人有时会需要在同一台机器上管理多个 github 账号，本文以管理两个 github 账号为例，记录了配置 git 的过程，方便下次遇到相同问题时，能节省处理时间。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-01-14</div>
+      <div class="popular-posts-title"><a href="/posts/e714e6f9/" rel="bookmark">Github+jsDelivr打造稳定快速、高效免费图床</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>jsDelivr 是 ProspectOne 开发的公共开源 CDN（Content Delivery Network），专注于性能，可靠性和安全性。每个人均可免费使用，没有带宽限制。jsDelivr 是唯一由中国政府签发并具有有效 ICP 许可证的公共 CDN，并且直接在中国大陆拥有数百个地点。</p>
+<p>jsDelivr 有一个十分好用的功能，它可以加速 Github 仓库的文件访问，借助 jsDelivr 我们可以搭建一个稳定快速、高效免费的图床。</p><p></p></div>
     </li>
   </ul>
 
@@ -505,14 +512,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

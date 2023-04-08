@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/3f76bfcaad7e4c16ee1e14035a15a234.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/0946c0e632dac3e08e1581769f85708a.png">
 <meta property="article:published_time" content="2020-09-20T08:22:34.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.533Z">
+<meta property="article:modified_time" content="2023-04-08T09:59:40.212Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="并查集">
 <meta name="twitter:card" content="summary">
@@ -166,7 +166,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-text">并查集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">并查集是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-text">并查集的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%AE%9E%E7%8E%B0%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-text">并查集实现中的注意点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-text">并查集的复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">并查集的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9"><span class="nav-text">路径压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9-%E6%8C%89%E7%A7%A9rank%E5%90%88%E5%B9%B6"><span class="nav-text">路径压缩 + 按秩（rank）合并</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-text">并查集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">并查集是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-text">并查集的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%AE%9E%E7%8E%B0%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-text">并查集实现中的注意点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-text">并查集的复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">并查集的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9"><span class="nav-text">路径压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9-%E6%8C%89%E7%A7%A9rank%E5%90%88%E5%B9%B6"><span class="nav-text">路径压缩 + 按秩（rank）合并</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -275,7 +275,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 17:59:40" itemprop="dateModified" datetime="2023-04-08T17:59:40+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -373,7 +373,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UnionFind</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n: <span class="built_in">int</span></span>):</span><br><span class="line">        self.par = <span class="built_in">list</span>(<span class="built_in">range</span>(n))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">self, x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">if</span> self.par[x] != x:</span><br><span class="line">            self.par[x] = self.find(self.par[x])</span><br><span class="line">        <span class="keyword">return</span> self.par[x]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">union</span>(<span class="params">self, x: <span class="built_in">int</span>, y: <span class="built_in">int</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        self.par[self.find(x)] = self.find(y)</span><br></pre></td></tr></table></figure>
 <h3 id="路径压缩-按秩rank合并">路径压缩 + 按秩（rank）合并</h3>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UnionFind</span>:</span><br><span class="line">    <span class="comment"># 初始化 n 个元素</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n: <span class="built_in">int</span></span>):</span><br><span class="line">        self.par = <span class="built_in">list</span>(<span class="built_in">range</span>(n))  <span class="comment"># 祖先结点</span></span><br><span class="line">        self.rank = [<span class="number">0</span>] * n  <span class="comment"># 树的高度</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 查询树的根</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">self, x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">if</span> self.par[x] != x:</span><br><span class="line">            self.par[x] = self.find(self.par[x])</span><br><span class="line">        <span class="keyword">return</span> self.par[x]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并 x 和 y 所属的集合</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">union</span>(<span class="params">self, x: <span class="built_in">int</span>, y: <span class="built_in">int</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        x = self.find(x)</span><br><span class="line">        y = self.find(y)</span><br><span class="line">        <span class="keyword">if</span> x == y:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.rank[x] &lt; self.rank[y]:</span><br><span class="line">            self.par[x] = y</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.par[y] = x</span><br><span class="line">            <span class="keyword">if</span> self.rank[x] == self.rank[y]:</span><br><span class="line">                self.rank[x] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure">https://en.wikipedia.org/wiki/Disjoint-set_data_structure</a></p>
 <p>&lt;&lt;挑战程序设计竞赛(第2版)&gt;&gt; 巫泽俊 2.4 并查集 p84-88</p>
 
@@ -478,14 +478,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -32,7 +32,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/1fe9c6f8b2d85e81b79e17c93396ad4c.jpg">
 <meta property="article:published_time" content="2020-03-25T13:48:25.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-08T15:06:29.293Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="centos">
 <meta property="article:tag" content="mongodb">
@@ -158,7 +158,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mongodb-%E7%A4%BE%E5%8C%BA%E7%89%88%E6%9C%AC"><span class="nav-text">安装 MongoDB 社区版本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-yum-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-text">配置 yum 包管理系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mongodb"><span class="nav-text">安装 MongoDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-mongodb"><span class="nav-text">运行 MongoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84"><span class="nav-text">目录路径</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%BB%98%E8%AE%A4%E7%9B%AE%E5%BD%95"><span class="nav-text">使用默认目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9D%9E%E9%BB%98%E8%AE%A4%E7%9B%AE%E5%BD%95"><span class="nav-text">使用非默认目录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-selinux"><span class="nav-text">配置 SELinux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86-mongod"><span class="nav-text">管理 mongod</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD-mongodb-%E7%A4%BE%E5%8C%BA%E7%89%88%E6%9C%AC"><span class="nav-text">卸载 MongoDB 社区版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#centos7%E5%AE%89%E8%A3%85%E5%8F%8A%E5%8D%B8%E8%BD%BDmongodb"><span class="nav-text">CentOS7安装及卸载MongoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mongodb-%E7%A4%BE%E5%8C%BA%E7%89%88%E6%9C%AC"><span class="nav-text">安装 MongoDB 社区版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-yum-%E5%8C%85%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-text">配置 yum 包管理系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-mongodb"><span class="nav-text">安装 MongoDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-mongodb"><span class="nav-text">运行 MongoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84"><span class="nav-text">目录路径</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%BB%98%E8%AE%A4%E7%9B%AE%E5%BD%95"><span class="nav-text">使用默认目录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9D%9E%E9%BB%98%E8%AE%A4%E7%9B%AE%E5%BD%95"><span class="nav-text">使用非默认目录</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-selinux"><span class="nav-text">配置 SELinux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E7%90%86-mongod"><span class="nav-text">管理 mongod</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD-mongodb-%E7%A4%BE%E5%8C%BA%E7%89%88%E6%9C%AC"><span class="nav-text">卸载 MongoDB 社区版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -267,7 +267,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 23:06:29" itemprop="dateModified" datetime="2023-04-08T23:06:29+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,7 +297,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>978</span>
+      <span>985</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -317,24 +317,25 @@
     <div class="post-body" itemprop="articleBody">
         <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1fe9c6f8b2d85e81b79e17c93396ad4c.jpg" alt="mongodb"></p>
 <span id="more"></span>
-<h1 id="安装-mongodb-社区版本">安装 MongoDB 社区版本</h1>
-<h2 id="配置-yum-包管理系统">配置 yum 包管理系统</h2>
+<h1 id="centos7安装及卸载mongodb">CentOS7安装及卸载MongoDB</h1>
+<h2 id="安装-mongodb-社区版本">安装 MongoDB 社区版本</h2>
+<h3 id="配置-yum-包管理系统">配置 yum 包管理系统</h3>
 <p>创建 <code>/etc/yum.repos.d/mongodb-org-4.2.repo</code> 文件，这样你就可以使用 yum 安装 MongoDB，文件内容如下：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[mongodb-org-4.2]</span></span><br><span class="line"><span class="attr">name</span>=MongoDB Repository</span><br><span class="line"><span class="attr">baseurl</span>=https://repo.mongodb.org/yum/redhat/<span class="variable">$releasever</span>/mongodb-org/<span class="number">4.2</span>/x<span class="number">86_64</span>/</span><br><span class="line"><span class="attr">gpgcheck</span>=<span class="number">1</span></span><br><span class="line"><span class="attr">enabled</span>=<span class="number">1</span></span><br><span class="line"><span class="attr">gpgkey</span>=https://www.mongodb.org/static/pgp/server-<span class="number">4.2</span>.asc</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>You can also download the <code>.rpm</code> files directly from the <a target="_blank" rel="external nofollow noopener noreferrer" href="https://repo.mongodb.org/yum/redhat/">MongoDB repository</a>. Downloads are organized by Red Hat / CentOS version (e.g. <code>7</code>), then MongoDB <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/versioning/">release version</a> (e.g. <code>4.2</code>), then architecture (e.g. <code>x86_64</code>).</p>
 </blockquote>
-<h2 id="安装-mongodb">安装 MongoDB</h2>
+<h3 id="安装-mongodb">安装 MongoDB</h3>
 <p>执行下列命令安装最新稳定版本：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y mongodb-org</span><br></pre></td></tr></table></figure>
 <p>如果要安装特定版本的 MongoDB，请分别指定每个组件软件包，并将版本号附加到软件包名称中，如以下示例所示：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y mongodb-org-4.2.3 mongodb-org-server-4.2.3 mongodb-org-shell-4.2.3 mongodb-org-mongos-4.2.3 mongodb-org-tools-4.2.3</span><br></pre></td></tr></table></figure>
 <p>你可以指定任何可用的 MongoDB 版本。但是，当有较新版本时，yum会升级软件包。为防止意外升级，请固定包。要固定软件包，请在 <code>/etc/yum.conf</code> 文件中添加以下 exclude 指令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exclude=mongodb-org,mongodb-org-server,mongodb-org-shell,mongodb-org-mongos,mongodb-org-tools</span><br></pre></td></tr></table></figure>
-<h2 id="运行-mongodb">运行 MongoDB</h2>
+<h3 id="运行-mongodb">运行 MongoDB</h3>
 <p><strong>运行前需要确认数据目录和日志目录是否存在，如果是初次尝试使用 MongoDB，建议使用默认目录。</strong></p>
-<h3 id="目录路径">目录路径</h3>
-<h4 id="使用默认目录">使用默认目录</h4>
+<h4 id="目录路径">目录路径</h4>
+<h5 id="使用默认目录">使用默认目录</h5>
 <p>默认情况下，MongoDB 使用 mongod 用户帐户运行，并使用以下默认目录：</p>
 <ul>
 <li><code>/var/lib/mongo</code> (数据目录)</li>
@@ -346,7 +347,7 @@
 <p>创建后，将这些目录的所有者和组设置为 mongod：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R mongod:mongod &lt;directory&gt;</span><br></pre></td></tr></table></figure>
 <p><code>&lt;directory&gt;</code> 为你创建的目录。</p>
-<h4 id="使用非默认目录">使用非默认目录</h4>
+<h5 id="使用非默认目录">使用非默认目录</h5>
 <p>要使用默认目录以外的数据目录和/或日志目录：</p>
 <ul>
 <li><p>创建一个或多个新目录。</p></li>
@@ -360,9 +361,9 @@
 <p>如果更改运行 MongoDB 进程的用户，则必须授予新用户访问这些目录的权限。</p></li>
 <li><p>配置 SELinux</p></li>
 </ul>
-<h3 id="配置-selinux">配置 SELinux</h3>
+<h4 id="配置-selinux">配置 SELinux</h4>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/#configure-selinux">Configure SELinux</a></p>
-<h3 id="管理-mongod">管理 mongod</h3>
+<h4 id="管理-mongod">管理 mongod</h4>
 <p>请按照以下步骤在系统上运行 MongoDB Community Edition。这些说明假定你使用的是默认设置。</p>
 <p>要运行和管理 mongod 进程，你将使用操作系统的内置初始化系统。Linux 的最新版本趋向于使用 systemd（使用 systemctl 命令），而 Linux 的较早版本趋向于使用 System V init（使用 service 命令）。</p>
 <p>以 systemd（使用 systemctl 命令）为例：</p>
@@ -388,7 +389,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo</span><br></pre></td></tr></table></figure>
 <p>有关使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/reference/program/mongo/#bin.mongo">mongo</a> shell 连接的更多信息，例如连接到在其他主机和/或端口上运行的 mongod 实例，请参阅 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/mongo/">mongo Shell</a>。</p></li>
 </ul>
-<h1 id="卸载-mongodb-社区版本">卸载 MongoDB 社区版本</h1>
+<h2 id="卸载-mongodb-社区版本">卸载 MongoDB 社区版本</h2>
 <p>要从系统中完全删除 MongoDB，必须删除 MongoDB 应用程序本身，配置文件以及所有包含数据和日志的目录。以下部分将指导你完成必要的步骤：</p>
 <blockquote>
 <p>WARNING</p>
@@ -402,7 +403,7 @@
 <li><p>删除数据和日志目录</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -r /var/log/mongodb</span><br><span class="line">sudo rm -r /var/lib/mongo</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/</a></p>
 
     </div>
@@ -531,14 +532,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

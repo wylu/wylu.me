@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/35f5d261a2ee7ff5e4b367a1974a9376.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/6b31260fefd827abc518129d781d72ae.png">
 <meta property="article:published_time" content="2019-06-08T09:54:18.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-08T13:56:12.573Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="ubuntu">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-albert"><span class="nav-text">安装 albert</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-text">设置快捷键</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-text">设置开机启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%90%E8%97%8F-albert-%E5%9B%BE%E6%A0%87"><span class="nav-text">隐藏 albert 图标</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu-16.04-%E7%B3%BB%E7%BB%9F%E6%89%98%E7%9B%98topbar%E9%9A%90%E8%97%8Falbert%E5%9B%BE%E6%A0%87"><span class="nav-text">Ubuntu 16.04 系统托盘topbar隐藏albert图标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-albert"><span class="nav-text">安装 albert</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-text">设置快捷键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-text">设置开机启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E8%97%8F-albert-%E5%9B%BE%E6%A0%87"><span class="nav-text">隐藏 albert 图标</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -271,7 +271,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 21:56:12" itemprop="dateModified" datetime="2023-04-08T21:56:12+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -301,7 +301,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>383</span>
+      <span>395</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -321,9 +321,10 @@
     <div class="post-body" itemprop="articleBody">
         <p>albert 是一个类似于 Mac OS Spotlight 的搜索软件，可以设置搜索本地应用、文件，也可以搜索浏览器书签，可以当作计算器等。</p>
 <span id="more"></span>
-<h1 id="安装-albert">安装 albert</h1>
+<h1 id="ubuntu-16.04-系统托盘topbar隐藏albert图标">Ubuntu 16.04 系统托盘topbar隐藏albert图标</h1>
+<h2 id="安装-albert">安装 albert</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:nilarimogard/webupd8</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install albert</span><br></pre></td></tr></table></figure>
-<h1 id="设置快捷键">设置快捷键</h1>
+<h2 id="设置快捷键">设置快捷键</h2>
 <p>安装完毕执行</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(albert &amp;)</span><br></pre></td></tr></table></figure>
 <p>因为是第一次运行，会提示你设置快捷键用来弹出 Albert 界面，点击 Yes 进行设置，先设置 Hotkey</p>
@@ -334,11 +335,11 @@
 <p>如果你什么都搜不到，那就重新进入设置界面添加你需要进行搜索的源</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/35f5d261a2ee7ff5e4b367a1974a9376.png" alt="albert-settings"></p>
 <p>这里也是根据个人需要进行选择，比如第二个是添加计算器的功能</p>
-<h1 id="设置开机启动">设置开机启动</h1>
+<h2 id="设置开机启动">设置开机启动</h2>
 <p>参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://wylu.github.io/posts/a4104dc1/">Ubuntu 16.04 设置imwheel开机启动</a></p>
 <p>albert 的安装路径可以如下命令查看</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whereis albert</span><br></pre></td></tr></table></figure>
-<h1 id="隐藏-albert-图标">隐藏 albert 图标</h1>
+<h2 id="隐藏-albert-图标">隐藏 albert 图标</h2>
 <p>albert 默认会在系统托盘 topbar 显示图标，如图</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6b31260fefd827abc518129d781d72ae.png" alt="albert-tray-icon"></p>
 <ul>
@@ -364,14 +365,14 @@
         <div class="popular-posts-excerpt"><p></p><p>Deepin Screenshot，一个简洁易用的截图工具。</p><p></p></div>
     </li>
     <li class="popular-posts-item">
-        <div class="popular-posts-date">2019-06-08</div>
-      <div class="popular-posts-title"><a href="/posts/a4104dc1/" rel="bookmark">Ubuntu 16.04 设置imwheel开机启动</a></div>
-        <div class="popular-posts-excerpt"><p></p><p>imwheel 是一组命令工具可以用来调节鼠标滚轮的行为，修改滚轮速度。</p><p></p></div>
-    </li>
-    <li class="popular-posts-item">
         <div class="popular-posts-date">2019-06-01</div>
       <div class="popular-posts-title"><a href="/posts/202f8f32/" rel="bookmark">Ubuntu 18.04 字体显示异常</a></div>
         <div class="popular-posts-excerpt"><p></p><p>解决 Ubuntu 18.04 下字体显示异常的问题。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/a4104dc1/" rel="bookmark">Ubuntu 16.04 设置imwheel开机启动</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>imwheel 是一组命令工具可以用来调节鼠标滚轮的行为，修改滚轮速度。</p><p></p></div>
     </li>
   </ul>
 
@@ -460,14 +461,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

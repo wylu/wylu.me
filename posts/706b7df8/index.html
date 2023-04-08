@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2e6d55e2974573e5535a96e39222b327.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/a6a85c411f68f37654a409d43b3e2908.gif">
 <meta property="article:published_time" content="2019-06-05T14:36:56.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-08T13:54:54.943Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vi-%E7%AE%80%E4%BB%8B"><span class="nav-text">vi 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vi-%E7%9A%84%E6%93%8D%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-text">vi 的操作模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vi-%E7%9A%84%E8%BF%9B%E5%85%A5%E4%B8%8E%E9%80%80%E5%87%BA"><span class="nav-text">vi 的进入与退出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-vi"><span class="nav-text">进入 vi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%80%E5%87%BA-vi"><span class="nav-text">退出 vi</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vivim-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">vi&#x2F;vim 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">命令模式的常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E6%A0%87%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-text">光标的移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BF%BB%E5%B1%8F%E4%B8%8E%E6%BB%9A%E5%B1%8F"><span class="nav-text">翻屏与滚屏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%89%AA%E5%88%87%E4%B8%8E%E4%BF%AE%E6%94%B9"><span class="nav-text">删除（剪切）与修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4"><span class="nav-text">复制粘贴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%92%A4%E9%94%80%E4%B8%8E%E5%8F%8D%E6%92%A4%E9%94%80"><span class="nav-text">撤销与反撤销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">可视模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E8%A1%8C%E7%A7%BB%E5%8A%A8%E7%BC%A9%E8%BF%9B"><span class="nav-text">文本行移动（缩进）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E5%91%BD%E4%BB%A4"><span class="nav-text">重复命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4"><span class="nav-text">退出命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="nav-text">插入模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4"><span class="nav-text">查找命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-text">替换命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4-1"><span class="nav-text">退出命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%91%BD%E4%BB%A4"><span class="nav-text">其它命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vivim-%E9%94%AE%E7%9B%98%E5%9B%BE"><span class="nav-text">vi&#x2F;vim 键盘图</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vivim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">vi&#x2F;vim常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-%E7%AE%80%E4%BB%8B"><span class="nav-text">vi 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-%E7%9A%84%E6%93%8D%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-text">vi 的操作模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-%E7%9A%84%E8%BF%9B%E5%85%A5%E4%B8%8E%E9%80%80%E5%87%BA"><span class="nav-text">vi 的进入与退出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-vi"><span class="nav-text">进入 vi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA-vi"><span class="nav-text">退出 vi</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vivim-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">vi&#x2F;vim 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">命令模式的常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%89%E6%A0%87%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-text">光标的移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BF%BB%E5%B1%8F%E4%B8%8E%E6%BB%9A%E5%B1%8F"><span class="nav-text">翻屏与滚屏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%89%AA%E5%88%87%E4%B8%8E%E4%BF%AE%E6%94%B9"><span class="nav-text">删除（剪切）与修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4"><span class="nav-text">复制粘贴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%A4%E9%94%80%E4%B8%8E%E5%8F%8D%E6%92%A4%E9%94%80"><span class="nav-text">撤销与反撤销</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">可视模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E8%A1%8C%E7%A7%BB%E5%8A%A8%E7%BC%A9%E8%BF%9B"><span class="nav-text">文本行移动（缩进）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E5%91%BD%E4%BB%A4"><span class="nav-text">重复命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4"><span class="nav-text">退出命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="nav-text">插入模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4"><span class="nav-text">查找命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-text">替换命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4-1"><span class="nav-text">退出命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%91%BD%E4%BB%A4"><span class="nav-text">其它命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vivim-%E9%94%AE%E7%9B%98%E5%9B%BE"><span class="nav-text">vi&#x2F;vim 键盘图</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -271,7 +271,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 21:54:54" itemprop="dateModified" datetime="2023-04-08T21:54:54+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -308,7 +308,7 @@
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>7 分钟</span>
     </span>
 </div>
 
@@ -322,9 +322,10 @@
         <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0d141a96847df24c99d25a228b63232e.png" alt="vim-editor"></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://zh.wikipedia.org/wiki/Vim">Vim</a> 是从 vi 发展出来的一个文本编辑器。其代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。和 Emacs 并列成为类 Unix 系统用户最喜欢的编辑器。</p>
 <span id="more"></span>
-<h1 id="vi-简介">vi 简介</h1>
+<h1 id="vivim常用命令">vi/vim常用命令</h1>
+<h2 id="vi-简介">vi 简介</h2>
 <p>vi 是 Unix 和 Linux 操作系统使用的终端文本编辑器，任何一台安装了 Unix 或 Linux 的机器都会提供这套软件，它是系统管理员手中的得力工具。vim 是 vi 的升级版，它不仅兼容 vi 的所有指令（命令），而且还具有一些新特性。</p>
-<h1 id="vi-的操作模式">vi 的操作模式</h1>
+<h2 id="vi-的操作模式">vi 的操作模式</h2>
 <p>vi 有三种操作状态：</p>
 <ul>
 <li>命令模式（command mode）</li>
@@ -339,12 +340,12 @@
 </ol>
 <p>vi 三种工作模式的转换如图：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/4fbcfcc788656a7d73ec4045ab862e2b.png" alt="vi工作模式"></p>
-<h1 id="vi-的进入与退出">vi 的进入与退出</h1>
-<h2 id="进入-vi">进入 vi</h2>
+<h2 id="vi-的进入与退出">vi 的进入与退出</h2>
+<h3 id="进入-vi">进入 vi</h3>
 <p>若要编辑文件 myfile，执行如下执行即可：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">vi myfile</span></span><br></pre></td></tr></table></figure>
 <p>终端显示 vi 的编辑窗口，进入命令模式。也可以直接输入 vi 创建一个新文件，然后在退出时保存文件或者丢弃。</p>
-<h2 id="退出-vi">退出 vi</h2>
+<h3 id="退出-vi">退出 vi</h3>
 <p>如果在插入模式下，则先利用 ESC 键返回命令模式，然后可选用下列指令退出 vi。</p>
 <ul>
 <li><code>:q!</code> 离开 vi，并放弃刚才的修改。</li>
@@ -355,10 +356,10 @@
 <li><code>:q</code> 退出 vi，若文件被修改过，则会被要求确认是否放弃修改。此指令可以 w 配合使用。</li>
 </ul>
 <p><strong>注意：如果不知道当前处于何种模式，可以多按几次 ESC 键，以便确认进入命令模式。</strong></p>
-<h1 id="vivim-常用命令">vi/vim 常用命令</h1>
-<h2 id="命令模式的常用命令">命令模式的常用命令</h2>
+<h2 id="vivim-常用命令">vi/vim 常用命令</h2>
+<h3 id="命令模式的常用命令">命令模式的常用命令</h3>
 <p>在命令模式下可以进行文本的编辑工作。使用下列命令，配合一般键盘上的功能键，如方向键、Insert 键、Delete 键等，就可以利用 vi 来处理文本数据了。</p>
-<h3 id="光标的移动">光标的移动</h3>
+<h4 id="光标的移动">光标的移动</h4>
 <table>
 <thead>
 <tr class="header">
@@ -455,7 +456,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="翻屏与滚屏">翻屏与滚屏</h3>
+<h4 id="翻屏与滚屏">翻屏与滚屏</h4>
 <table>
 <thead>
 <tr class="header">
@@ -502,7 +503,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="删除剪切与修改">删除（剪切）与修改</h3>
+<h4 id="删除剪切与修改">删除（剪切）与修改</h4>
 <table>
 <thead>
 <tr class="header">
@@ -569,7 +570,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="复制粘贴">复制粘贴</h3>
+<h4 id="复制粘贴">复制粘贴</h4>
 <table>
 <thead>
 <tr class="header">
@@ -596,7 +597,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="撤销与反撤销">撤销与反撤销</h3>
+<h4 id="撤销与反撤销">撤销与反撤销</h4>
 <table>
 <thead>
 <tr class="header">
@@ -615,7 +616,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="可视模式">可视模式</h3>
+<h4 id="可视模式">可视模式</h4>
 <table>
 <thead>
 <tr class="header">
@@ -636,7 +637,7 @@
 </table>
 <p><strong>可视模式可以配合 <code>d</code>，<code>y</code> 实现对文本块的删除（剪切），复制。</strong></p>
 <p><strong>vim 下还支持配合 <code>&lt;</code>，<code>&gt;</code> 实现对文本块的左右移动，首先使用 <code>v</code> 或 <code>V</code> 选择要移动的部分，然后按 <code>Ctrl+v</code> 选中该文本块，接着可根据需要左移 <code>&lt;</code> 或 右移 <code>&gt;</code> 。</strong></p>
-<h3 id="文本行移动缩进">文本行移动（缩进）</h3>
+<h4 id="文本行移动缩进">文本行移动（缩进）</h4>
 <table>
 <thead>
 <tr class="header">
@@ -663,7 +664,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="重复命令">重复命令</h3>
+<h4 id="重复命令">重复命令</h4>
 <table>
 <thead>
 <tr class="header">
@@ -678,7 +679,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="退出命令">退出命令</h3>
+<h4 id="退出命令">退出命令</h4>
 <table>
 <thead>
 <tr class="header">
@@ -693,7 +694,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="插入模式">插入模式</h2>
+<h3 id="插入模式">插入模式</h3>
 <p>所有以下命令都能从命令模式进入插入模式。</p>
 <table>
 <thead>
@@ -729,8 +730,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="末行模式">末行模式</h2>
-<h3 id="查找命令">查找命令</h3>
+<h3 id="末行模式">末行模式</h3>
+<h4 id="查找命令">查找命令</h4>
 <table>
 <thead>
 <tr class="header">
@@ -749,7 +750,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="替换命令">替换命令</h3>
+<h4 id="替换命令">替换命令</h4>
 <table>
 <thead>
 <tr class="header">
@@ -768,7 +769,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="退出命令-1">退出命令</h3>
+<h4 id="退出命令-1">退出命令</h4>
 <table>
 <thead>
 <tr class="header">
@@ -807,7 +808,7 @@
 <p><code>:wq</code> <strong>强制性</strong> 写入文件并退出。即使文件没有被修改也强制写入，并更新文件的修改时间。</p>
 <p><code>:x</code> 写入文件并退出。仅当文件被修改时才写入，并更新文件修改时间，否则不会更新文件修改时间。</p>
 </blockquote>
-<h3 id="其它命令">其它命令</h3>
+<h4 id="其它命令">其它命令</h4>
 <table>
 <thead>
 <tr class="header">
@@ -838,7 +839,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="vivim-键盘图">vi/vim 键盘图</h1>
+<h2 id="vivim-键盘图">vi/vim 键盘图</h2>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2e6d55e2974573e5535a96e39222b327.png" alt="vi-vim-cheat-sheet-cn"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a6a85c411f68f37654a409d43b3e2908.gif" alt="vi-vim-cheat-sheet"></p>
 
@@ -934,14 +935,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

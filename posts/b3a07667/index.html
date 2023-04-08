@@ -34,7 +34,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/e1a5e701ab13aa61112dcf0d7732e929.gif">
 <meta property="article:published_time" content="2019-05-24T02:11:24.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.533Z">
+<meta property="article:modified_time" content="2023-04-08T10:22:53.382Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="sort">
 <meta name="twitter:card" content="summary">
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="nav-text">算法步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">动画演示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">参考实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fbubble-sort"><span class="nav-text">冒泡排序（Bubble Sort）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="nav-text">算法步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">动画演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">参考实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +268,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 18:22:53" itemprop="dateModified" datetime="2023-04-08T18:22:53+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -298,7 +298,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>382</span>
+      <span>388</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -318,26 +318,27 @@
     <div class="post-body" itemprop="articleBody">
         <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Bubble_sort">冒泡排序（Bubble Sort）</a> 是一种简单的排序算法，它重复遍历列表，比较相邻的两个元素，如果它们的顺序错误则交换它们。</p>
 <span id="more"></span>
-<h1 id="基本原理">基本原理</h1>
+<h1 id="冒泡排序bubble-sort">冒泡排序（Bubble Sort）</h1>
+<h2 id="基本原理">基本原理</h2>
 <p>依次比较相邻的两个元素，如果相邻的两个元素的顺序是错误的，则将它们交换，直至没有元素需要交换，排序完成。</p>
 <p>在实现上有两种方法：</p>
 <ul>
 <li>每一轮让未排序的最大元素交换到正确位置，以下称之为"最大冒泡"</li>
 <li>每一轮让未排序的最小元素交换到正确位置，以下称之为"最小冒泡"</li>
 </ul>
-<h1 id="算法步骤">算法步骤</h1>
+<h2 id="算法步骤">算法步骤</h2>
 <p>以最大冒泡为例：</p>
 <ul>
 <li>比较相邻的元素。如果第一个比第二个大，就交换它们两个。</li>
 <li>对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。这步做完后，最后的元素会是最大的数，是已排序的。</li>
 <li>对剩下所有未排序的元素重复以上步骤，直至所有元素都是已排序的。</li>
 </ul>
-<h1 id="动画演示">动画演示</h1>
+<h2 id="动画演示">动画演示</h2>
 <p>以最小冒泡为例：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/e1a5e701ab13aa61112dcf0d7732e929.gif" alt="BubbleSort"></p>
-<h1 id="参考实现">参考实现</h1>
+<h2 id="参考实现">参考实现</h2>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> wylu</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BubbleSort</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">swap</span><span class="params">(<span class="type">int</span>[] arr, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">tmp</span> <span class="operator">=</span> arr[i];</span><br><span class="line">        arr[i] = arr[j];</span><br><span class="line">        arr[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 最大冒泡，每轮的交换都是从左往右进行的</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 待排序数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">maxBubbleSort</span><span class="params">(<span class="type">int</span>[] arr)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> arr.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    swap(arr, j, j + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 最小冒泡，每轮的交换都是从右往左进行的</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 待排序数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">minBubbleSort</span><span class="params">(<span class="type">int</span>[] arr)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> arr.length - <span class="number">1</span>; j &gt; i; j--) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[j] &lt; arr[j - <span class="number">1</span>]) &#123;</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    swap(arr, j, j - <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] arr = &#123;<span class="number">3</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">8</span>&#125;;</span><br><span class="line">        BubbleSort.maxBubbleSort(arr);</span><br><span class="line">        System.out.println(Arrays.toString(arr));</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span>[] arr2 = &#123;<span class="number">12</span>, <span class="number">8</span>, <span class="number">30</span>, <span class="number">25</span>, -<span class="number">1</span>, <span class="number">0</span> , <span class="number">17</span>, <span class="number">8</span>, <span class="number">10</span>&#125;;</span><br><span class="line">        BubbleSort.minBubbleSort(arr2);</span><br><span class="line">        System.out.println(Arrays.toString(arr2));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="复杂度分析">复杂度分析</h1>
+<h2 id="复杂度分析">复杂度分析</h2>
 <table>
 <thead>
 <tr class="header">
@@ -362,7 +363,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Bubble_sort">https://en.wikipedia.org/wiki/Bubble_sort</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://youliao.163yun.com/api-server/rss/xiaomi/item/IN2WDOMKAWVNTZV.html?ref=browser_news&amp;s=mb&amp;cp=cn-netease-youliao-browser&amp;docid=44797c69e120935b2c4790d933d02a9b&amp;itemtype=news&amp;cateCode=rec&amp;category=%E7%A7%91%E6%8A%80">https://youliao.163yun.com/api-server/rss/xiaomi/item/IN2WDOMKAWVNTZV.html?ref=browser_news&amp;s=mb&amp;cp=cn-netease-youliao-browser&amp;docid=44797c69e120935b2c4790d933d02a9b&amp;itemtype=news&amp;cateCode=rec&amp;category=%E7%A7%91%E6%8A%80</a></p>
 
@@ -391,13 +392,13 @@
     </li>
     <li class="popular-posts-item">
         <div class="popular-posts-date">2019-05-24</div>
-      <div class="popular-posts-title"><a href="/posts/ef1ec211/" rel="bookmark">RadixSort</a></div>
-        <div class="popular-posts-excerpt"><p></p><p>基数排序（Radix sort）是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。基数排序的发明可以追溯到 1887 年 Herman Hollerith 在打孔卡片制表机（Tabulation Machine）上的贡献。</p><p></p></div>
+      <div class="popular-posts-title"><a href="/posts/844f0450/" rel="bookmark">CountingSort</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Counting_sort">计数排序（Counting sort）</a>是一种稳定的线性时间排序算法。该算法于1954年由 Harold H. Seward 提出。计数排序使用一个额外的数组 C ，其中第 i 个元素是待排序数组 A 中值等于 i 的元素的个数。然后根据数组 C 来将 A 中的元素排到正确的位置。</p><p></p></div>
     </li>
     <li class="popular-posts-item">
         <div class="popular-posts-date">2019-05-24</div>
-      <div class="popular-posts-title"><a href="/posts/844f0450/" rel="bookmark">CountingSort</a></div>
-        <div class="popular-posts-excerpt"><p></p><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Counting_sort">计数排序（Counting sort）</a>是一种稳定的线性时间排序算法。该算法于1954年由 Harold H. Seward 提出。计数排序使用一个额外的数组 C ，其中第 i 个元素是待排序数组 A 中值等于 i 的元素的个数。然后根据数组 C 来将 A 中的元素排到正确的位置。</p><p></p></div>
+      <div class="popular-posts-title"><a href="/posts/ef1ec211/" rel="bookmark">RadixSort</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>基数排序（Radix sort）是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。基数排序的发明可以追溯到 1887 年 Herman Hollerith 在打孔卡片制表机（Tabulation Machine）上的贡献。</p><p></p></div>
     </li>
   </ul>
 
@@ -486,14 +487,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

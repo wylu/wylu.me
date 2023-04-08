@@ -34,7 +34,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/ffda0249330d775e6fd3488f198c5c43.gif">
 <meta property="article:published_time" content="2019-05-24T03:04:07.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.533Z">
+<meta property="article:modified_time" content="2023-04-08T10:24:24.872Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="sort">
 <meta name="twitter:card" content="summary">
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="nav-text">算法步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">动画演示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">参考实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Finsertion-sort"><span class="nav-text">插入排序（Insertion Sort）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="nav-text">算法步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA"><span class="nav-text">动画演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0"><span class="nav-text">参考实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +268,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 18:24:24" itemprop="dateModified" datetime="2023-04-08T18:24:24+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -298,7 +298,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>350</span>
+      <span>356</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -318,9 +318,10 @@
     <div class="post-body" itemprop="articleBody">
         <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Insertion_sort">插入排序（Insertion Sort）</a>是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</p>
 <span id="more"></span>
-<h1 id="基本原理">基本原理</h1>
+<h1 id="插入排序insertion-sort">插入排序（Insertion Sort）</h1>
+<h2 id="基本原理">基本原理</h2>
 <p>每步将一个待排序的元素，将其插入前面已排好序的部分中，直到全部插入完为止。</p>
-<h1 id="算法步骤">算法步骤</h1>
+<h2 id="算法步骤">算法步骤</h2>
 <ol type="1">
 <li>将待排序序列第一个元素看做已排序序列，把第二个元素到最后一个元素当成是未排序序列</li>
 <li>从未排序序列中取出下一个元素记为 a，在已排序的序列中从后向前扫描</li>
@@ -329,11 +330,11 @@
 <li>将 a 插入到该位置后</li>
 <li>重复步骤 2~5，直至没有未排序元素</li>
 </ol>
-<h1 id="动画演示">动画演示</h1>
+<h2 id="动画演示">动画演示</h2>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/ffda0249330d775e6fd3488f198c5c43.gif" alt="InsertSort"></p>
-<h1 id="参考实现">参考实现</h1>
+<h2 id="参考实现">参考实现</h2>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> wylu</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InsertSort</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(<span class="type">int</span>[] arr)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i, tmp = arr[i];</span><br><span class="line">            <span class="keyword">for</span> (; j &gt;= <span class="number">1</span> &amp;&amp; arr[j - <span class="number">1</span>] &gt; tmp; j--) &#123;</span><br><span class="line">                arr[j] = arr[j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            arr[j] = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] arr = &#123;<span class="number">3</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">8</span>&#125;;</span><br><span class="line">        InsertSort.sort(arr);</span><br><span class="line">        System.out.println(Arrays.toString(arr));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="复杂度分析">复杂度分析</h1>
+<h2 id="复杂度分析">复杂度分析</h2>
 <table>
 <thead>
 <tr class="header">
@@ -358,7 +359,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Insertion_sort">https://en.wikipedia.org/wiki/Insertion_sort</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://youliao.163yun.com/api-server/rss/xiaomi/item/IN2WDOMKAWVNTZV.html?ref=browser_news&amp;s=mb&amp;cp=cn-netease-youliao-browser&amp;docid=44797c69e120935b2c4790d933d02a9b&amp;itemtype=news&amp;cateCode=rec&amp;category=%E7%A7%91%E6%8A%80">https://youliao.163yun.com/api-server/rss/xiaomi/item/IN2WDOMKAWVNTZV.html?ref=browser_news&amp;s=mb&amp;cp=cn-netease-youliao-browser&amp;docid=44797c69e120935b2c4790d933d02a9b&amp;itemtype=news&amp;cateCode=rec&amp;category=%E7%A7%91%E6%8A%80</a></p>
 
@@ -387,13 +388,13 @@
     </li>
     <li class="popular-posts-item">
         <div class="popular-posts-date">2019-05-24</div>
-      <div class="popular-posts-title"><a href="/posts/ef1ec211/" rel="bookmark">RadixSort</a></div>
-        <div class="popular-posts-excerpt"><p></p><p>基数排序（Radix sort）是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。基数排序的发明可以追溯到 1887 年 Herman Hollerith 在打孔卡片制表机（Tabulation Machine）上的贡献。</p><p></p></div>
+      <div class="popular-posts-title"><a href="/posts/844f0450/" rel="bookmark">CountingSort</a></div>
+        <div class="popular-posts-excerpt"><p></p><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Counting_sort">计数排序（Counting sort）</a>是一种稳定的线性时间排序算法。该算法于1954年由 Harold H. Seward 提出。计数排序使用一个额外的数组 C ，其中第 i 个元素是待排序数组 A 中值等于 i 的元素的个数。然后根据数组 C 来将 A 中的元素排到正确的位置。</p><p></p></div>
     </li>
     <li class="popular-posts-item">
         <div class="popular-posts-date">2019-05-24</div>
-      <div class="popular-posts-title"><a href="/posts/844f0450/" rel="bookmark">CountingSort</a></div>
-        <div class="popular-posts-excerpt"><p></p><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://en.wikipedia.org/wiki/Counting_sort">计数排序（Counting sort）</a>是一种稳定的线性时间排序算法。该算法于1954年由 Harold H. Seward 提出。计数排序使用一个额外的数组 C ，其中第 i 个元素是待排序数组 A 中值等于 i 的元素的个数。然后根据数组 C 来将 A 中的元素排到正确的位置。</p><p></p></div>
+      <div class="popular-posts-title"><a href="/posts/ef1ec211/" rel="bookmark">RadixSort</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>基数排序（Radix sort）是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。基数排序的发明可以追溯到 1887 年 Herman Hollerith 在打孔卡片制表机（Tabulation Machine）上的贡献。</p><p></p></div>
     </li>
   </ul>
 
@@ -482,14 +483,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">

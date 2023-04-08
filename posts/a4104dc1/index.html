@@ -34,7 +34,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/6491c34aa862fa4663c60e655642064e.png">
 <meta property="article:published_time" content="2019-06-08T09:43:10.000Z">
-<meta property="article:modified_time" content="2022-11-23T17:04:10.543Z">
+<meta property="article:modified_time" content="2023-04-08T13:56:21.403Z">
 <meta property="article:author" content="lu wenye">
 <meta property="article:tag" content="ubuntu">
 <meta name="twitter:card" content="summary">
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-imwheel"><span class="nav-text">安装 imwheel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E8%BF%90%E8%A1%8C"><span class="nav-text">启动运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-text">设置开机启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu-16.04-%E8%AE%BE%E7%BD%AEimwheel%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-text">Ubuntu 16.04 设置imwheel开机启动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-imwheel"><span class="nav-text">安装 imwheel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E8%BF%90%E8%A1%8C"><span class="nav-text">启动运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="nav-text">设置开机启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +268,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 01:04:10" itemprop="dateModified" datetime="2022-11-24T01:04:10+08:00">2022-11-24</time>
+      <time title="修改时间：2023-04-08 21:56:21" itemprop="dateModified" datetime="2023-04-08T21:56:21+08:00">2023-04-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -298,7 +298,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>362</span>
+      <span>371</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -318,11 +318,12 @@
     <div class="post-body" itemprop="articleBody">
         <p>imwheel 是一组命令工具可以用来调节鼠标滚轮的行为，修改滚轮速度。</p>
 <span id="more"></span>
-<h1 id="安装-imwheel">安装 imwheel</h1>
+<h1 id="ubuntu-16.04-设置imwheel开机启动">Ubuntu 16.04 设置imwheel开机启动</h1>
+<h2 id="安装-imwheel">安装 imwheel</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install imwheel</span><br></pre></td></tr></table></figure>
 <p>查看安装位置</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whereis imwheel</span><br></pre></td></tr></table></figure>
-<h1 id="配置">配置</h1>
+<h2 id="配置">配置</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim ~/.imwheelrc</span><br></pre></td></tr></table></figure>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&quot;.*&quot;</span><br><span class="line">None,      Up,      Button4, 2</span><br><span class="line">None,      Down,    Button5, 2</span><br><span class="line">Control_L, Up,      Control_L|Button4</span><br><span class="line">Control_L, Down,    Control_L|Button5</span><br><span class="line">Shift_L,   Up,      Shift_L|Button4</span><br><span class="line">Shift_L,   Down,    Shift_L|Button5</span><br><span class="line">None,      Thumb1,  Alt_L|Left</span><br><span class="line">None,      Thumb2,  Alt_L|Right</span><br></pre></td></tr></table></figure>
 <ul>
@@ -332,14 +333,14 @@
 <li>第六行和第七行可以让鼠标支持 <code>左Shift+上下滚动</code> (不同应用有不同的作用)，实测似乎并没有什么卵用。</li>
 <li>最后两行用来开启鼠标侧键功能。</li>
 </ul>
-<h1 id="启动运行">启动运行</h1>
+<h2 id="启动运行">启动运行</h2>
 <p>查看是否有已启动 imwheel 进程</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep imwheel</span><br></pre></td></tr></table></figure>
 <p>为了不要启动多个 imwheel，可以结束已有进程</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo killall imwheel</span><br></pre></td></tr></table></figure>
 <p>然后重新启动程序，修改配置后需要重启才能生效</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">imwheel</span><br></pre></td></tr></table></figure>
-<h1 id="设置开机启动">设置开机启动</h1>
+<h2 id="设置开机启动">设置开机启动</h2>
 <p>试过在 rc.local 中执行 <code>nohup /usr/bin/imwheel &amp;</code>，排查该命令确实在开机后被执行，但是 <code>ps</code> 却看不到该进程，没找到具体原因。</p>
 <p>实测 Ubuntu 16.04 简单有效的方法：</p>
 <ul>
@@ -351,7 +352,7 @@
 <li><p>编辑完毕点击保存</p></li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/6491c34aa862fa4663c60e655642064e.png" alt="set-imwheel"></p>
-<h1 id="references">References</h1>
+<h2 id="references">References</h2>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linuxdown.net/install/soft/2016/0314/5034.html">http://www.linuxdown.net/install/soft/2016/0314/5034.html</a></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.csdn.net/u010820857/article/details/82776382">https://blog.csdn.net/u010820857/article/details/82776382</a></p>
 
@@ -372,6 +373,11 @@
         <div class="popular-posts-date">2019-06-08</div>
       <div class="popular-posts-title"><a href="/posts/c4aa3fad/" rel="bookmark">Ubuntu 16.04 系统托盘topbar隐藏albert图标</a></div>
         <div class="popular-posts-excerpt"><p></p><p>albert 是一个类似于 Mac OS Spotlight 的搜索软件，可以设置搜索本地应用、文件，也可以搜索浏览器书签，可以当作计算器等。</p><p></p></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-06-08</div>
+      <div class="popular-posts-title"><a href="/posts/dd26a250/" rel="bookmark">Ubuntu 18.04 一键安装深度截图工具 Deepin Screenshot</a></div>
+        <div class="popular-posts-excerpt"><p></p><p>Deepin Screenshot，一个简洁易用的截图工具。</p><p></p></div>
     </li>
   </ul>
 
@@ -460,14 +466,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">129k</span>
+    <span title="站点总字数">131k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:50</span>
+    <span title="站点阅读时长">7:58</span>
   </span>
 </div>
 <div class="busuanzi-count">
