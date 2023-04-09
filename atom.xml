@@ -3,11 +3,11 @@
   <title>wylu</title>
   
   <subtitle>Keep It Simple, Stupid</subtitle>
-  <link href="https://wylu.me/atom.xml" rel="self"/>
+  <link href="https://www.wylu.me/atom.xml" rel="self"/>
   
-  <link href="https://wylu.me/"/>
+  <link href="https://www.wylu.me/"/>
   <updated>2023-04-08T02:51:38.212Z</updated>
-  <id>https://wylu.me/</id>
+  <id>https://www.wylu.me/</id>
   
   <author>
     <name>lu wenye</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>CentOS 搭建 DNS 服务</title>
-    <link href="https://wylu.me/posts/b769518c/"/>
-    <id>https://wylu.me/posts/b769518c/</id>
+    <link href="https://www.wylu.me/posts/b769518c/"/>
+    <id>https://www.wylu.me/posts/b769518c/</id>
     <published>2023-04-08T02:45:39.000Z</published>
     <updated>2023-04-08T02:51:38.212Z</updated>
     
@@ -30,19 +30,19 @@
     
     
     
-    <category term="os" scheme="https://wylu.me/categories/os/"/>
+    <category term="os" scheme="https://www.wylu.me/categories/os/"/>
     
-    <category term="centos" scheme="https://wylu.me/categories/os/centos/"/>
+    <category term="centos" scheme="https://www.wylu.me/categories/os/centos/"/>
     
     
-    <category term="centos" scheme="https://wylu.me/tags/centos/"/>
+    <category term="centos" scheme="https://www.wylu.me/tags/centos/"/>
     
   </entry>
   
   <entry>
     <title>二进制部署 k8s 集群 1.23.6 版本</title>
-    <link href="https://wylu.me/posts/b4d8958f/"/>
-    <id>https://wylu.me/posts/b4d8958f/</id>
+    <link href="https://www.wylu.me/posts/b4d8958f/"/>
+    <id>https://www.wylu.me/posts/b4d8958f/</id>
     <published>2023-04-06T16:30:31.000Z</published>
     <updated>2023-04-06T16:40:22.949Z</updated>
     
@@ -53,19 +53,19 @@
     
     
     
-    <category term="cloud" scheme="https://wylu.me/categories/cloud/"/>
+    <category term="cloud" scheme="https://www.wylu.me/categories/cloud/"/>
     
-    <category term="kubernetes" scheme="https://wylu.me/categories/cloud/kubernetes/"/>
+    <category term="kubernetes" scheme="https://www.wylu.me/categories/cloud/kubernetes/"/>
     
     
-    <category term="kubernetes" scheme="https://wylu.me/tags/kubernetes/"/>
+    <category term="kubernetes" scheme="https://www.wylu.me/tags/kubernetes/"/>
     
   </entry>
   
   <entry>
     <title>使用GNU-make管理项目</title>
-    <link href="https://wylu.me/posts/cec71891/"/>
-    <id>https://wylu.me/posts/cec71891/</id>
+    <link href="https://www.wylu.me/posts/cec71891/"/>
+    <id>https://www.wylu.me/posts/cec71891/</id>
     <published>2020-10-25T09:40:46.000Z</published>
     <updated>2022-11-23T17:04:10.543Z</updated>
     
@@ -76,21 +76,21 @@
     
     
     
-    <category term="programming-language" scheme="https://wylu.me/categories/programming-language/"/>
+    <category term="programming-language" scheme="https://www.wylu.me/categories/programming-language/"/>
     
-    <category term="c" scheme="https://wylu.me/categories/programming-language/c/"/>
+    <category term="c" scheme="https://www.wylu.me/categories/programming-language/c/"/>
     
     
-    <category term="make" scheme="https://wylu.me/tags/make/"/>
+    <category term="make" scheme="https://www.wylu.me/tags/make/"/>
     
-    <category term="makefile" scheme="https://wylu.me/tags/makefile/"/>
+    <category term="makefile" scheme="https://www.wylu.me/tags/makefile/"/>
     
   </entry>
   
   <entry>
     <title>差分序列</title>
-    <link href="https://wylu.me/posts/eaa75cf0/"/>
-    <id>https://wylu.me/posts/eaa75cf0/</id>
+    <link href="https://www.wylu.me/posts/eaa75cf0/"/>
+    <id>https://www.wylu.me/posts/eaa75cf0/</id>
     <published>2020-09-20T14:02:20.000Z</published>
     <updated>2023-04-08T10:01:01.782Z</updated>
     
@@ -101,19 +101,19 @@
     
     
     
-    <category term="algorithm" scheme="https://wylu.me/categories/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/categories/algorithm/"/>
     
-    <category term="math" scheme="https://wylu.me/categories/algorithm/math/"/>
+    <category term="math" scheme="https://www.wylu.me/categories/algorithm/math/"/>
     
     
-    <category term="math" scheme="https://wylu.me/tags/math/"/>
+    <category term="math" scheme="https://www.wylu.me/tags/math/"/>
     
   </entry>
   
   <entry>
     <title>并查集</title>
-    <link href="https://wylu.me/posts/c517589e/"/>
-    <id>https://wylu.me/posts/c517589e/</id>
+    <link href="https://www.wylu.me/posts/c517589e/"/>
+    <id>https://www.wylu.me/posts/c517589e/</id>
     <published>2020-09-20T08:22:34.000Z</published>
     <updated>2023-04-08T09:59:40.212Z</updated>
     
@@ -129,19 +129,19 @@
     
     
     
-    <category term="algorithm" scheme="https://wylu.me/categories/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/categories/algorithm/"/>
     
-    <category term="data-structure" scheme="https://wylu.me/categories/algorithm/data-structure/"/>
+    <category term="data-structure" scheme="https://www.wylu.me/categories/algorithm/data-structure/"/>
     
     
-    <category term="并查集" scheme="https://wylu.me/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/"/>
+    <category term="并查集" scheme="https://www.wylu.me/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/"/>
     
   </entry>
   
   <entry>
     <title>RabbitMQ高可用集群搭建</title>
-    <link href="https://wylu.me/posts/85807abd/"/>
-    <id>https://wylu.me/posts/85807abd/</id>
+    <link href="https://www.wylu.me/posts/85807abd/"/>
+    <id>https://www.wylu.me/posts/85807abd/</id>
     <published>2020-07-16T14:28:26.000Z</published>
     <updated>2023-04-08T15:07:56.023Z</updated>
     
@@ -158,21 +158,21 @@
     
     
     
-    <category term="web" scheme="https://wylu.me/categories/web/"/>
+    <category term="web" scheme="https://www.wylu.me/categories/web/"/>
     
-    <category term="mq" scheme="https://wylu.me/categories/web/mq/"/>
+    <category term="mq" scheme="https://www.wylu.me/categories/web/mq/"/>
     
     
-    <category term="rabbitmq" scheme="https://wylu.me/tags/rabbitmq/"/>
+    <category term="rabbitmq" scheme="https://www.wylu.me/tags/rabbitmq/"/>
     
-    <category term="haproxy" scheme="https://wylu.me/tags/haproxy/"/>
+    <category term="haproxy" scheme="https://www.wylu.me/tags/haproxy/"/>
     
   </entry>
   
   <entry>
     <title>算法设计与分析</title>
-    <link href="https://wylu.me/posts/3274548c/"/>
-    <id>https://wylu.me/posts/3274548c/</id>
+    <link href="https://www.wylu.me/posts/3274548c/"/>
+    <id>https://www.wylu.me/posts/3274548c/</id>
     <published>2020-05-17T10:18:26.000Z</published>
     <updated>2023-04-08T13:31:09.753Z</updated>
     
@@ -183,21 +183,21 @@
     
     
     
-    <category term="cs" scheme="https://wylu.me/categories/cs/"/>
+    <category term="cs" scheme="https://www.wylu.me/categories/cs/"/>
     
-    <category term="data-structure" scheme="https://wylu.me/categories/cs/data-structure/"/>
+    <category term="data-structure" scheme="https://www.wylu.me/categories/cs/data-structure/"/>
     
     
-    <category term="data-structure" scheme="https://wylu.me/tags/data-structure/"/>
+    <category term="data-structure" scheme="https://www.wylu.me/tags/data-structure/"/>
     
-    <category term="algorithm" scheme="https://wylu.me/tags/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/tags/algorithm/"/>
     
   </entry>
   
   <entry>
     <title>CentOS7下Firewall的设置与使用</title>
-    <link href="https://wylu.me/posts/6a7a0bd6/"/>
-    <id>https://wylu.me/posts/6a7a0bd6/</id>
+    <link href="https://www.wylu.me/posts/6a7a0bd6/"/>
+    <id>https://www.wylu.me/posts/6a7a0bd6/</id>
     <published>2020-05-16T10:53:39.000Z</published>
     <updated>2022-11-23T17:04:10.543Z</updated>
     
@@ -208,21 +208,21 @@
     
     
     
-    <category term="os" scheme="https://wylu.me/categories/os/"/>
+    <category term="os" scheme="https://www.wylu.me/categories/os/"/>
     
-    <category term="centos" scheme="https://wylu.me/categories/os/centos/"/>
+    <category term="centos" scheme="https://www.wylu.me/categories/os/centos/"/>
     
     
-    <category term="centos" scheme="https://wylu.me/tags/centos/"/>
+    <category term="centos" scheme="https://www.wylu.me/tags/centos/"/>
     
-    <category term="firewall" scheme="https://wylu.me/tags/firewall/"/>
+    <category term="firewall" scheme="https://www.wylu.me/tags/firewall/"/>
     
   </entry>
   
   <entry>
     <title>进程间通信机制</title>
-    <link href="https://wylu.me/posts/9fb7f5b4/"/>
-    <id>https://wylu.me/posts/9fb7f5b4/</id>
+    <link href="https://www.wylu.me/posts/9fb7f5b4/"/>
+    <id>https://www.wylu.me/posts/9fb7f5b4/</id>
     <published>2020-05-10T14:51:26.000Z</published>
     <updated>2022-11-23T17:04:10.543Z</updated>
     
@@ -233,21 +233,21 @@
     
     
     
-    <category term="os" scheme="https://wylu.me/categories/os/"/>
+    <category term="os" scheme="https://www.wylu.me/categories/os/"/>
     
-    <category term="kernel" scheme="https://wylu.me/categories/os/kernel/"/>
+    <category term="kernel" scheme="https://www.wylu.me/categories/os/kernel/"/>
     
     
-    <category term="进程间通信" scheme="https://wylu.me/tags/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"/>
+    <category term="进程间通信" scheme="https://www.wylu.me/tags/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"/>
     
-    <category term="IPC" scheme="https://wylu.me/tags/IPC/"/>
+    <category term="IPC" scheme="https://www.wylu.me/tags/IPC/"/>
     
   </entry>
   
   <entry>
     <title>Linux进程管理</title>
-    <link href="https://wylu.me/posts/3a046ccf/"/>
-    <id>https://wylu.me/posts/3a046ccf/</id>
+    <link href="https://www.wylu.me/posts/3a046ccf/"/>
+    <id>https://www.wylu.me/posts/3a046ccf/</id>
     <published>2020-05-10T14:50:38.000Z</published>
     <updated>2022-11-23T17:04:10.543Z</updated>
     
@@ -258,19 +258,19 @@
     
     
     
-    <category term="os" scheme="https://wylu.me/categories/os/"/>
+    <category term="os" scheme="https://www.wylu.me/categories/os/"/>
     
-    <category term="kernel" scheme="https://wylu.me/categories/os/kernel/"/>
+    <category term="kernel" scheme="https://www.wylu.me/categories/os/kernel/"/>
     
     
-    <category term="进程管理" scheme="https://wylu.me/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
+    <category term="进程管理" scheme="https://www.wylu.me/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>Morris Traversal</title>
-    <link href="https://wylu.me/posts/5e36b8b8/"/>
-    <id>https://wylu.me/posts/5e36b8b8/</id>
+    <link href="https://www.wylu.me/posts/5e36b8b8/"/>
+    <id>https://www.wylu.me/posts/5e36b8b8/</id>
     <published>2020-05-02T13:21:46.000Z</published>
     <updated>2023-04-08T10:40:51.772Z</updated>
     
@@ -282,21 +282,21 @@
     
     
     
-    <category term="algorithm" scheme="https://wylu.me/categories/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/categories/algorithm/"/>
     
-    <category term="tree" scheme="https://wylu.me/categories/algorithm/tree/"/>
+    <category term="tree" scheme="https://www.wylu.me/categories/algorithm/tree/"/>
     
     
-    <category term="binary-tree" scheme="https://wylu.me/tags/binary-tree/"/>
+    <category term="binary-tree" scheme="https://www.wylu.me/tags/binary-tree/"/>
     
-    <category term="morris-traversal" scheme="https://wylu.me/tags/morris-traversal/"/>
+    <category term="morris-traversal" scheme="https://www.wylu.me/tags/morris-traversal/"/>
     
   </entry>
   
   <entry>
     <title>二叉树练习</title>
-    <link href="https://wylu.me/posts/cb350e7d/"/>
-    <id>https://wylu.me/posts/cb350e7d/</id>
+    <link href="https://www.wylu.me/posts/cb350e7d/"/>
+    <id>https://www.wylu.me/posts/cb350e7d/</id>
     <published>2020-05-02T09:33:59.000Z</published>
     <updated>2023-04-08T10:42:08.982Z</updated>
     
@@ -307,23 +307,23 @@
     
     
     
-    <category term="algorithm" scheme="https://wylu.me/categories/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/categories/algorithm/"/>
     
-    <category term="tree" scheme="https://wylu.me/categories/algorithm/tree/"/>
+    <category term="tree" scheme="https://www.wylu.me/categories/algorithm/tree/"/>
     
     
-    <category term="二叉树" scheme="https://wylu.me/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="二叉树" scheme="https://www.wylu.me/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
     
-    <category term="binary-tree" scheme="https://wylu.me/tags/binary-tree/"/>
+    <category term="binary-tree" scheme="https://www.wylu.me/tags/binary-tree/"/>
     
-    <category term="练习" scheme="https://wylu.me/tags/%E7%BB%83%E4%B9%A0/"/>
+    <category term="练习" scheme="https://www.wylu.me/tags/%E7%BB%83%E4%B9%A0/"/>
     
   </entry>
   
   <entry>
     <title>递归地解决树问题</title>
-    <link href="https://wylu.me/posts/657c0b00/"/>
-    <id>https://wylu.me/posts/657c0b00/</id>
+    <link href="https://www.wylu.me/posts/657c0b00/"/>
+    <id>https://www.wylu.me/posts/657c0b00/</id>
     <published>2020-05-02T08:38:48.000Z</published>
     <updated>2023-04-08T10:42:51.322Z</updated>
     
@@ -336,27 +336,27 @@
     
     
     
-    <category term="algorithm" scheme="https://wylu.me/categories/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/categories/algorithm/"/>
     
-    <category term="tree" scheme="https://wylu.me/categories/algorithm/tree/"/>
+    <category term="tree" scheme="https://www.wylu.me/categories/algorithm/tree/"/>
     
     
-    <category term="二叉树" scheme="https://wylu.me/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="二叉树" scheme="https://www.wylu.me/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
     
-    <category term="binary-tree" scheme="https://wylu.me/tags/binary-tree/"/>
+    <category term="binary-tree" scheme="https://www.wylu.me/tags/binary-tree/"/>
     
-    <category term="树" scheme="https://wylu.me/tags/%E6%A0%91/"/>
+    <category term="树" scheme="https://www.wylu.me/tags/%E6%A0%91/"/>
     
-    <category term="递归" scheme="https://wylu.me/tags/%E9%80%92%E5%BD%92/"/>
+    <category term="递归" scheme="https://www.wylu.me/tags/%E9%80%92%E5%BD%92/"/>
     
-    <category term="Recursion" scheme="https://wylu.me/tags/Recursion/"/>
+    <category term="Recursion" scheme="https://www.wylu.me/tags/Recursion/"/>
     
   </entry>
   
   <entry>
     <title>二叉树</title>
-    <link href="https://wylu.me/posts/e85d694a/"/>
-    <id>https://wylu.me/posts/e85d694a/</id>
+    <link href="https://www.wylu.me/posts/e85d694a/"/>
+    <id>https://www.wylu.me/posts/e85d694a/</id>
     <published>2020-04-25T13:33:47.000Z</published>
     <updated>2023-04-08T10:41:25.482Z</updated>
     
@@ -374,27 +374,27 @@
     
     
     
-    <category term="algorithm" scheme="https://wylu.me/categories/algorithm/"/>
+    <category term="algorithm" scheme="https://www.wylu.me/categories/algorithm/"/>
     
-    <category term="tree" scheme="https://wylu.me/categories/algorithm/tree/"/>
+    <category term="tree" scheme="https://www.wylu.me/categories/algorithm/tree/"/>
     
     
-    <category term="二叉树" scheme="https://wylu.me/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="二叉树" scheme="https://www.wylu.me/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
     
-    <category term="前序遍历" scheme="https://wylu.me/tags/%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
+    <category term="前序遍历" scheme="https://www.wylu.me/tags/%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
     
-    <category term="中序遍历" scheme="https://wylu.me/tags/%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
+    <category term="中序遍历" scheme="https://www.wylu.me/tags/%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
     
-    <category term="后序遍历" scheme="https://wylu.me/tags/%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
+    <category term="后序遍历" scheme="https://www.wylu.me/tags/%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
     
-    <category term="层次遍历" scheme="https://wylu.me/tags/%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86/"/>
+    <category term="层次遍历" scheme="https://www.wylu.me/tags/%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86/"/>
     
   </entry>
   
   <entry>
     <title>C函数指针的理解与使用</title>
-    <link href="https://wylu.me/posts/184fc68/"/>
-    <id>https://wylu.me/posts/184fc68/</id>
+    <link href="https://www.wylu.me/posts/184fc68/"/>
+    <id>https://www.wylu.me/posts/184fc68/</id>
     <published>2020-04-14T15:14:32.000Z</published>
     <updated>2022-11-23T17:04:10.543Z</updated>
     
@@ -405,21 +405,21 @@
     
     
     
-    <category term="programming-language" scheme="https://wylu.me/categories/programming-language/"/>
+    <category term="programming-language" scheme="https://www.wylu.me/categories/programming-language/"/>
     
-    <category term="c" scheme="https://wylu.me/categories/programming-language/c/"/>
+    <category term="c" scheme="https://www.wylu.me/categories/programming-language/c/"/>
     
     
-    <category term="c" scheme="https://wylu.me/tags/c/"/>
+    <category term="c" scheme="https://www.wylu.me/tags/c/"/>
     
-    <category term="函数指针" scheme="https://wylu.me/tags/%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88/"/>
+    <category term="函数指针" scheme="https://www.wylu.me/tags/%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88/"/>
     
   </entry>
   
   <entry>
     <title>wylu blog</title>
-    <link href="https://wylu.me/posts/f6bd2bb1/"/>
-    <id>https://wylu.me/posts/f6bd2bb1/</id>
+    <link href="https://www.wylu.me/posts/f6bd2bb1/"/>
+    <id>https://www.wylu.me/posts/f6bd2bb1/</id>
     <published>2020-04-13T14:43:14.000Z</published>
     <updated>2022-11-23T15:43:27.703Z</updated>
     
@@ -440,8 +440,8 @@
   
   <entry>
     <title>应用密码学总结</title>
-    <link href="https://wylu.me/posts/8ad7d8df/"/>
-    <id>https://wylu.me/posts/8ad7d8df/</id>
+    <link href="https://www.wylu.me/posts/8ad7d8df/"/>
+    <id>https://www.wylu.me/posts/8ad7d8df/</id>
     <published>2020-04-12T02:19:41.000Z</published>
     <updated>2023-04-08T13:28:08.003Z</updated>
     
@@ -452,19 +452,19 @@
     
     
     
-    <category term="cs" scheme="https://wylu.me/categories/cs/"/>
+    <category term="cs" scheme="https://www.wylu.me/categories/cs/"/>
     
-    <category term="cryptography" scheme="https://wylu.me/categories/cs/cryptography/"/>
+    <category term="cryptography" scheme="https://www.wylu.me/categories/cs/cryptography/"/>
     
     
-    <category term="cryptography" scheme="https://wylu.me/tags/cryptography/"/>
+    <category term="cryptography" scheme="https://www.wylu.me/tags/cryptography/"/>
     
   </entry>
   
   <entry>
     <title>Nginx configuration for CodeIgniter</title>
-    <link href="https://wylu.me/posts/ec244fdf/"/>
-    <id>https://wylu.me/posts/ec244fdf/</id>
+    <link href="https://www.wylu.me/posts/ec244fdf/"/>
+    <id>https://www.wylu.me/posts/ec244fdf/</id>
     <published>2020-04-04T08:58:27.000Z</published>
     <updated>2023-04-08T14:32:16.463Z</updated>
     
@@ -475,19 +475,19 @@
     
     
     
-    <category term="programming-language" scheme="https://wylu.me/categories/programming-language/"/>
+    <category term="programming-language" scheme="https://www.wylu.me/categories/programming-language/"/>
     
-    <category term="php" scheme="https://wylu.me/categories/programming-language/php/"/>
+    <category term="php" scheme="https://www.wylu.me/categories/programming-language/php/"/>
     
     
-    <category term="CodeIgniter" scheme="https://wylu.me/tags/CodeIgniter/"/>
+    <category term="CodeIgniter" scheme="https://www.wylu.me/tags/CodeIgniter/"/>
     
   </entry>
   
   <entry>
     <title>MongoDB分片集群搭建</title>
-    <link href="https://wylu.me/posts/e54730f4/"/>
-    <id>https://wylu.me/posts/e54730f4/</id>
+    <link href="https://www.wylu.me/posts/e54730f4/"/>
+    <id>https://www.wylu.me/posts/e54730f4/</id>
     <published>2020-04-04T08:17:04.000Z</published>
     <updated>2023-04-08T15:06:39.783Z</updated>
     
@@ -503,21 +503,21 @@
     
     
     
-    <category term="web" scheme="https://wylu.me/categories/web/"/>
+    <category term="web" scheme="https://www.wylu.me/categories/web/"/>
     
-    <category term="mongo" scheme="https://wylu.me/categories/web/mongo/"/>
+    <category term="mongo" scheme="https://www.wylu.me/categories/web/mongo/"/>
     
     
-    <category term="mongodb" scheme="https://wylu.me/tags/mongodb/"/>
+    <category term="mongodb" scheme="https://www.wylu.me/tags/mongodb/"/>
     
-    <category term="sharding-cluster" scheme="https://wylu.me/tags/sharding-cluster/"/>
+    <category term="sharding-cluster" scheme="https://www.wylu.me/tags/sharding-cluster/"/>
     
   </entry>
   
   <entry>
     <title>MongoDB副本集搭建</title>
-    <link href="https://wylu.me/posts/fd4a1d37/"/>
-    <id>https://wylu.me/posts/fd4a1d37/</id>
+    <link href="https://www.wylu.me/posts/fd4a1d37/"/>
+    <id>https://www.wylu.me/posts/fd4a1d37/</id>
     <published>2020-04-04T06:46:47.000Z</published>
     <updated>2023-04-08T15:06:47.713Z</updated>
     
@@ -528,14 +528,14 @@
     
     
     
-    <category term="web" scheme="https://wylu.me/categories/web/"/>
+    <category term="web" scheme="https://www.wylu.me/categories/web/"/>
     
-    <category term="mongo" scheme="https://wylu.me/categories/web/mongo/"/>
+    <category term="mongo" scheme="https://www.wylu.me/categories/web/mongo/"/>
     
     
-    <category term="mongodb" scheme="https://wylu.me/tags/mongodb/"/>
+    <category term="mongodb" scheme="https://www.wylu.me/tags/mongodb/"/>
     
-    <category term="replica-set" scheme="https://wylu.me/tags/replica-set/"/>
+    <category term="replica-set" scheme="https://www.wylu.me/tags/replica-set/"/>
     
   </entry>
   

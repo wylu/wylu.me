@@ -23,12 +23,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="请求分页虚存管理在地址映射过程中，若页表中发现所要访问的页不在主存，则产生缺页异常，操作系统接到此信号后，就调出缺页异常处理程序，根据页表中给出的磁盘地址，将该页面调入主存，是作业继续运行下去。如果主存中有空闲块，则分配一个页框，将新调入页面装入，并修改页表中相应页表项的驻留位及相应的主存块号；若此时主存中没有空闲块，则要淘汰某页面，若该页在此期间被修改过，要将其先写回磁盘，这个过程就是页面替换。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="模拟实现请求分页虚存页面替换算法">
-<meta property="og:url" content="https://wylu.me/posts/a3679bbe/index.html">
+<meta property="og:url" content="https://www.wylu.me/posts/a3679bbe/index.html">
 <meta property="og:site_name" content="wylu">
 <meta property="og:description" content="请求分页虚存管理在地址映射过程中，若页表中发现所要访问的页不在主存，则产生缺页异常，操作系统接到此信号后，就调出缺页异常处理程序，根据页表中给出的磁盘地址，将该页面调入主存，是作业继续运行下去。如果主存中有空闲块，则分配一个页框，将新调入页面装入，并修改页表中相应页表项的驻留位及相应的主存块号；若此时主存中没有空闲块，则要淘汰某页面，若该页在此期间被修改过，要将其先写回磁盘，这个过程就是页面替换。">
 <meta property="og:locale" content="zh_CN">
@@ -47,11 +47,11 @@
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2ed005480aea73531270b259c516ecf8.png">
 
 
-<link rel="canonical" href="https://wylu.me/posts/a3679bbe/">
+<link rel="canonical" href="https://www.wylu.me/posts/a3679bbe/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/a3679bbe/","path":"posts/a3679bbe/","title":"模拟实现请求分页虚存页面替换算法"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/a3679bbe/","path":"posts/a3679bbe/","title":"模拟实现请求分页虚存页面替换算法"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>模拟实现请求分页虚存页面替换算法 | wylu</title>
@@ -238,7 +238,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/a3679bbe/">
+    <link itemprop="mainEntityOfPage" href="https://www.wylu.me/posts/a3679bbe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.jpg">
@@ -421,7 +421,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://wylu.me/posts/a3679bbe/" title="模拟实现请求分页虚存页面替换算法">https://wylu.me/posts/a3679bbe/</a>
+      <a href="https://www.wylu.me/posts/a3679bbe/" title="模拟实现请求分页虚存页面替换算法">https://www.wylu.me/posts/a3679bbe/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！

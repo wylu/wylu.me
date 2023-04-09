@@ -23,12 +23,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="本文介绍了一本名为《GPU高性能编程CUDA实战》的书籍，并提供了一段计算圆周率的CUDA程序的源码分析。该程序的基本思路是通过积分公式计算圆周率，并使用CUDA进行并行计算。CUDA程序执行的主要步骤包括在GPU上申请空间、将数据从内存拷贝到显存、启动GPU上的内核进行计算以及将处理结果从显存拷贝到内存。该程序的源码分析涉及到CUDA的一些基本概念和函数，如cudaMalloc、cudaMemc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CUDA积分法求PI">
-<meta property="og:url" content="https://wylu.me/posts/f4a6508a/index.html">
+<meta property="og:url" content="https://www.wylu.me/posts/f4a6508a/index.html">
 <meta property="og:site_name" content="wylu">
 <meta property="og:description" content="本文介绍了一本名为《GPU高性能编程CUDA实战》的书籍，并提供了一段计算圆周率的CUDA程序的源码分析。该程序的基本思路是通过积分公式计算圆周率，并使用CUDA进行并行计算。CUDA程序执行的主要步骤包括在GPU上申请空间、将数据从内存拷贝到显存、启动GPU上的内核进行计算以及将处理结果从显存拷贝到内存。该程序的源码分析涉及到CUDA的一些基本概念和函数，如cudaMalloc、cudaMemc">
 <meta property="og:locale" content="zh_CN">
@@ -39,11 +39,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://wylu.me/posts/f4a6508a/">
+<link rel="canonical" href="https://www.wylu.me/posts/f4a6508a/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/f4a6508a/","path":"posts/f4a6508a/","title":"CUDA积分法求PI"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/f4a6508a/","path":"posts/f4a6508a/","title":"CUDA积分法求PI"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>CUDA积分法求PI | wylu</title>
@@ -230,7 +230,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/f4a6508a/">
+    <link itemprop="mainEntityOfPage" href="https://www.wylu.me/posts/f4a6508a/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.jpg">
@@ -366,7 +366,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://wylu.me/posts/f4a6508a/" title="CUDA积分法求PI">https://wylu.me/posts/f4a6508a/</a>
+      <a href="https://www.wylu.me/posts/f4a6508a/" title="CUDA积分法求PI">https://www.wylu.me/posts/f4a6508a/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！

@@ -1,3 +1,3 @@
 # wylu blog
 
-<https://wylu.me>
+<https://www.wylu.me>

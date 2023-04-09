@@ -13,5 +13,6 @@ Disallow: /images/
 Disallow: /js/
 Disallow: /lib/
 Disallow: /live2dw/
+Disallow: /uploads/
 
-Sitemap: https://wylu.me/sitemap.xml
+Sitemap: https://www.wylu.me/sitemap.xml

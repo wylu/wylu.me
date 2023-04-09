@@ -23,12 +23,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="对于互联网应用来说，我们要尽量保证服务的不可间断性，一旦出现故障需要尽快的恢复。MongoDB 的副本集模式主要解决了在其主从模式下故障无法自动转移的情况，自动实现高可用。三个成员副本集提供足够的冗余性，以承受大多数网络分区和其他系统故障，这些集合对于许多分布式读取操作也具有足够的容量。本文介绍如何从三个现有 mongod 实例创建三成员副本集，包括不启用访问控制的和启用访问控制的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MongoDB副本集搭建">
-<meta property="og:url" content="https://wylu.me/posts/fd4a1d37/index.html">
+<meta property="og:url" content="https://www.wylu.me/posts/fd4a1d37/index.html">
 <meta property="og:site_name" content="wylu">
 <meta property="og:description" content="对于互联网应用来说，我们要尽量保证服务的不可间断性，一旦出现故障需要尽快的恢复。MongoDB 的副本集模式主要解决了在其主从模式下故障无法自动转移的情况，自动实现高可用。三个成员副本集提供足够的冗余性，以承受大多数网络分区和其他系统故障，这些集合对于许多分布式读取操作也具有足够的容量。本文介绍如何从三个现有 mongod 实例创建三成员副本集，包括不启用访问控制的和启用访问控制的。">
 <meta property="og:locale" content="zh_CN">
@@ -43,11 +43,11 @@
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/71ff1feced2a2fa4d924c9ed148c4437.svg">
 
 
-<link rel="canonical" href="https://wylu.me/posts/fd4a1d37/">
+<link rel="canonical" href="https://www.wylu.me/posts/fd4a1d37/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wylu.me/posts/fd4a1d37/","path":"posts/fd4a1d37/","title":"MongoDB副本集搭建"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/fd4a1d37/","path":"posts/fd4a1d37/","title":"MongoDB副本集搭建"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>MongoDB副本集搭建 | wylu</title>
@@ -234,7 +234,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wylu.me/posts/fd4a1d37/">
+    <link itemprop="mainEntityOfPage" href="https://www.wylu.me/posts/fd4a1d37/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.jpg">
@@ -509,7 +509,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://wylu.me/posts/fd4a1d37/" title="MongoDB副本集搭建">https://wylu.me/posts/fd4a1d37/</a>
+      <a href="https://www.wylu.me/posts/fd4a1d37/" title="MongoDB副本集搭建">https://www.wylu.me/posts/fd4a1d37/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
