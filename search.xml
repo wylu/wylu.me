@@ -8,6 +8,107 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Docker 磁盘清理</title>
+    <url>/posts/ab2a96fe/</url>
+    <content><![CDATA[<p>在使用 docker 的时候，经常需要下载镜像，给镜像打标签，然后又因为没有及时清理无用的镜像，久而久之，docker 就会把宿主机的磁盘空间占满，导致系统异常。对于 docker 磁盘占用的问题，可以通过 docker 自带的 prune 命令清理或者迁移 docker 下的 overlay2 文件夹来解决。</p>
+<span id="more"></span>
+<h1 id="docker-磁盘清理">Docker 磁盘清理</h1>
+<h2 id="通过-prune-清理">通过 prune 清理</h2>
+<h3 id="查看磁盘使用情况">查看磁盘使用情况</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">du -sh /var/lib/docker</span><br></pre></td></tr></table></figure>
+<h3 id="查看-docker-磁盘占用">查看 docker 磁盘占用</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker system df</span><br></pre></td></tr></table></figure>
+<p>该命令可以用于查看 Docker 环境中的磁盘使用情况，包括镜像、容器、数据卷和网络等资源的使用情况。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker system df -v</span><br></pre></td></tr></table></figure>
+<p>与 <code>docker system df</code> 命令不同的是，该命令可以进一步查看空间占用细节，以确定是哪个镜像、容器或本地卷占用过高空间。</p>
+<h3 id="清理-docker-磁盘占用">清理 docker 磁盘占用</h3>
+<h4 id="自动清理">自动清理</h4>
+<p>如果您只想清理未被使用的容器、数据卷和网络等资源，可以使用以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker system prune</span><br></pre></td></tr></table></figure>
+<p>该命令会清理未被使用的容器、数据卷和网络等资源，但不会删除未被使用的镜像。</p>
+<blockquote>
+<p>该命令所清理的对象如下：</p>
+<ul>
+<li>已停止的容器</li>
+<li>未被任何容器使用的卷</li>
+<li>未被任何容器所关联的网络</li>
+<li>所有悬空的镜像</li>
+</ul>
+<p>对于上面提到的一些镜像或容器的状态所代表的含义如下：</p>
+<ul>
+<li>已使用的镜像：指所有已被容器（包括 stop 的）关联的镜像，也就是 <code>docker ps -a</code> 所看到的所有容器对应的 image</li>
+<li>未引用镜像：没有被分配或使用在容器中的镜像</li>
+<li>悬空镜像（dangling image）：未配置任何 tag（也就是无法被引用）的镜像。通常是由于镜像编译过程中未指定 <code>-t</code> 参数配置 tag 导致的。</li>
+</ul>
+</blockquote>
+<p>如果想清理所有未被使用的镜像，可以使用 <code>-a</code> 参数：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker system prune -a</span><br></pre></td></tr></table></figure>
+<p>该命令会提示您确认是否要清理无用资源，确认后将会删除所有无用资源（包括未被使用的镜像、已停止的容器、未被使用的数据卷和网络等），释放磁盘空间。请注意，该命令会删除所有未被使用的镜像，包括您手动下载的镜像和 Docker 官方镜像，因此请谨慎使用。</p>
+<p>删除无用的容器：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker container prune</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>默认情况下 <code>docker container prune</code> 会清理掉所有处于 stopped 状态的容器</p></li>
+<li><p>如果不想都删掉，也可以使用 <code>--filter</code> 标志来筛选出不希望被清理掉的容器</p>
+<p>例子：清除掉所有停掉的容器，但24内创建的除外。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker container prune --filter &quot;until=24h&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>删除无用的卷：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker volume prune</span><br></pre></td></tr></table></figure>
+<p>删除无用的网络：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker network prune</span><br></pre></td></tr></table></figure>
+<h4 id="手动清理">手动清理</h4>
+<p>（1）删除所有悬空镜像，不删除未使用镜像：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images -f &quot;dangling=true&quot; -q)</span><br></pre></td></tr></table></figure>
+<p>（2）删除所有未使用镜像和悬空镜像</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure>
+<p>（3）删除所有未被容器引用的卷</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker volume rm $(docker volume ls -qf dangling=true)</span><br></pre></td></tr></table></figure>
+<p>如果卷占用空间过高，可以清除一些不使用的卷，包括一些未被任何容器调用的卷（<code>-v</code> 详细信息中若显示 LINKS = 0，则是未被调用）</p>
+<p>（4）删除容器</p>
+<p>删除所有已退出的容器：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm -v $(docker ps -aq -f status=exited)</span><br></pre></td></tr></table></figure>
+<p>具体来说，该命令使用了以下参数：</p>
+<ul>
+<li><code>-a</code>：列出所有的容器，包括正在运行的容器和已经停止的容器。</li>
+<li><code>-q</code>：只列出容器的 ID，而不显示容器的详细信息。</li>
+<li><code>-f status=exited</code>：只列出状态为 "exited" 的容器，即已经退出的容器。</li>
+</ul>
+<p>删除所有状态为 dead 的容器：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm -v $(docker ps -aq -f status=dead)</span><br></pre></td></tr></table></figure>
+<p>如果发现是容器占用过高的空间，可以手动删除一些。</p>
+<h2 id="迁移-varlibdocker">迁移 /var/lib/docker</h2>
+<p>/var/lib/docker/overlay2 占用很大，要想清理 Docker 占用的磁盘空间，可以考虑迁移 /var/lib/docker 目录。</p>
+<h3 id="停止-docker-服务">停止 docker 服务</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl stop docker</span><br></pre></td></tr></table></figure>
+<h3 id="创建新的分区目录">创建新的分区目录</h3>
+<p>创建一个磁盘空间更大的分区目录，例如：/home/lib/docker</p>
+<h3 id="迁移-varlibdocker-1">迁移 /var/lib/docker</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rsync -avz /var/lib/docker /home/lib/docker</span><br></pre></td></tr></table></figure>
+<h3 id="配置-devicemapper.conf">配置 devicemapper.conf</h3>
+<p>配置 /etc/systemd/system/docker.service.d/devicemapper.conf（查看 devicemapper.conf 是否存在，如果不存在则创建）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /etc/systemd/system/docker.service.d/</span><br><span class="line">vim /etc/systemd/system/docker.service.d/devicemapper.conf</span><br></pre></td></tr></table></figure>
+<p>配置内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/bin/dockerd --graph=/home/lib/docker/docker</span><br></pre></td></tr></table></figure>
+<h3 id="重启-docker">重启 docker</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h3 id="验证">验证</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker info</span><br></pre></td></tr></table></figure>
+<p>命令检查 Docker 的根目录，它将被更改为 /home/lib/docker/docker</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line">Docker Root Dir: /home/lib/docker/docker</span><br><span class="line">Debug Mode (client): false</span><br><span class="line">Debug Mode (server): false</span><br><span class="line">Registry: https://index.docker.io/v1/</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>查看之前的镜像是否还在：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# docker images</span><br><span class="line">REPOSITORY                  TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">demo                        0.0.1     4fa4c5aae26d   4 months ago    378MB</span><br><span class="line">adoptopenjdk/openjdk11      alpine    552165ab2add   4 months ago    343MB</span><br><span class="line">registry                    2.8.1     dcb3d42c1744   5 months ago    24.1MB</span><br></pre></td></tr></table></figure>
+<p>确定容器没问题后删除 /var/lib/docker 目录下的文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rm -rf /var/lib/docker/*</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>cloud</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CentOS 搭建 DNS 服务</title>
     <url>/posts/b769518c/</url>
     <content><![CDATA[<p>本文介绍了在 CentOS 上使用 BIND (Berkeley Internet Name Domain) 搭建 DNS 服务的步骤。首先需要下载 DNS 服务软件，然后配置主配置文件和区域文件，接着配置正向解析数据文件和反向解析数据文件，设置文件权限，检查配置文件是否配置正确，最后启动 DNS 服务并测试解析。</p>
