@@ -27,7 +27,7 @@
 
     <meta name="description" content="Vim 是从 vi 发展出来的一个文本编辑器。其代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。和 Emacs 并列成为类 Unix 系统用户最喜欢的编辑器。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="vi&#x2F;vim常用命令">
+<meta property="og:title" content="vi&#x2F;vim 常用命令">
 <meta property="og:url" content="https://www.wylu.me/posts/706b7df8/index.html">
 <meta property="og:site_name" content="wylu">
 <meta property="og:description" content="Vim 是从 vi 发展出来的一个文本编辑器。其代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。和 Emacs 并列成为类 Unix 系统用户最喜欢的编辑器。">
@@ -37,9 +37,9 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/2e6d55e2974573e5535a96e39222b327.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/wylu/img/a6a85c411f68f37654a409d43b3e2908.gif">
 <meta property="article:published_time" content="2019-06-05T14:36:56.000Z">
-<meta property="article:modified_time" content="2023-04-08T13:54:54.943Z">
+<meta property="article:modified_time" content="2023-07-24T16:26:34.706Z">
 <meta property="article:author" content="lu wenye">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="vim">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wylu/img/0d141a96847df24c99d25a228b63232e.png">
 
@@ -48,10 +48,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/706b7df8/","path":"posts/706b7df8/","title":"vi/vim常用命令"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/706b7df8/","path":"posts/706b7df8/","title":"vi/vim 常用命令"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>vi/vim常用命令 | wylu</title>
+<title>vi/vim 常用命令 | wylu</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
@@ -112,7 +112,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">68</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">38</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">69</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">39</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -161,7 +161,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vivim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">vi&#x2F;vim常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-%E7%AE%80%E4%BB%8B"><span class="nav-text">vi 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-%E7%9A%84%E6%93%8D%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-text">vi 的操作模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vi-%E7%9A%84%E8%BF%9B%E5%85%A5%E4%B8%8E%E9%80%80%E5%87%BA"><span class="nav-text">vi 的进入与退出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-vi"><span class="nav-text">进入 vi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA-vi"><span class="nav-text">退出 vi</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vivim-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">vi&#x2F;vim 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">命令模式的常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%89%E6%A0%87%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-text">光标的移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BF%BB%E5%B1%8F%E4%B8%8E%E6%BB%9A%E5%B1%8F"><span class="nav-text">翻屏与滚屏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%89%AA%E5%88%87%E4%B8%8E%E4%BF%AE%E6%94%B9"><span class="nav-text">删除（剪切）与修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4"><span class="nav-text">复制粘贴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%A4%E9%94%80%E4%B8%8E%E5%8F%8D%E6%92%A4%E9%94%80"><span class="nav-text">撤销与反撤销</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">可视模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E8%A1%8C%E7%A7%BB%E5%8A%A8%E7%BC%A9%E8%BF%9B"><span class="nav-text">文本行移动（缩进）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E5%91%BD%E4%BB%A4"><span class="nav-text">重复命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4"><span class="nav-text">退出命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="nav-text">插入模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4"><span class="nav-text">查找命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-text">替换命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4-1"><span class="nav-text">退出命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%91%BD%E4%BB%A4"><span class="nav-text">其它命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vivim-%E9%94%AE%E7%9B%98%E5%9B%BE"><span class="nav-text">vi&#x2F;vim 键盘图</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vivim-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">vi&#x2F;vim 常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-text">操作模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E4%B8%8E%E9%80%80%E5%87%BA"><span class="nav-text">进入与退出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-vi"><span class="nav-text">进入 vi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA-vi"><span class="nav-text">退出 vi</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-text">命令模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%89%E6%A0%87%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-text">光标的移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BF%BB%E5%B1%8F%E4%B8%8E%E6%BB%9A%E5%B1%8F"><span class="nav-text">翻屏与滚屏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%89%AA%E5%88%87%E4%B8%8E%E4%BF%AE%E6%94%B9"><span class="nav-text">删除（剪切）与修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4"><span class="nav-text">复制粘贴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%A4%E9%94%80%E4%B8%8E%E5%8F%8D%E6%92%A4%E9%94%80"><span class="nav-text">撤销与反撤销</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E8%A1%8C%E7%A7%BB%E5%8A%A8%E7%BC%A9%E8%BF%9B"><span class="nav-text">文本行移动（缩进）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E5%91%BD%E4%BB%A4"><span class="nav-text">重复命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4"><span class="nav-text">退出命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="nav-text">插入模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4"><span class="nav-text">查找命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-text">替换命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4-1"><span class="nav-text">退出命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%91%BD%E4%BB%A4"><span class="nav-text">其它命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">可视模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E5%91%BD%E4%BB%A4"><span class="nav-text">进阶命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E7%BA%A0%E9%94%99"><span class="nav-text">快速纠错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E6%A8%A1%E5%BC%8F"><span class="nav-text">快速切换模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2-normal-%E6%A8%A1%E5%BC%8F"><span class="nav-text">快速切换 normal 模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2-insert-%E6%A8%A1%E5%BC%8F"><span class="nav-text">快速切换 insert 模式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8"><span class="nav-text">快速移动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E8%AF%8D%E4%B9%8B%E9%97%B4%E7%A7%BB%E5%8A%A8"><span class="nav-text">单词之间移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E9%97%B4%E6%90%9C%E7%B4%A2%E7%A7%BB%E5%8A%A8"><span class="nav-text">行间搜索移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B0%B4%E5%B9%B3%E7%A7%BB%E5%8A%A8"><span class="nav-text">水平移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9E%82%E7%9B%B4%E7%A7%BB%E5%8A%A8"><span class="nav-text">垂直移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%A7%BB%E5%8A%A8"><span class="nav-text">页面移动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5"><span class="nav-text">快速增删改查</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4"><span class="nav-text">快速删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E4%BF%AE%E6%94%B9"><span class="nav-text">快速修改</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%AE%E7%9B%98%E5%9B%BE"><span class="nav-text">键盘图</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -181,12 +181,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-count">69</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -247,12 +247,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="vi/vim常用命令 | wylu">
+      <meta itemprop="name" content="vi/vim 常用命令 | wylu">
       <meta itemprop="description" content>
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          vi/vim常用命令
+          vi/vim 常用命令
         </h1>
 
         <div class="post-meta-container">
@@ -270,7 +270,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-04-08 21:54:54" itemprop="dateModified" datetime="2023-04-08T21:54:54+08:00">2023-04-08</time>
+      <time title="修改时间：2023-07-25 00:26:34" itemprop="dateModified" datetime="2023-07-25T00:26:34+08:00">2023-07-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -278,11 +278,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os/" itemprop="url" rel="index"><span itemprop="name">os</span></a>
+          <a href="/categories/tool/" itemprop="url" rel="index"><span itemprop="name">tool</span></a>
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/os/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+          <a href="/categories/tool/vim/" itemprop="url" rel="index"><span itemprop="name">vim</span></a>
         </span>
     </span>
 
@@ -300,14 +300,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.8k</span>
+      <span>2.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>9 分钟</span>
     </span>
 </div>
 
@@ -320,10 +320,10 @@
     <div class="post-body" itemprop="articleBody"><p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0d141a96847df24c99d25a228b63232e.png" alt="vim-editor"></p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://zh.wikipedia.org/wiki/Vim">Vim</a> 是从 vi 发展出来的一个文本编辑器。其代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。和 Emacs 并列成为类 Unix 系统用户最喜欢的编辑器。</p>
 <span id="more"></span>
-<h1 id="vivim常用命令">vi/vim常用命令</h1>
-<h2 id="vi-简介">vi 简介</h2>
+<h1 id="vivim-常用命令">vi/vim 常用命令</h1>
+<h2 id="简介">简介</h2>
 <p>vi 是 Unix 和 Linux 操作系统使用的终端文本编辑器，任何一台安装了 Unix 或 Linux 的机器都会提供这套软件，它是系统管理员手中的得力工具。vim 是 vi 的升级版，它不仅兼容 vi 的所有指令（命令），而且还具有一些新特性。</p>
-<h2 id="vi-的操作模式">vi 的操作模式</h2>
+<h2 id="操作模式">操作模式</h2>
 <p>vi 有三种操作状态：</p>
 <ul>
 <li>命令模式（command mode）</li>
@@ -338,7 +338,7 @@
 </ol>
 <p>vi 三种工作模式的转换如图：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/4fbcfcc788656a7d73ec4045ab862e2b.png" alt="vi工作模式"></p>
-<h2 id="vi-的进入与退出">vi 的进入与退出</h2>
+<h2 id="进入与退出">进入与退出</h2>
 <h3 id="进入-vi">进入 vi</h3>
 <p>若要编辑文件 myfile，执行如下执行即可：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">vi myfile</span></span><br></pre></td></tr></table></figure>
@@ -354,8 +354,8 @@
 <li><code>:q</code> 退出 vi，若文件被修改过，则会被要求确认是否放弃修改。此指令可以 w 配合使用。</li>
 </ul>
 <p><strong>注意：如果不知道当前处于何种模式，可以多按几次 ESC 键，以便确认进入命令模式。</strong></p>
-<h2 id="vivim-常用命令">vi/vim 常用命令</h2>
-<h3 id="命令模式的常用命令">命令模式的常用命令</h3>
+<h2 id="常用命令">常用命令</h2>
+<h3 id="命令模式">命令模式</h3>
 <p>在命令模式下可以进行文本的编辑工作。使用下列命令，配合一般键盘上的功能键，如方向键、Insert 键、Delete 键等，就可以利用 vi 来处理文本数据了。</p>
 <h4 id="光标的移动">光标的移动</h4>
 <table>
@@ -614,27 +614,6 @@
 </tr>
 </tbody>
 </table>
-<h4 id="可视模式">可视模式</h4>
-<table>
-<thead>
-<tr class="header">
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>v</code></td>
-<td>选中文本（按字符移动）</td>
-</tr>
-<tr class="even">
-<td><code>V</code></td>
-<td>选中文本（按行移动）</td>
-</tr>
-</tbody>
-</table>
-<p><strong>可视模式可以配合 <code>d</code>，<code>y</code> 实现对文本块的删除（剪切），复制。</strong></p>
-<p><strong>vim 下还支持配合 <code>&lt;</code>，<code>&gt;</code> 实现对文本块的左右移动，首先使用 <code>v</code> 或 <code>V</code> 选择要移动的部分，然后按 <code>Ctrl+v</code> 选中该文本块，接着可根据需要左移 <code>&lt;</code> 或 右移 <code>&gt;</code> 。</strong></p>
 <h4 id="文本行移动缩进">文本行移动（缩进）</h4>
 <table>
 <thead>
@@ -837,7 +816,113 @@
 </tr>
 </tbody>
 </table>
-<h2 id="vivim-键盘图">vi/vim 键盘图</h2>
+<h3 id="可视模式">可视模式</h3>
+<table>
+<thead>
+<tr class="header">
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>v</code></td>
+<td>选中文本（按字符移动）</td>
+</tr>
+<tr class="even">
+<td><code>V</code></td>
+<td>选中文本（按行移动）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>可视模式可以配合 <code>d</code>，<code>y</code> 实现对文本块的删除（剪切），复制。</strong></p>
+<p><strong>vim 下还支持配合 <code>&lt;</code>，<code>&gt;</code> 实现对文本块的左右移动，首先使用 <code>v</code> 或 <code>V</code> 选择要移动的部分，然后按 <code>Ctrl+v</code> 选中该文本块，接着可根据需要左移 <code>&lt;</code> 或 右移 <code>&gt;</code> 。</strong></p>
+<h2 id="进阶命令">进阶命令</h2>
+<h3 id="快速纠错">快速纠错</h3>
+<p>进入 vim 之后首先使用 <code>a/i/o</code> 之一进入插入模式：</p>
+<ul>
+<li><code>Ctrl+h</code> 删除上一个字符</li>
+<li><code>Ctrl+w</code> 删除上一个单词</li>
+<li><code>Ctrl+u</code> 删除当前行</li>
+</ul>
+<h3 id="快速切换模式">快速切换模式</h3>
+<h4 id="快速切换-normal-模式">快速切换 normal 模式</h4>
+<ul>
+<li>使用 <code>Ctrl+c</code> 代替 <code>Esc</code>（但是可能会中断某些插件）</li>
+<li>或者 <code>Ctrl+[</code></li>
+</ul>
+<h4 id="快速切换-insert-模式">快速切换 insert 模式</h4>
+<ul>
+<li><code>gi</code> 快速跳转到你最后一次编辑的地方并进入插入模式</li>
+</ul>
+<h3 id="快速移动">快速移动</h3>
+<h4 id="单词之间移动">单词之间移动</h4>
+<ul>
+<li><code>w/W</code> 移动到下一个单词 word/WORD 开头</li>
+<li><code>e/E</code> 移动到下一个单词 word/WORD 结尾</li>
+<li><code>b/B</code> 移动到上一个单词 word/WORD 开头</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>word 指的是以非空白符分割的单词</li>
+<li>WORD 指的是以空白符分割的单词</li>
+</ul>
+<h4 id="行间搜索移动">行间搜索移动</h4>
+<p>同一行快速移动的方式其实是搜索一个字符并且移动到该字符。</p>
+<ul>
+<li>使用 <code>f&#123;char&#125;</code> 可移动到 char 字符上，从左往右搜索</li>
+<li>使用 <code>F&#123;char&#125;</code> 可移动到 char 字符上，从右往左搜索</li>
+<li><code>t&#123;char&#125;</code> 移动到 char 的前一个字符，从左往右搜索</li>
+<li>T{char}` 移动到 char 的后一个字符，从右往左搜索</li>
+<li>可以用分号 <code>;</code> 继续搜索该行下一个</li>
+<li>可以用分号 <code>,</code> 继续搜索该行上一个</li>
+</ul>
+<h4 id="水平移动">水平移动</h4>
+<ul>
+<li><code>0</code> 移动到行首</li>
+<li><code>^</code> 移动到行首非空白字符</li>
+<li><code>$</code> 移动到行尾</li>
+<li><code>g_</code> 移动到行尾非空白字符</li>
+</ul>
+<h4 id="垂直移动">垂直移动</h4>
+<ul>
+<li>使用 <code>(</code> 和 <code>)</code> 在句子 sentence 间移动，你可以使用 <code>:help (</code> 查看 sentence 的定义</li>
+<li>使用 <code>&#123;</code> 和 <code>&#125;</code> 在段落 paragraph 间移动，你可以使用 <code>:help &#123;</code> 查看 paragraph 的定义</li>
+</ul>
+<h4 id="页面移动">页面移动</h4>
+<ul>
+<li><code>gg</code> 移动到文件开头</li>
+<li><code>G</code> 移动文件结尾</li>
+<li><code>Ctrl+o</code> 快速返回</li>
+<li><code>H</code> 跳转到屏幕的开头（Head）</li>
+<li><code>M</code> 跳转到屏幕的中间（Middle）</li>
+<li><code>L</code> 跳转到屏幕的结尾（Lower）</li>
+<li><code>zz</code> 把屏幕置为中间</li>
+</ul>
+<h3 id="快速增删改查">快速增删改查</h3>
+<h4 id="快速删除">快速删除</h4>
+<ul>
+<li>vim 在 normal 模式下使用 <code>x</code> 快速删除一个字符</li>
+<li>使用 <code>d</code>（delete）配合文本对象快速删除一个单词 <code>daw</code>（d around word）
+<ul>
+<li><code>dw</code> 表示删除光标后面的单词</li>
+<li><code>daw</code> 表示删除光标所在的单词，包括单词旁边的空格</li>
+<li><code>diw</code> 表示删除光标所在的单词，但不包括单词旁边的空格</li>
+<li><code>dt&#123;char&#125;</code> 表示从光标位置删除到 char 之前的字符</li>
+</ul></li>
+<li><code>d</code> 和 <code>x</code> 都可以配合数字来执行多次</li>
+</ul>
+<h4 id="快速修改">快速修改</h4>
+<p>常用的有三个，<code>r</code>（replace），<code>c</code>（change），<code>s</code> （substitute）。</p>
+<ul>
+<li><code>r</code> 可以替换一个字符</li>
+<li><code>s</code> 删除当前字符并且进入插入模式</li>
+<li><code>c</code> 可以配合文本对象快速修改一个单词
+<ul>
+<li><code>cw</code>，<code>ciw</code>，<code>caw</code>，<code>ct&#123;char&#125;</code> 只不过是在 <code>dw</code>，<code>diw</code>，<code>daw</code>，<code>dt&#123;char&#125;</code> 删除的基础上同时进入插入模式</li>
+</ul></li>
+</ul>
+<h2 id="键盘图">键盘图</h2>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2e6d55e2974573e5535a96e39222b327.png" alt="vi-vim-cheat-sheet-cn"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a6a85c411f68f37654a409d43b3e2908.gif" alt="vi-vim-cheat-sheet"></p>
 
@@ -857,7 +942,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://www.wylu.me/posts/706b7df8/" title="vi&#x2F;vim常用命令">https://www.wylu.me/posts/706b7df8/</a>
+      <a href="https://www.wylu.me/posts/706b7df8/" title="vi&#x2F;vim 常用命令">https://www.wylu.me/posts/706b7df8/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -866,7 +951,7 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+              <a href="/tags/vim/" rel="tag"><i class="fa fa-tag"></i> vim</a>
           </div>
 
         
@@ -937,7 +1022,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:02</span>
+    <span title="站点阅读时长">8:04</span>
   </span>
 </div>
 <div class="busuanzi-count">

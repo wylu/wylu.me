@@ -116,33 +116,33 @@
 <h1 id="centos-搭建-dns-服务">CentOS 搭建 DNS 服务</h1>
 <p>可以使用 BIND (Berkeley Internet Name Domain) 来搭建 DNS 服务。以下是在 CentOS 上搭建 BIND 的步骤：</p>
 <h2 id="下载-dns-服务软件">下载 DNS 服务软件</h2>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">服务端需安装bind-chroot软件</span></span><br><span class="line">yun install -y bind-chroot</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">客户端需下载bind-utils（需要使用nslookup命令）</span></span><br><span class="line">yum install -y bind-utils</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">服务端需安装 bind-chroot 软件</span></span><br><span class="line">yun install -y bind-chroot</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">客户端需下载 bind-utils（需要使用 nslookup 命令）</span></span><br><span class="line">yum install -y bind-utils</span><br></pre></td></tr></table></figure>
 <h2 id="配置主配置文件">配置主配置文件</h2>
-<p><a href="https://bind9.readthedocs.io/en/v9_18_8/reference.html#configuration-reference">https://bind9.readthedocs.io/en/v9_18_8/reference.html#configuration-reference</a></p>
+<p><a href="https://bind9.readthedocs.io/en/v9_18_8/reference.html#configuration-reference" class="uri">https://bind9.readthedocs.io/en/v9_18_8/reference.html#configuration-reference</a></p>
 <p>编辑 /etc/named.conf 文件，修改以下内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">options &#123;</span><br><span class="line">        // 配置DNS服务监听的IP地址（可以写成any）和端口（默认53，确保该端口没有被占用）</span><br><span class="line">        listen-on port 53 &#123; any; &#125;;</span><br><span class="line">        // 允许任何网段的主机访问DNS服务</span><br><span class="line">        allow-query     &#123; any; &#125;;</span><br><span class="line"></span><br><span class="line">        dnssec-enable no;</span><br><span class="line">        dnssec-validation no;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p><a href="https://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-bind-namedconf.html">https://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-bind-namedconf.html</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">options &#123;</span><br><span class="line">        // 配置 DNS 服务监听的 IP 地址（可以写成 any）和端口（默认 53，确保该端口没有被占用）</span><br><span class="line">        listen-on port 53 &#123; any; &#125;;</span><br><span class="line">        // 允许任何网段的主机访问 DNS 服务</span><br><span class="line">        allow-query     &#123; any; &#125;;</span><br><span class="line"></span><br><span class="line">        dnssec-enable no;</span><br><span class="line">        dnssec-validation no;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><a href="https://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-bind-namedconf.html" class="uri">https://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-bind-namedconf.html</a></p>
 <h2 id="配置区域文件">配置区域文件</h2>
 <p>编辑 /etc/named.rfc1912.zones 文件，添加以下内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">zone &quot;wylu.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;wylu.com.localhost&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;170.128.10.in-addr.arpa&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;wylu.com.loopback&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">zone &quot;wylu.test&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;wylu.test.localhost&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;170.128.10.in-addr.arpa&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;wylu.test.loopback&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="配置正向解析数据文件">配置正向解析数据文件</h2>
 <p>拷贝一份正向解析数据文件的模板，然后进行编辑：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/named</span><br><span class="line">cp -a named.localhost wylu.com.localhost</span><br><span class="line">vim wylu.com.localhost</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/named</span><br><span class="line">cp -a named.localhost wylu.test.localhost</span><br><span class="line">vim wylu.test.localhost</span><br></pre></td></tr></table></figure>
 <p>添加如下内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  wylu.com. rname.invalid. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      www.wylu.com.</span><br><span class="line">www     A       10.128.170.235</span><br><span class="line">email   A       10.128.170.235</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  wylu.test. rname.invalid. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      www.wylu.test.</span><br><span class="line">www     A       10.128.170.235</span><br><span class="line">email   A       10.128.170.235</span><br></pre></td></tr></table></figure>
 <h2 id="配置反向解析数据文件">配置反向解析数据文件</h2>
 <p>拷贝一份正向解析数据文件的模板，然后进行编辑：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/named</span><br><span class="line">cp -a named.loopback wylu.com.loopback</span><br><span class="line">vim wylu.com.loopback</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/named</span><br><span class="line">cp -a named.loopback wylu.test.loopback</span><br><span class="line">vim wylu.test.loopback</span><br></pre></td></tr></table></figure>
 <p>添加如下内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  wylu.com. rname.invalid. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      www.wylu.com.</span><br><span class="line">235     PTR     www.wylu.com.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  wylu.test. rname.invalid. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      www.wylu.test.</span><br><span class="line">235     PTR     www.wylu.test.</span><br></pre></td></tr></table></figure>
 <h2 id="设置文件权限">设置文件权限</h2>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chown named:named wylu.com.localhost wylu.com.loopback</span><br></pre></td></tr></table></figure>
-<p><strong>注意：请确保 wylu.com.localhost 和 wylu.com.loopback 文件的属主和属组为 named。</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# ls -alh</span><br><span class="line">total 28K</span><br><span class="line">drwxrwx--T.  5 root  named  178 Mar 22 18:52 .</span><br><span class="line">drwxr-xr-x. 22 root  root  4.0K Mar 22 17:34 ..</span><br><span class="line">drwxrwx---.  2 named named   23 Mar 22 17:45 data</span><br><span class="line">drwxrwx---.  2 named named   60 Mar 22 18:52 dynamic</span><br><span class="line">-rw-r-----.  1 root  named 2.3K Nov  8 19:18 named.ca</span><br><span class="line">-rw-r-----.  1 root  named  152 Nov  8 19:18 named.empty</span><br><span class="line">-rw-r-----.  1 root  named  152 Nov  8 19:18 named.localhost</span><br><span class="line">-rw-r-----.  1 root  named  168 Nov  8 19:18 named.loopback</span><br><span class="line">drwxrwx---.  2 named named    6 Nov  8 19:18 slaves</span><br><span class="line">-rw-r--r--.  1 root  root   429 Mar 22 18:51 wylu.com.localhost</span><br><span class="line">-rw-r--r--.  1 root  root   397 Mar 22 17:44 wylu.com.loopback</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chown named:named wylu.test.localhost wylu.test.loopback</span><br></pre></td></tr></table></figure>
+<p><strong>注意：请确保 wylu.test.localhost 和 wylu.test.loopback 文件的属主和属组为 named。</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# ls -alh</span><br><span class="line">total 28K</span><br><span class="line">drwxrwx--T.  5 root  named  178 Mar 22 18:52 .</span><br><span class="line">drwxr-xr-x. 22 root  root  4.0K Mar 22 17:34 ..</span><br><span class="line">drwxrwx---.  2 named named   23 Mar 22 17:45 data</span><br><span class="line">drwxrwx---.  2 named named   60 Mar 22 18:52 dynamic</span><br><span class="line">-rw-r-----.  1 root  named 2.3K Nov  8 19:18 named.ca</span><br><span class="line">-rw-r-----.  1 root  named  152 Nov  8 19:18 named.empty</span><br><span class="line">-rw-r-----.  1 root  named  152 Nov  8 19:18 named.localhost</span><br><span class="line">-rw-r-----.  1 root  named  168 Nov  8 19:18 named.loopback</span><br><span class="line">drwxrwx---.  2 named named    6 Nov  8 19:18 slaves</span><br><span class="line">-rw-r--r--.  1 root  root   429 Mar 22 18:51 wylu.test.localhost</span><br><span class="line">-rw-r--r--.  1 root  root   397 Mar 22 17:44 wylu.test.loopback</span><br></pre></td></tr></table></figure>
 <p>否则启动服务时会产生如下错误提示：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone 170.128.10.in-addr.arpa/IN: loading from master file wylu.com.loopback failed: permission denied</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone 170.128.10.in-addr.arpa/IN: not loaded due to errors.</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone wylu.com/IN: loading from master file wylu.com.localhost failed: permission denied</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone wylu.com/IN: not loaded due to errors.</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: all zones loaded</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: running</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone 170.128.10.in-addr.arpa/IN: loading from master file wylu.test.loopback failed: permission denied</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone 170.128.10.in-addr.arpa/IN: not loaded due to errors.</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone wylu.test/IN: loading from master file wylu.test.localhost failed: permission denied</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: zone wylu.test/IN: not loaded due to errors.</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: all zones loaded</span><br><span class="line">Mar 22 17:44:08 localhost.localdomain named[15726]: running</span><br></pre></td></tr></table></figure>
 <h2 id="检查配置文件是否配置正确">检查配置文件是否配置正确</h2>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# named-checkconf -z /etc/named.conf</span><br><span class="line">zone localhost.localdomain/IN: loaded serial 0</span><br><span class="line">zone localhost/IN: loaded serial 0</span><br><span class="line">zone 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa/IN: loaded serial 0</span><br><span class="line">zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0</span><br><span class="line">zone 0.in-addr.arpa/IN: loaded serial 0</span><br><span class="line">zone wylu.com/IN: loaded serial 0</span><br><span class="line">zone 170.128.10.in-addr.arpa/IN: loaded serial 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# named-checkconf -z /etc/named.conf</span><br><span class="line">zone localhost.localdomain/IN: loaded serial 0</span><br><span class="line">zone localhost/IN: loaded serial 0</span><br><span class="line">zone 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa/IN: loaded serial 0</span><br><span class="line">zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0</span><br><span class="line">zone 0.in-addr.arpa/IN: loaded serial 0</span><br><span class="line">zone wylu.test/IN: loaded serial 0</span><br><span class="line">zone 170.128.10.in-addr.arpa/IN: loaded serial 0</span><br></pre></td></tr></table></figure>
 <p>如上输出表示配置文件没问题。</p>
 <h2 id="启动-dns-服务">启动 DNS 服务</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关闭防火墙服务</span></span><br><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl disable firewalld</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">临时禁用 SELinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">永久禁用 SELinux</span></span><br><span class="line">vim /etc/selinux/config</span><br><span class="line">SELINUX=disabled</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动 DNS 服务</span></span><br><span class="line">systemctl start named</span><br><span class="line">systemctl enable named</span><br></pre></td></tr></table></figure>
@@ -150,9 +150,9 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# netstat -anupl | grep 53</span><br><span class="line">udp        0      0 172.17.0.1:53           0.0.0.0:*           2111795/named</span><br><span class="line">udp        0      0 10.128.170.235:53       0.0.0.0:*           2111795/named</span><br><span class="line">udp        0      0 127.0.0.1:53            0.0.0.0:*           2111795/named</span><br><span class="line">udp6       0      0 ::1:53                  :::*                2111795/named</span><br></pre></td></tr></table></figure>
 <h2 id="测试解析">测试解析</h2>
 <h3 id="正向解析">正向解析</h3>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# nslookup email.wylu.com 10.128.170.235</span><br><span class="line">Server:         10.128.170.235</span><br><span class="line">Address:        10.128.170.235#53</span><br><span class="line"></span><br><span class="line">Name:   email.wylu.com</span><br><span class="line">Address: 10.128.170.235</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# nslookup email.wylu.test 10.128.170.235</span><br><span class="line">Server:         10.128.170.235</span><br><span class="line">Address:        10.128.170.235#53</span><br><span class="line"></span><br><span class="line">Name:   email.wylu.test</span><br><span class="line">Address: 10.128.170.235</span><br></pre></td></tr></table></figure>
 <h3 id="反向解析">反向解析</h3>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# nslookup 10.128.170.235 10.128.170.235</span><br><span class="line">235.170.128.10.in-addr.arpa     name = www.wylu.com.</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost named]# nslookup 10.128.170.235 10.128.170.235</span><br><span class="line">235.170.128.10.in-addr.arpa     name = www.wylu.test.</span><br></pre></td></tr></table></figure>
 <h2 id="references">References</h2>
 <h3 id="cp--a-选项作用">cp -a 选项作用</h3>
 <p>cp -a 是 cp 命令的一个选项，用于复制文件和目录，并保留所有的属性和权限。具体来说，-a 选项等价于以下三个选项的组合：</p>
@@ -5161,15 +5161,15 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
       </tags>
   </entry>
   <entry>
-    <title>vi/vim常用命令</title>
+    <title>vi/vim 常用命令</title>
     <url>/posts/706b7df8/</url>
     <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/0d141a96847df24c99d25a228b63232e.png" alt="vim-editor" /></p>
 <p><a href="https://zh.wikipedia.org/wiki/Vim">Vim</a> 是从 vi 发展出来的一个文本编辑器。其代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。和 Emacs 并列成为类 Unix 系统用户最喜欢的编辑器。</p>
 <span id="more"></span>
-<h1 id="vivim常用命令">vi/vim常用命令</h1>
-<h2 id="vi-简介">vi 简介</h2>
+<h1 id="vivim-常用命令">vi/vim 常用命令</h1>
+<h2 id="简介">简介</h2>
 <p>vi 是 Unix 和 Linux 操作系统使用的终端文本编辑器，任何一台安装了 Unix 或 Linux 的机器都会提供这套软件，它是系统管理员手中的得力工具。vim 是 vi 的升级版，它不仅兼容 vi 的所有指令（命令），而且还具有一些新特性。</p>
-<h2 id="vi-的操作模式">vi 的操作模式</h2>
+<h2 id="操作模式">操作模式</h2>
 <p>vi 有三种操作状态：</p>
 <ul>
 <li>命令模式（command mode）</li>
@@ -5184,7 +5184,7 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 </ol>
 <p>vi 三种工作模式的转换如图：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/4fbcfcc788656a7d73ec4045ab862e2b.png" alt="vi工作模式" /></p>
-<h2 id="vi-的进入与退出">vi 的进入与退出</h2>
+<h2 id="进入与退出">进入与退出</h2>
 <h3 id="进入-vi">进入 vi</h3>
 <p>若要编辑文件 myfile，执行如下执行即可：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">vi myfile</span></span><br></pre></td></tr></table></figure>
@@ -5200,8 +5200,8 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 <li><code>:q</code> 退出 vi，若文件被修改过，则会被要求确认是否放弃修改。此指令可以 w 配合使用。</li>
 </ul>
 <p><strong>注意：如果不知道当前处于何种模式，可以多按几次 ESC 键，以便确认进入命令模式。</strong></p>
-<h2 id="vivim-常用命令">vi/vim 常用命令</h2>
-<h3 id="命令模式的常用命令">命令模式的常用命令</h3>
+<h2 id="常用命令">常用命令</h2>
+<h3 id="命令模式">命令模式</h3>
 <p>在命令模式下可以进行文本的编辑工作。使用下列命令，配合一般键盘上的功能键，如方向键、Insert 键、Delete 键等，就可以利用 vi 来处理文本数据了。</p>
 <h4 id="光标的移动">光标的移动</h4>
 <table>
@@ -5460,27 +5460,6 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 </tr>
 </tbody>
 </table>
-<h4 id="可视模式">可视模式</h4>
-<table>
-<thead>
-<tr class="header">
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>v</code></td>
-<td>选中文本（按字符移动）</td>
-</tr>
-<tr class="even">
-<td><code>V</code></td>
-<td>选中文本（按行移动）</td>
-</tr>
-</tbody>
-</table>
-<p><strong>可视模式可以配合 <code>d</code>，<code>y</code> 实现对文本块的删除（剪切），复制。</strong></p>
-<p><strong>vim 下还支持配合 <code>&lt;</code>，<code>&gt;</code> 实现对文本块的左右移动，首先使用 <code>v</code> 或 <code>V</code> 选择要移动的部分，然后按 <code>Ctrl+v</code> 选中该文本块，接着可根据需要左移 <code>&lt;</code> 或 右移 <code>&gt;</code> 。</strong></p>
 <h4 id="文本行移动缩进">文本行移动（缩进）</h4>
 <table>
 <thead>
@@ -5683,16 +5662,122 @@ f(n)=o(g(n)) \qquad f(n)的阶＜g(n)的阶\\
 </tr>
 </tbody>
 </table>
-<h2 id="vivim-键盘图">vi/vim 键盘图</h2>
+<h3 id="可视模式">可视模式</h3>
+<table>
+<thead>
+<tr class="header">
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>v</code></td>
+<td>选中文本（按字符移动）</td>
+</tr>
+<tr class="even">
+<td><code>V</code></td>
+<td>选中文本（按行移动）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>可视模式可以配合 <code>d</code>，<code>y</code> 实现对文本块的删除（剪切），复制。</strong></p>
+<p><strong>vim 下还支持配合 <code>&lt;</code>，<code>&gt;</code> 实现对文本块的左右移动，首先使用 <code>v</code> 或 <code>V</code> 选择要移动的部分，然后按 <code>Ctrl+v</code> 选中该文本块，接着可根据需要左移 <code>&lt;</code> 或 右移 <code>&gt;</code> 。</strong></p>
+<h2 id="进阶命令">进阶命令</h2>
+<h3 id="快速纠错">快速纠错</h3>
+<p>进入 vim 之后首先使用 <code>a/i/o</code> 之一进入插入模式：</p>
+<ul>
+<li><code>Ctrl+h</code> 删除上一个字符</li>
+<li><code>Ctrl+w</code> 删除上一个单词</li>
+<li><code>Ctrl+u</code> 删除当前行</li>
+</ul>
+<h3 id="快速切换模式">快速切换模式</h3>
+<h4 id="快速切换-normal-模式">快速切换 normal 模式</h4>
+<ul>
+<li>使用 <code>Ctrl+c</code> 代替 <code>Esc</code>（但是可能会中断某些插件）</li>
+<li>或者 <code>Ctrl+[</code></li>
+</ul>
+<h4 id="快速切换-insert-模式">快速切换 insert 模式</h4>
+<ul>
+<li><code>gi</code> 快速跳转到你最后一次编辑的地方并进入插入模式</li>
+</ul>
+<h3 id="快速移动">快速移动</h3>
+<h4 id="单词之间移动">单词之间移动</h4>
+<ul>
+<li><code>w/W</code> 移动到下一个单词 word/WORD 开头</li>
+<li><code>e/E</code> 移动到下一个单词 word/WORD 结尾</li>
+<li><code>b/B</code> 移动到上一个单词 word/WORD 开头</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>word 指的是以非空白符分割的单词</li>
+<li>WORD 指的是以空白符分割的单词</li>
+</ul>
+<h4 id="行间搜索移动">行间搜索移动</h4>
+<p>同一行快速移动的方式其实是搜索一个字符并且移动到该字符。</p>
+<ul>
+<li>使用 <code>f&#123;char&#125;</code> 可移动到 char 字符上，从左往右搜索</li>
+<li>使用 <code>F&#123;char&#125;</code> 可移动到 char 字符上，从右往左搜索</li>
+<li><code>t&#123;char&#125;</code> 移动到 char 的前一个字符，从左往右搜索</li>
+<li>T{char}` 移动到 char 的后一个字符，从右往左搜索</li>
+<li>可以用分号 <code>;</code> 继续搜索该行下一个</li>
+<li>可以用分号 <code>,</code> 继续搜索该行上一个</li>
+</ul>
+<h4 id="水平移动">水平移动</h4>
+<ul>
+<li><code>0</code> 移动到行首</li>
+<li><code>^</code> 移动到行首非空白字符</li>
+<li><code>$</code> 移动到行尾</li>
+<li><code>g_</code> 移动到行尾非空白字符</li>
+</ul>
+<h4 id="垂直移动">垂直移动</h4>
+<ul>
+<li>使用 <code>(</code> 和 <code>)</code> 在句子 sentence 间移动，你可以使用 <code>:help (</code> 查看 sentence 的定义</li>
+<li>使用 <code>&#123;</code> 和 <code>&#125;</code> 在段落 paragraph 间移动，你可以使用 <code>:help &#123;</code> 查看 paragraph 的定义</li>
+</ul>
+<h4 id="页面移动">页面移动</h4>
+<ul>
+<li><code>gg</code> 移动到文件开头</li>
+<li><code>G</code> 移动文件结尾</li>
+<li><code>Ctrl+o</code> 快速返回</li>
+<li><code>H</code> 跳转到屏幕的开头（Head）</li>
+<li><code>M</code> 跳转到屏幕的中间（Middle）</li>
+<li><code>L</code> 跳转到屏幕的结尾（Lower）</li>
+<li><code>zz</code> 把屏幕置为中间</li>
+</ul>
+<h3 id="快速增删改查">快速增删改查</h3>
+<h4 id="快速删除">快速删除</h4>
+<ul>
+<li>vim 在 normal 模式下使用 <code>x</code> 快速删除一个字符</li>
+<li>使用 <code>d</code>（delete）配合文本对象快速删除一个单词 <code>daw</code>（d around word）
+<ul>
+<li><code>dw</code> 表示删除光标后面的单词</li>
+<li><code>daw</code> 表示删除光标所在的单词，包括单词旁边的空格</li>
+<li><code>diw</code> 表示删除光标所在的单词，但不包括单词旁边的空格</li>
+<li><code>dt&#123;char&#125;</code> 表示从光标位置删除到 char 之前的字符</li>
+</ul></li>
+<li><code>d</code> 和 <code>x</code> 都可以配合数字来执行多次</li>
+</ul>
+<h4 id="快速修改">快速修改</h4>
+<p>常用的有三个，<code>r</code>（replace），<code>c</code>（change），<code>s</code> （substitute）。</p>
+<ul>
+<li><code>r</code> 可以替换一个字符</li>
+<li><code>s</code> 删除当前字符并且进入插入模式</li>
+<li><code>c</code> 可以配合文本对象快速修改一个单词
+<ul>
+<li><code>cw</code>，<code>ciw</code>，<code>caw</code>，<code>ct&#123;char&#125;</code> 只不过是在 <code>dw</code>，<code>diw</code>，<code>daw</code>，<code>dt&#123;char&#125;</code> 删除的基础上同时进入插入模式</li>
+</ul></li>
+</ul>
+<h2 id="键盘图">键盘图</h2>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/2e6d55e2974573e5535a96e39222b327.png" alt="vi-vim-cheat-sheet-cn" /></p>
 <p><img src="https://cdn.jsdelivr.net/gh/wylu/img/a6a85c411f68f37654a409d43b3e2908.gif" alt="vi-vim-cheat-sheet" /></p>
 ]]></content>
       <categories>
-        <category>os</category>
-        <category>linux</category>
+        <category>tool</category>
+        <category>vim</category>
       </categories>
       <tags>
-        <tag>linux</tag>
+        <tag>vim</tag>
       </tags>
   </entry>
   <entry>
