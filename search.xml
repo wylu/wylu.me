@@ -8,6 +8,47 @@
 ]]></content>
   </entry>
   <entry>
+    <title>pycharm 远程调试</title>
+    <url>/posts/a02cc5ac/</url>
+    <content><![CDATA[<p>本文介绍了使用 PyCharm 提供的 pydevd 模块进行远程调试的步骤和原理。首先，在远程服务器上安装所需依赖，然后在本地机器上配置监听的 IP 地址和端口号，确保远程计算机可以访问到本地 IP 地址。接下来，在远程计算机的代码中插入特定的代码，其中 IP 地址和端口号需要与 PyCharm 中的监听配置一致。最后，通过 PyCharm 的远程调试模式，将 PyCharm 作为服务端，远程计算机上的应用程序作为客户端，建立连接并进行单步调试。</p>
+<span id="more"></span>
+<h1 id="pycharm-远程调试">pycharm 远程调试</h1>
+<p><a href="https://www.jetbrains.com/help/pycharm/remote-debugging-with-product.html" class="uri">https://www.jetbrains.com/help/pycharm/remote-debugging-with-product.html</a></p>
+<h2 id="远程服务器安装依赖">1. 远程服务器安装依赖</h2>
+<h3 id="下载依赖包">下载依赖包</h3>
+<p><a href="https://pypi.org/project/pydevd-pycharm" class="uri">https://pypi.org/project/pydevd-pycharm</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip download -d Downloads pydevd-pycharm==221.5921.27</span><br></pre></td></tr></table></figure>
+<h3 id="安装依赖包">安装依赖包</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxf pydevd-pycharm-221.5921.27.tar.gz</span><br><span class="line">cd pydevd-pycharm-221.5921.27/</span><br><span class="line">python3 setup.py install</span><br></pre></td></tr></table></figure>
+<h4 id="查看依赖是否安装成功">查看依赖是否安装成功</h4>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# pip3 list | grep pycharm</span><br><span class="line">pydevd-pycharm      221.5921.27</span><br></pre></td></tr></table></figure>
+<h2 id="本地机器的配置">2. 本地机器的配置</h2>
+<ul>
+<li>Run -&gt; Edit Configurations</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/1fa98965e687d1f60ebea828c61bd997.png" alt="Run -&gt; Edit Configurations" /></p>
+<ul>
+<li>Add New <a href="https://so.csdn.net/so/search?q=Configuration&amp;spm=1001.2101.3001.7020">Configuration</a> -&gt; Python Remote Debug</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wylu/img/333d31a77d6c2fe4f7bc54620722bed4.png" alt="Add New Configuration -&gt; Python Remote Debug" /></p>
+<p>填写 <strong>Local host name</strong> 和 <strong>Port</strong>，其中 Local host name 指的是本机开发环境的 IP 地址，而 Port 则随便填写一个 10000 以上的即可；需要注意的是，由于远程计算机需要连接至本地开发环境，因此本地 IP 地址应该保证远程可以访问得到。</p>
+<h2 id="远程计算机的代码配置">3. 远程计算机的代码配置</h2>
+<p>在远程需要调试的代码中插入如下代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pydevd</span><br><span class="line">pydevd.settrace(<span class="string">&#x27;10.214.161.179&#x27;</span>, port=<span class="number">10000</span>, stdoutToServer=<span class="literal">True</span>, stderrToServer=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>其中，IP 地址和端口号要与 PyCharm 中的监听配置保持一致。</p>
+<h2 id="pycharm-远程调试的原理">4. pycharm 远程调试的原理</h2>
+<p>在远程调试的模式下，PyCharm（IDE）扮演服务端（Server）的角色，而运行在远程计算机上的应用程序扮演客户端（Client）的角色。正因如此，进行远程调试时，需要先在本地开发环境中设定端口并启动IDE，IDE会对设定的端口开始监听，等待客户端的连接请求；</p>
+<p>针对远程调试功能，PyCharm 提供了 pydevd 模块，该模块以 pycharm-debug.egg 的形式存在于 PyCharm 的安装路径中。远程计算机安装该库文件后，然后就可以调用 pydevd.settrace 方法，该方法会指定 IDE 所在机器的 IP 地址和监听的端口号，用于与 IDE 建立连接；建立连接后，便可在 IDE 中对远程在远程计算机中的程序进行单步调试。</p>
+]]></content>
+      <categories>
+        <category>tool</category>
+        <category>pycharm</category>
+      </categories>
+      <tags>
+        <tag>pycharm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker 磁盘清理</title>
     <url>/posts/ab2a96fe/</url>
     <content><![CDATA[<p>在使用 docker 的时候，经常需要下载镜像，给镜像打标签，然后又因为没有及时清理无用的镜像，久而久之，docker 就会把宿主机的磁盘空间占满，导致系统异常。对于 docker 磁盘占用的问题，可以通过 docker 自带的 prune 命令清理或者迁移 docker 下的 overlay2 文件夹来解决。</p>
