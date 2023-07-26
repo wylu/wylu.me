@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="msvalidate.01" content="05EA84E81FBC0002CD044701E7E4E569">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文介绍了在 CentOS7 系统下安装 RabbitMQ 的详细步骤。首先需要安装 Erlang 和 RabbitMQ，然后进行 RabbitMQ 的配置，包括设置防火墙和 SELinux。接着介绍了如何启用 RabbitMQ Web 控制台以及如何配置 SSL 证书。最后，文章提供了设置 RabbitMQ 集群的脚本 &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;rabbitmq-cluster.sh，供读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7 下安装 RabbitMQ">
+<meta property="og:url" content="https://www.wylu.me/posts/57eda046/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="本文介绍了在 CentOS7 系统下安装 RabbitMQ 的详细步骤。首先需要安装 Erlang 和 RabbitMQ，然后进行 RabbitMQ 的配置，包括设置防火墙和 SELinux。接着介绍了如何启用 RabbitMQ Web 控制台以及如何配置 SSL 证书。最后，文章提供了设置 RabbitMQ 集群的脚本 &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;rabbitmq-cluster.sh，供读">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-26T15:13:23.000Z">
+<meta property="article:modified_time" content="2023-07-26T15:14:40.305Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="rabbitmq">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.wylu.me/posts/57eda046/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/57eda046/","path":"posts/57eda046/","title":"CentOS7 下安装 RabbitMQ"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CentOS7 下安装 RabbitMQ | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "enj9prl9r6");
+</script>
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5699403938610067" crossorigin="anonymous"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">70</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">42</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">86</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#centos7-%E4%B8%8B%E5%AE%89%E8%A3%85-rabbitmq"><span class="nav-text">CentOS7 下安装 RabbitMQ</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-erlang"><span class="nav-text">安装 Erlang</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-rabbitmq"><span class="nav-text">安装 RabbitMQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq-%E9%85%8D%E7%BD%AE%E5%8F%AF%E9%80%89"><span class="nav-text">RabbitMQ 配置（可选）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-text">设置防火墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#selinux"><span class="nav-text">SELinux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq-web-%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-text">RabbitMQ Web 控制台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq-web-%E6%8E%A7%E5%88%B6%E5%8F%B0%E9%85%8D%E7%BD%AE-ssl-%E8%AF%81%E4%B9%A6%E5%8F%AF%E9%80%89"><span class="nav-text">RabbitMQ Web 控制台配置 SSL 证书（可选）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq-%E9%9B%86%E7%BE%A4"><span class="nav-text">RabbitMQ 集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rabbitmq-%E5%BC%82%E5%B8%B8%E9%80%80%E5%87%BA%E6%97%A0%E6%B3%95%E9%87%8D%E5%90%AF"><span class="nav-text">1. RabbitMQ 异常退出无法重启</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/posts/85807abd/" rel="bookmark">
+        <time class="popular-posts-time">2020-07-16</time>
+        <br>
+      RabbitMQ高可用集群搭建
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/posts/b769518c/" rel="bookmark">
+        <time class="popular-posts-time">2023-04-08</time>
+        <br>
+      CentOS 搭建 DNS 服务
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wylu.me/posts/57eda046/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CentOS7 下安装 RabbitMQ | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS7 下安装 RabbitMQ
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-07-26 23:13:23 / 修改时间：23:14:40" itemprop="dateCreated datePublished" datetime="2023-07-26T23:13:23+08:00">2023-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/middleware/" itemprop="url" rel="index"><span itemprop="name">middleware</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/middleware/mq/" itemprop="url" rel="index"><span itemprop="name">mq</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/middleware/mq/RabbitMQ/" itemprop="url" rel="index"><span itemprop="name">RabbitMQ</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>538</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文介绍了在 CentOS7 系统下安装 RabbitMQ 的详细步骤。首先需要安装 Erlang 和 RabbitMQ，然后进行 RabbitMQ 的配置，包括设置防火墙和 SELinux。接着介绍了如何启用 RabbitMQ Web 控制台以及如何配置 SSL 证书。最后，文章提供了设置 RabbitMQ 集群的脚本 /usr/local/sbin/rabbitmq-cluster.sh，供读者参考。</p>
+<span id="more"></span>
+<h1 id="centos7-下安装-rabbitmq">CentOS7 下安装 RabbitMQ</h1>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br><span class="line">sudo yum -y update</span><br></pre></td></tr></table></figure>
+<h2 id="安装-erlang">安装 Erlang</h2>
+<p>下载 erlang repository：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>添加 erlang repository：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh erlang-solutions-1.0-1.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>安装 erlang 及其依赖：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install erlang socat logrotate</span><br></pre></td></tr></table></figure>
+<h2 id="安装-rabbitmq">安装 RabbitMQ</h2>
+<p>下载 RabbitMQ rpm 包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.8/rabbitmq-server-3.8.8-1.el6.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>添加 signing key：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc</span><br></pre></td></tr></table></figure>
+<p>安装 rabbitmq-server：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh rabbitmq-server-3.8.8-1.el6.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>启动 RabbitMQ：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start rabbitmq-server</span><br></pre></td></tr></table></figure>
+<p>设置 RabbitMQ 开机自启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable rabbitmq-server</span><br></pre></td></tr></table></figure>
+<h2 id="rabbitmq-配置可选">RabbitMQ 配置（可选）</h2>
+<p>创建 rabbitmq 配置文件 <code>/etc/rabbitmq/rabbitmq.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">listeners.ssl.default = 5671</span><br><span class="line"></span><br><span class="line">ssl_options.cacertfile = /path/to/cacertfile.pem</span><br><span class="line">ssl_options.certfile   = /path/to/certfile.pem</span><br><span class="line">ssl_options.keyfile    = /path/to/keyfile.pem</span><br><span class="line">ssl_options.verify     = verify_peer</span><br><span class="line">ssl_options.versions.1 = tlsv1.2</span><br><span class="line">ssl_options.versions.2 = tlsv1.1</span><br><span class="line">ssl_options.fail_if_no_peer_cert = false</span><br><span class="line"></span><br><span class="line">tcp_listen_options.backlog       = 128</span><br><span class="line">tcp_listen_options.nodelay       = true</span><br><span class="line">tcp_listen_options.exit_on_close = false</span><br><span class="line">tcp_listen_options.keepalive     = false</span><br><span class="line"></span><br><span class="line">heartbeat = 580</span><br></pre></td></tr></table></figure>
+<h2 id="设置防火墙">设置防火墙</h2>
+<p>设置防火墙规则，放通相关端口：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=4369/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=25672/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=5671-5672/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=15672/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=61613-61614/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=1883/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=8883/tcp</span><br></pre></td></tr></table></figure>
+<p>重载防火墙，使规则生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h2 id="selinux">SELinux</h2>
+<p>如果 SELinux 是 enabled，则启用 NIS：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo setsebool -P nis_enabled 1</span><br></pre></td></tr></table></figure>
+<p><code>-P</code> 参数表示将设置永久生效，nis_enabled 是一个 SELinux 布尔类型的变量，用于控制是否启用 NIS（Network Information Service）服务。将其设置为 1 表示启用 NIS 服务。</p>
+<h2 id="rabbitmq-web-控制台">RabbitMQ Web 控制台</h2>
+<p>启用 RabbitMQ web 控制台：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
+<p>修改文件权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R rabbitmq:rabbitmq /var/lib/rabbitmq/</span><br></pre></td></tr></table></figure>
+<p>创建一个 admin 用户（将 <code>password</code> 替换为一个强密码）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl add_user admin password</span><br></pre></td></tr></table></figure>
+<p>给 admin 用户设置 administrator 标签：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl set_user_tags admin administrator</span><br></pre></td></tr></table></figure>
+<p>设置 admin 用户权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl set_permissions -p / admin &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</span><br></pre></td></tr></table></figure>
+<p>使用 admin 用户访问 RabbitMQ web 控制台：</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="http://Your_Server_IP:15672" class="uri">http://Your_Server_IP:15672</a></p>
+<h2 id="rabbitmq-web-控制台配置-ssl-证书可选">RabbitMQ Web 控制台配置 SSL 证书（可选）</h2>
+<p>编辑 RabbitMQ 配置文件 <code>/etc/rabbitmq/rabbitmq.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">management.listener.port = 15672</span><br><span class="line">management.listener.ssl  = true</span><br><span class="line"></span><br><span class="line">management.listener.ssl_opts.cacertfile = /path/to/cacertfile.pem</span><br><span class="line">management.listener.ssl_opts.certfile   = /path/to/certfile.pem</span><br><span class="line">management.listener.ssl_opts.keyfile    = /path/to/keyfile.pem</span><br></pre></td></tr></table></figure>
+<h2 id="rabbitmq-集群">RabbitMQ 集群</h2>
+<p>设置 RabbitMQ 集群, 拷贝下面的脚本 <code>/usr/local/sbin/rabbitmq-cluster.sh</code> 并运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">getHostname</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">local</span> HOST=<span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> <span class="built_in">test</span> -z <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span></span><br><span class="line">  <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">read</span> -p <span class="string">&quot;<span class="variable">$1</span> : &quot;</span> HOST</span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$HOST</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SETUP_MASTER_SCRIPT=<span class="string">&#x27;</span></span><br><span class="line"><span class="string">rabbitmqctl stop_app;</span></span><br><span class="line"><span class="string">rabbitmqctl reset;</span></span><br><span class="line"><span class="string">rabbitmqctl start_app;</span></span><br><span class="line"><span class="string">&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1 : Setup the Master. Get the erlang cookie</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Setup RabbitMQ Master&quot;</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;=====================&quot;</span>;</span><br><span class="line"></span><br><span class="line">OUT=/tmp/master.out</span><br><span class="line">MASTER_HOSTNAME=$(getHostname <span class="string">&quot;Enter the master server&#x27;s hostname&quot;</span>);</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$MASTER_HOSTNAME</span>] Setting up master&quot;</span>;</span><br><span class="line">ssh -t <span class="variable">$MASTER_HOSTNAME</span> <span class="string">&quot;bash -c &#x27;<span class="variable">$SETUP_MASTER_SCRIPT</span> cat /var/lib/rabbitmq/.erlang.cookie;&#x27;&quot;</span> | <span class="built_in">tee</span> <span class="variable">$OUT</span>;</span><br><span class="line">COOKIE=$(<span class="built_in">cat</span> <span class="variable">$OUT</span> | <span class="built_in">tail</span> -n1)</span><br><span class="line"><span class="built_in">rm</span> <span class="variable">$OUT</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Master&#x27;s Erlang Cookie : &#x27;<span class="variable">$COOKIE</span>&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line">MASTER_IP=$(getHostname <span class="string">&quot;Enter the master server&#x27;s IP as seen from the slaves (Use a local IP if available)&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 2 : Setup the slaves</span></span><br><span class="line"></span><br><span class="line">SETUP_SLAVE_SCRIPT=<span class="string">&quot;</span></span><br><span class="line"><span class="string">sed -i \&quot;s/^$/<span class="variable">$MASTER_IP</span>    <span class="variable">$MASTER_HOSTNAME</span>\n/\&quot; /etc/hosts</span></span><br><span class="line"><span class="string">bash -c \&quot;echo -n &#x27;<span class="variable">$COOKIE</span>&#x27; &gt; /var/lib/rabbitmq/.erlang.cookie\&quot;;</span></span><br><span class="line"><span class="string">rabbitmqctl stop_app;</span></span><br><span class="line"><span class="string">rabbitmqctl reset;</span></span><br><span class="line"><span class="string">rabbitmqctl join_cluster --ram rabbit@<span class="variable">$MASTER_HOSTNAME</span>;</span></span><br><span class="line"><span class="string">rabbitmqctl start_app;</span></span><br><span class="line"><span class="string">rabbitmqctl cluster_status;</span></span><br><span class="line"><span class="string">&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Setup RabbitMQ Slaves&quot;</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;=====================&quot;</span>;</span><br><span class="line"></span><br><span class="line">SERVER=$(getHostname <span class="string">&quot;Enter slave&#x27;s hostname or &#x27;q&#x27; to quit&quot;</span>);</span><br><span class="line"><span class="keyword">while</span> <span class="built_in">test</span> <span class="string">&quot;<span class="variable">$SERVER</span>&quot;</span> != <span class="string">&quot;q&quot;</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Setting up slave&quot;</span>;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;ssh &#x27;<span class="variable">$SERVER</span>&#x27;&quot;</span>;</span><br><span class="line">  ssh -t <span class="variable">$SERVER</span> <span class="string">&quot;bash -c &#x27;<span class="variable">$SETUP_SLAVE_SCRIPT</span>&#x27;&quot;</span>;</span><br><span class="line">  SERVER=$(getHostname <span class="string">&quot;Enter another slave&#x27;s hostname or &#x27;q&#x27; to quit&quot;</span>);</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 3 : Create admin user</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$MASTER_HOSTNAME</span>] Setting up admin user&quot;</span>;</span><br><span class="line">ssh -t <span class="variable">$MASTER_HOSTNAME</span> <span class="string">&quot;bash -c &#x27;rabbitmqctl add_user admin password&#x27;&quot;</span>;</span><br><span class="line">ssh -t <span class="variable">$MASTER_HOSTNAME</span> <span class="string">&quot;bash -c &#x27;rabbitmqctl set_user_tags admin administrator&#x27;&quot;</span>;</span><br><span class="line">ssh -t <span class="variable">$MASTER_HOSTNAME</span> <span class="string">&quot;bash -c &#x27;rabbitmqctl set_permissions -p / admin \&quot;.*\&quot; \&quot;.*\&quot; \&quot;.*\&quot;&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 3 : Delete guest user</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$MASTER_HOSTNAME</span>] Removing user&quot;</span>;</span><br><span class="line">ssh -t <span class="variable">$MASTER_HOSTNAME</span> <span class="string">&quot;bash -c &#x27;rabbitmqctl delete_user guest&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 5 : Create sync policy</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;[<span class="variable">$MASTER_HOSTNAME</span>] Synchronizing cluster&quot;</span>;</span><br><span class="line">ssh -t <span class="variable">$MASTER_HOSTNAME</span> $<span class="string">&quot;bash -c &#x27;rabbitmqctl set_policy -p / ha-all \&quot;\&quot; &#x27;\&#x27;&#x27;&#123;\&quot;ha-mode\&quot;:\&quot;all\&quot;,\&quot;ha-sync-mode\&quot;:\&quot;automatic\&quot;&#125;&#x27;\&#x27;&#x27;&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Done&quot;</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="rabbitmq-异常退出无法重启">1. RabbitMQ 异常退出无法重启</h3>
+<p><strong>问题描述：</strong></p>
+<p>机房突然停电，rabbitmq 的主机异常断电，集群服务全部需要重启。但是在执行 <code>systemctl start rabbitmq-server</code> 启动主节点服务的时候，没有反应，服务没有启动，命令执行卡住。只能 Ctrl+C 结束进程。</p>
+<p>查看 /var/log/rabbitmq/rabbit@hostname.log 发现有如下报错信息：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2021-04-13 20:15:00.011 [info] &lt;0.317.0&gt; Waiting for Mnesia tables for 30000 ms, 9 retries left</span><br><span class="line">2021-04-13 20:15:00.011 [warning] &lt;0.317.0&gt; Error while waiting for Mnesia tables: &#123;failed_waiting_for_tables,&#123;node_not_running,rabbit@node233&#125;&#125;</span><br><span class="line">...</span><br><span class="line">2021-04-13 20:15:00.012 [info] &lt;0.317.0&gt; Waiting for Mnesia tables for 30000 ms, 0 retries left</span><br><span class="line">2021-04-13 20:15:00.013 [error] &lt;0.316.0&gt; CRASH REPORT Process &lt;0.316.0&gt; with 0 neighbours exited with reason: &#123;&#123;failed_waiting_for_tables,&#123;node_not_running,rabbit@node233&#125;&#125;,&#123;rabbit,start,[normal,[]]&#125;&#125; in application_master:init/4 line 138</span><br></pre></td></tr></table></figure>
+<p><strong>解决方法：</strong></p>
+<ol type="1">
+<li>检查端口是否被占用；</li>
+<li>检查 /var/log/rabbitmq 目录权限；</li>
+<li>分布式数据库 mnesia 异常，将 /var/lib/rabbitmq/mnesia/rabbit@hostname/ 下的数据库文件清空即可，重新启动服务；或直接清除 /var/lib/rabbitmq/mnesia 目录下所有文件；</li>
+</ol>
+<h2 id="references">References</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://gist.github.com/fernandoaleman/fe34e83781f222dfd8533b36a52dddcc">Install RabbitMQ on CentOS 7</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.wylu.me/posts/57eda046/" title="CentOS7 下安装 RabbitMQ">https://www.wylu.me/posts/57eda046/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/rabbitmq/" rel="tag"><i class="fa fa-tag"></i> rabbitmq</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/a02cc5ac/" rel="prev" title="pycharm 远程调试">
+                  <i class="fa fa-chevron-left"></i> pycharm 远程调试
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="aec94e31a6cdf994c6c6572444aa2591"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">wylu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">135k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:11</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
