@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="msvalidate.01" content="05EA84E81FBC0002CD044701E7E4E569">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文介绍了在 CentOS7 下安装和部署 Kafka 集群的步骤。首先介绍了 Kafka 的简介，包括其作为高吞吐量的分布式发布订阅消息系统的特点。然后说明了搭建 Kafka 集群环境所需的设备环境，包括准备一个 Zookeeper 环境。接下来详细介绍了安装步骤，包括下载 Kafka、解压安装、配置环境变量、编辑配置文件、创建 system 服务、启动和关闭 Kafka 以及查看集群状态。最后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7 下 kafka 集群安装部署">
+<meta property="og:url" content="https://www.wylu.me/posts/3e8270c5/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="本文介绍了在 CentOS7 下安装和部署 Kafka 集群的步骤。首先介绍了 Kafka 的简介，包括其作为高吞吐量的分布式发布订阅消息系统的特点。然后说明了搭建 Kafka 集群环境所需的设备环境，包括准备一个 Zookeeper 环境。接下来详细介绍了安装步骤，包括下载 Kafka、解压安装、配置环境变量、编辑配置文件、创建 system 服务、启动和关闭 Kafka 以及查看集群状态。最后">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-27T15:25:52.000Z">
+<meta property="article:modified_time" content="2023-07-27T15:46:15.666Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="kafka">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.wylu.me/posts/3e8270c5/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/3e8270c5/","path":"posts/3e8270c5/","title":"CentOS7 下 kafka 集群安装部署"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CentOS7 下 kafka 集群安装部署 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "enj9prl9r6");
+</script>
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5699403938610067" crossorigin="anonymous"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">71</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">43</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#centos7-%E4%B8%8B-kafka-%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><span class="nav-text">CentOS7 下 kafka 集群安装部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka-%E7%AE%80%E4%BB%8B"><span class="nav-text">1. kafka 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%8E%AF%E5%A2%83"><span class="nav-text">2. 设备环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="nav-text">3. 安装步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-kafka"><span class="nav-text">3.1 下载 kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85"><span class="nav-text">3.2 解压安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8F%AF%E9%80%89"><span class="nav-text">3.3 配置环境变量（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">3.4 编辑配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-system-%E6%9C%8D%E5%8A%A1%E5%8F%AF%E9%80%89"><span class="nav-text">3.5 创建 system 服务（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-kafka"><span class="nav-text">3.6 启动 kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD-kafka"><span class="nav-text">3.7 关闭 kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="nav-text">3.8 查看集群状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8"><span class="nav-text">4. kafka 命令行工具使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B"><span class="nav-text">4.1 测试流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%AD%A5%E9%AA%A4"><span class="nav-text">4.2 测试步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-text">References</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">71</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wylu.me/posts/3e8270c5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CentOS7 下 kafka 集群安装部署 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS7 下 kafka 集群安装部署
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-07-27 23:25:52 / 修改时间：23:46:15" itemprop="dateCreated datePublished" datetime="2023-07-27T23:25:52+08:00">2023-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/middleware/" itemprop="url" rel="index"><span itemprop="name">middleware</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/middleware/mq/" itemprop="url" rel="index"><span itemprop="name">mq</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/middleware/mq/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>895</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文介绍了在 CentOS7 下安装和部署 Kafka 集群的步骤。首先介绍了 Kafka 的简介，包括其作为高吞吐量的分布式发布订阅消息系统的特点。然后说明了搭建 Kafka 集群环境所需的设备环境，包括准备一个 Zookeeper 环境。接下来详细介绍了安装步骤，包括下载 Kafka、解压安装、配置环境变量、编辑配置文件、创建 system 服务、启动和关闭 Kafka 以及查看集群状态。最后，介绍了 Kafka 命令行工具的使用，包括测试流程和测试步骤，涵盖了创建 topic、生产消息、消费消息等操作。</p>
+<span id="more"></span>
+<h1 id="centos7-下-kafka-集群安装部署">CentOS7 下 kafka 集群安装部署</h1>
+<h2 id="kafka-简介">1. kafka 简介</h2>
+<p>Apache kafka 是由 Apache 软件基金会开发的一个开源流处理平台，由 Scala 和 Java 编写。Kafka 是一种高吞吐量的分布式发布订阅消息系统，是消息中间件的一种，用于构建实时数据管道和流应用程序，非常流行。</p>
+<p>Kafka官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="http://kafka.apache.org" class="uri">http://kafka.apache.org</a></p>
+<p>学习推荐：<a target="_blank" rel="external nofollow noopener noreferrer" href="http://orchome.com/kafka/index" class="uri">http://orchome.com/kafka/index</a></p>
+<p>官网下载：<a target="_blank" rel="external nofollow noopener noreferrer" href="http://kafka.apache.org/downloads" class="uri">http://kafka.apache.org/downloads</a></p>
+<h2 id="设备环境">2. 设备环境</h2>
+<p>Kafka 集群环境搭建，需要准备好一个 zookeeper 环境（集群）</p>
+<table>
+<thead>
+<tr class="header">
+<th>Host</th>
+<th>IP</th>
+<th>Port</th>
+<th>OS</th>
+<th>Software</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>cnode1</td>
+<td>10.128.170.21</td>
+<td>9092</td>
+<td>CentOS 7.9.2009</td>
+<td>kafka 2.13-2.8.1</td>
+</tr>
+<tr class="even">
+<td>cnode2</td>
+<td>10.128.170.22</td>
+<td>9092</td>
+<td>CentOS 7.9.2009</td>
+<td>kafka 2.13-2.8.1</td>
+</tr>
+<tr class="odd">
+<td>cnode3</td>
+<td>10.128.170.23</td>
+<td>9092</td>
+<td>CentOS 7.9.2009</td>
+<td>kafka 2.13-2.8.1</td>
+</tr>
+</tbody>
+</table>
+<p>说明：kafka 名中的 2.13 是 Scala 语言版本，后面的 2.8.1 是 kafka 版本，端口默认为 9092。</p>
+<h2 id="安装步骤">3. 安装步骤</h2>
+<h3 id="下载-kafka">3.1 下载 kafka</h3>
+<p>官网下载太慢，推荐使用国内镜像进行下载，清华镜像下载地址：</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://mirrors.tuna.tsinghua.edu.cn/apache/kafka" class="uri">https://mirrors.tuna.tsinghua.edu.cn/apache/kafka</a></p>
+<p>这里以下载 2.8.1 版本为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -c https://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.8.1/kafka_2.13-2.8.1.tgz</span><br></pre></td></tr></table></figure>
+<h3 id="解压安装">3.2 解压安装</h3>
+<p>这里解压至 /opt 目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf kafka_2.13-2.8.1.tgz -C /opt</span><br></pre></td></tr></table></figure>
+<p>解压后目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 kafka_2.13-2.8.1]# pwd</span><br><span class="line">/opt/kafka_2.13-2.8.1</span><br><span class="line">[root@cnode1 kafka_2.13-2.8.1]# ll</span><br><span class="line">total 40</span><br><span class="line">drwxr-xr-x. 3 root root  4096 Sep 14 21:09 bin</span><br><span class="line">drwxr-xr-x. 3 root root  4096 Sep 14 21:09 config</span><br><span class="line">drwxr-xr-x. 2 root root  8192 Feb 18 10:26 libs</span><br><span class="line">-rw-r--r--. 1 root root 14520 Sep 14 21:03 LICENSE</span><br><span class="line">drwxr-xr-x. 2 root root   262 Sep 14 21:09 licenses</span><br><span class="line">-rw-r--r--. 1 root root   953 Sep 14 21:03 NOTICE</span><br><span class="line">drwxr-xr-x. 2 root root    44 Sep 14 21:09 site-docs</span><br></pre></td></tr></table></figure>
+<h3 id="配置环境变量可选">3.3 配置环境变量（可选）</h3>
+<p>编辑 /etc/profile 文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>在文件末尾添加如下配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Kafka Environment</span></span><br><span class="line">export KAFKA_HOME=/opt/kafka_2.13-2.8.1</span><br><span class="line"></span><br><span class="line">export PATH=$&#123;PATH&#125;:$&#123;KAFKA_HOME&#125;/bin</span><br></pre></td></tr></table></figure>
+<p>使配置生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+<h3 id="编辑配置文件">3.4 编辑配置文件</h3>
+<p>进入 config 目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/kafka_2.13-2.8.1/config/</span><br></pre></td></tr></table></figure>
+<p>备份原配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp server.properties server.properties.bak</span><br></pre></td></tr></table></figure>
+<p>编辑配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim server.properties</span><br></pre></td></tr></table></figure>
+<p>修改配置如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">############################# Server Basics #############################</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># The id of the broker. This must be set to a unique integer for each broker.</span></span><br><span class="line"><span class="attr">broker.id</span>=<span class="string">1  # 默认是 0，这里自定义 cnode1:1 cnode2:2 cnode3:3</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Switch to enable topic deletion or not, default value is false</span></span><br><span class="line"><span class="comment">#delete.topic.enable  # 这里为新增行，默认是 false，为 false 时，删除 topic 时不会立即被删掉</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">############################# Socket Server Settings #############################</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># The address the socket server listens on. It will get the value returned from</span></span><br><span class="line"><span class="comment"># java.net.InetAddress.getCanonicalHostName() if not configured.</span></span><br><span class="line"><span class="comment">#   FORMAT:</span></span><br><span class="line"><span class="comment">#     listeners = listener_name://host_name:port</span></span><br><span class="line"><span class="comment">#   EXAMPLE:</span></span><br><span class="line"><span class="comment">#     listeners = PLAINTEXT://your.host.name:9092</span></span><br><span class="line"><span class="comment">#listeners=PLAINTEXT://:9092  # 根据需要修改端口</span></span><br><span class="line"><span class="attr">host.name</span>=<span class="string">cnode1  # 这里为新增行</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">############################# Log Basics #############################</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># A comma separated list of directories under which to store log files</span></span><br><span class="line"><span class="attr">log.dirs</span>=<span class="string">/data/kafka-logs  # 默认是 /tmp/kafka-logs，这里重新定义了路径</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">############################# Zookeeper #############################</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Zookeeper connection string (see zookeeper docs for details).</span></span><br><span class="line"><span class="comment"># This is a comma separated host:port pairs, each corresponding to a zk</span></span><br><span class="line"><span class="comment"># server. e.g. &quot;127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002&quot;.</span></span><br><span class="line"><span class="comment"># You can also append an optional chroot string to the urls to specify the</span></span><br><span class="line"><span class="comment"># root directory for all kafka znodes.</span></span><br><span class="line"><span class="comment"># 这里写上已准备好的 zookeeper 集群环境</span></span><br><span class="line"><span class="attr">zookeeper.connect</span>=<span class="string">cnode1:2181,cnode2:2181,cnode3:2181</span></span><br></pre></td></tr></table></figure>
+<p>其它配置可以保持默认，保存退出。在 cnode2 和 cnode3 上进行同样的操作，不再赘述。</p>
+<h3 id="创建-system-服务可选">3.5 创建 system 服务（可选）</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/lib/systemd/system/kafka.service</span><br></pre></td></tr></table></figure>
+<p>添加如下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=kafka service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">User=root</span><br><span class="line">Group=root</span><br><span class="line"># 启用 jmx</span><br><span class="line">#Environment=JMX_PORT=9988</span><br><span class="line">ExecStart=/opt/kafka_2.13-2.8.1/bin/kafka-server-start.sh -daemon /opt/kafka_2.13-2.8.1/config/server.properties</span><br><span class="line">ExecStop=/opt/kafka_2.13-2.8.1/bin/kafka-server-stop.sh</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=1</span><br><span class="line">StartLimitIntervalSec=0</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://lists.freedesktop.org/archives/systemd-devel/2017-July/039255.html" class="uri">https://lists.freedesktop.org/archives/systemd-devel/2017-July/039255.html</a></p>
+<h3 id="启动-kafka">3.6 启动 kafka</h3>
+<p>这里以未配置环境变量为例。</p>
+<p>切换到 bin 目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/kafka_2.13-2.8.1/bin/</span><br></pre></td></tr></table></figure>
+<p>启动服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# ./kafka-server-start.sh -daemon ../config/server.properties</span><br></pre></td></tr></table></figure>
+<p>查看 9092 端口状态，确保服务已经启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# netstat -anptl | grep 9092</span><br><span class="line">tcp6       0      0 10.128.170.21:9092      :::*                    LISTEN      29553/java</span><br><span class="line">tcp6       0      0 10.128.170.21:40092     10.128.170.21:9092      ESTABLISHED 29553/java</span><br><span class="line">tcp6       0      0 10.128.170.21:9092      10.128.170.21:40092     ESTABLISHED 29553/java</span><br></pre></td></tr></table></figure>
+<p>同样地，启动 cnode2 和 cnode3：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode2 bin]# ./kafka-server-start.sh -daemon ../config/server.properties</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode3 bin]# ./kafka-server-start.sh -daemon ../config/server.properties</span><br></pre></td></tr></table></figure>
+<p>至此，kafka 安装启动完成。</p>
+<h3 id="关闭-kafka">3.7 关闭 kafka</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# ./kafka-server-stop.sh</span><br><span class="line">[root@cnode2 bin]# ./kafka-server-stop.sh</span><br><span class="line">[root@cnode3 bin]# ./kafka-server-stop.sh</span><br></pre></td></tr></table></figure>
+<h3 id="查看集群状态">3.8 查看集群状态</h3>
+<p>登录 zookeeper（切换到 zookeeper 的 bin 目录下）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# cd /opt/apache-zookeeper-3.6.3-bin/bin/</span><br><span class="line">[root@cnode1 bin]# ./zkCli.sh -server cnode2</span><br><span class="line">...</span><br><span class="line">[zk: cnode2(CONNECTED) 0] ls /</span><br><span class="line">[admin, brokers, cluster, config, consumers, controller, controller_epoch, feature, isr_change_notification, latest_producer_id_block, log_dir_event_notification, zookeeper]</span><br><span class="line">[zk: cnode2(CONNECTED) 1] ls /brokers</span><br><span class="line">[ids, seqid, topics]</span><br><span class="line">[zk: cnode2(CONNECTED) 2] ls /brokers/ids</span><br><span class="line">[1, 2, 3]</span><br></pre></td></tr></table></figure>
+<p>说明：zookeeper 集群建好之后，通过 <code>ls /</code> 出来的只有 zookeeper，连接 kafka 使用后，<code>/</code> 下面多了不少东西，其中通过查看 <code>/brokers/ids</code> 可以发现已经检查到了已经安装的三台 kafka 的 broker.id [1,2,3]。</p>
+<h2 id="kafka-命令行工具使用">4. kafka 命令行工具使用</h2>
+<h3 id="测试流程">4.1 测试流程</h3>
+<p>主线：创建 topic，生产消息，消费消息。</p>
+<p>流程命令会连接不同的节点，可以顺带检测集群消息的同步情况。</p>
+<p>（1）在 cnode1 上创建 topic</p>
+<p>（2）在 cnode3 查看 topic</p>
+<p>（3）在 cnode1 上生成消息</p>
+<p>（4）在 cnode2 上消费消息</p>
+<h3 id="测试步骤">4.2 测试步骤</h3>
+<p>（1）先创建一个 topic</p>
+<p>在 cnode1 节点执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# ./kafka-topics.sh --create --zookeeper cnode1:2181 --replication-factor 3 --partitions 2 --topic google</span><br><span class="line">Created topic google.</span><br></pre></td></tr></table></figure>
+<p>创建一个名叫 "google" 的 topic 成功。</p>
+<p>（2）查看一下建好的 topic</p>
+<p>在 cnode3 节点执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode3 bin]# ./kafka-topics.sh --list --zookeeper cnode3:2181</span><br><span class="line">google</span><br></pre></td></tr></table></figure>
+<p>（3）在建好的 topic 下生产消息</p>
+<p>在 cnode1 节点执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# ./kafka-console-producer.sh --broker-list cnode1:9092 --topic google</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">Apple</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">Banana</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">Cat</span></span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">Dog</span></span><br></pre></td></tr></table></figure>
+<p>这里生产了 4 个消息，每行一个。</p>
+<p>（4）消费指定 topic 下的消息</p>
+<p>在 cnode2 节点执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode2 bin]# ./kafka-console-consumer.sh --bootstrap-server cnode2:9092 --topic google --from-beginning</span><br><span class="line">Banana</span><br><span class="line">Dog</span><br><span class="line">Apple</span><br><span class="line">Cat</span><br></pre></td></tr></table></figure>
+<p>（5）删除指定 topic</p>
+<p>先 list 一下然后删除</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@cnode1 bin]# ./kafka-topics.sh --list --zookeeper cnode1:2181</span><br><span class="line">__consumer_offsets</span><br><span class="line">google</span><br><span class="line">[root@cnode1 bin]# ./kafka-topics.sh --delete --zookeeper cnode3:2181 --topic google</span><br><span class="line">Topic google is marked for deletion.</span><br><span class="line">Note: This will have no impact if delete.topic.enable is not set to true.</span><br><span class="line">[root@cnode1 bin]# ./kafka-topics.sh --list --zookeeper cnode1:2181</span><br><span class="line">__consumer_offsets</span><br></pre></td></tr></table></figure>
+<h2 id="references">References</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cnblogs.com/ding2016/p/8282907.html">centos7下kafka集群安装部署</a></p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cnblogs.com/ding2016/p/8283796.html">kafka命令行脚本使用</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.wylu.me/posts/3e8270c5/" title="CentOS7 下 kafka 集群安装部署">https://www.wylu.me/posts/3e8270c5/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/kafka/" rel="tag"><i class="fa fa-tag"></i> kafka</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/57eda046/" rel="prev" title="CentOS7 下安装 RabbitMQ">
+                  <i class="fa fa-chevron-left"></i> CentOS7 下安装 RabbitMQ
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="479cf82120b1e2e8e2f750bf810adc66"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">wylu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">136k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:14</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
