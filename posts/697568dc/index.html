@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="TWTqGRcdm7qMQZ1XqfQLJEwhOaDcUy81paYiE7e3tyw">
+  <meta name="msvalidate.01" content="05EA84E81FBC0002CD044701E7E4E569">
+  <meta name="baidu-site-verification" content="uuaszSSnES">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.wylu.me","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"changyan","storage":true,"lazyload":false,"nav":null,"activeClass":"changyan"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文介绍了 nmcli (Network Manager Command Line Interface) 网络管理工具，它是 NetworkManager 的命令行工具，用于在 Linux 系统上管理网络连接。nmcli 允许用户通过命令行界面管理和配置网络连接，包括无线网络、以太网、VPN 等。本文详细介绍了 nmcli 的安装方法和各种命令，包括选项、通用命令、网络控制命令、设备管理命令、连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nmcli 网络管理工具">
+<meta property="og:url" content="https://www.wylu.me/posts/697568dc/index.html">
+<meta property="og:site_name" content="wylu">
+<meta property="og:description" content="本文介绍了 nmcli (Network Manager Command Line Interface) 网络管理工具，它是 NetworkManager 的命令行工具，用于在 Linux 系统上管理网络连接。nmcli 允许用户通过命令行界面管理和配置网络连接，包括无线网络、以太网、VPN 等。本文详细介绍了 nmcli 的安装方法和各种命令，包括选项、通用命令、网络控制命令、设备管理命令、连接">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-30T06:42:05.000Z">
+<meta property="article:modified_time" content="2023-07-30T06:45:53.705Z">
+<meta property="article:author" content="lu wenye">
+<meta property="article:tag" content="centos">
+<meta property="article:tag" content="nmcli">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.wylu.me/posts/697568dc/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.wylu.me/posts/697568dc/","path":"posts/697568dc/","title":"nmcli 网络管理工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nmcli 网络管理工具 | wylu</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155154294-1"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-155154294-1","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "enj9prl9r6");
+</script>
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5699403938610067" crossorigin="anonymous"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="wylu" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">wylu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep It Simple, Stupid</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">72</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">43</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">89</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-commenting fa-fw"></i>留言</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80" placeholder="搜索..." spellcheck="false" type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nmcli-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="nav-text">nmcli 网络管理工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nmcli-%E7%AE%80%E4%BB%8B"><span class="nav-text">nmcli 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nmcli-%E5%AE%89%E8%A3%85"><span class="nav-text">nmcli 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nmcli-%E5%91%BD%E4%BB%A4"><span class="nav-text">nmcli 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E9%A1%B9options"><span class="nav-text">选项（Options）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4general-commands"><span class="nav-text">通用命令（General Commands）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#status"><span class="nav-text">status</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hostname"><span class="nav-text">hostname</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#permissions"><span class="nav-text">permissions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#logging"><span class="nav-text">logging</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#reload"><span class="nav-text">reload</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%8E%A7%E5%88%B6%E5%91%BD%E4%BB%A4networking-control-commands"><span class="nav-text">网络控制命令（Networking Control Commands）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#on-off"><span class="nav-text">on, off</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#connectivity"><span class="nav-text">connectivity</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4device-management-commands"><span class="nav-text">设备管理命令（Device Management Commands）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#status-1"><span class="nav-text">status</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#show"><span class="nav-text">show</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#delete"><span class="nav-text">delete</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#disconnect"><span class="nav-text">disconnect</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#connect"><span class="nav-text">connect</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#monitor"><span class="nav-text">monitor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4connection-management-commands"><span class="nav-text">连接管理命令（Connection Management Commands）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#show-1"><span class="nav-text">show</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#add"><span class="nav-text">add</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#delete-1"><span class="nav-text">delete</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#down"><span class="nav-text">down</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#modify"><span class="nav-text">modify</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#up"><span class="nav-text">up</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#clone"><span class="nav-text">clone</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#load"><span class="nav-text">load</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%91%BD%E4%BB%A4radio-transmission-control-commands"><span class="nav-text">无线传输控制命令（Radio Transmission Control Commands）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B4%BB%E5%8A%A8%E7%9B%91%E8%A7%86%E5%99%A8activity-monitor"><span class="nav-text">活动监视器（Activity Monitor）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-text">退出状态码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nmcli-%E7%A4%BA%E4%BE%8B"><span class="nav-text">nmcli 示例</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lu wenye" src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">lu wenye</p>
+  <div class="site-description" itemprop="description">Hard work, Dedication and Discipline</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wylu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wylu" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15wylu@gmail.com" title="E-Mail → mailto:15wylu@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_32767041" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_32767041" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-book fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="external nofollow noopener noreferrer" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wylu.me/posts/697568dc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="lu wenye">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wylu">
+      <meta itemprop="description" content="Hard work, Dedication and Discipline">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nmcli 网络管理工具 | wylu">
+      <meta itemprop="description" content>
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nmcli 网络管理工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-07-30 14:42:05 / 修改时间：14:45:53" itemprop="dateCreated datePublished" datetime="2023-07-30T14:42:05+08:00">2023-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/" itemprop="url" rel="index"><span itemprop="name">os</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/os/centos/" itemprop="url" rel="index"><span itemprop="name">centos</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>18 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文介绍了 nmcli (Network Manager Command Line Interface) 网络管理工具，它是 NetworkManager 的命令行工具，用于在 Linux 系统上管理网络连接。nmcli 允许用户通过命令行界面管理和配置网络连接，包括无线网络、以太网、VPN 等。本文详细介绍了 nmcli 的安装方法和各种命令，包括选项、通用命令、网络控制命令、设备管理命令、连接管理命令、无线传输控制命令和活动监视器。此外，本文还提供了 nmcli 的示例，供用户参考。nmcli 是一个功能强大且灵活的工具，常用于服务器管理和命令行环境下的网络配置。</p>
+<span id="more"></span>
+<h1 id="nmcli-网络管理工具">nmcli 网络管理工具</h1>
+<h2 id="nmcli-简介">nmcli 简介</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://networkmanager.dev/" class="uri">https://networkmanager.dev/</a></p>
+<p>nmcli (Network Manager Command Line Interface) 是 NetworkManager 的命令行工具。NetworkManager 是一个在 Linux 系统上管理网络连接的守护进程。nmcli 允许用户通过命令行界面管理和配置网络连接，包括无线网络、以太网、VPN 等。使用 nmcli，您可以列出可用的网络连接、连接到特定的网络、配置网络设置、查看网络状态等。它是一个功能强大且灵活的工具，常用于服务器管理和命令行环境下的网络配置。</p>
+<blockquote>
+<p>NetworkManager 是 2004 年 RedHat 启动的项目，皆在能够让 Linux 用户更轻松的处理现代网络需求，尤其是无线网络，能够自动发现网卡并配置 IP 地址。</p>
+<p>RHEL7 上同时支持 network.service 和 NetworkManager.service（简称 NM）。默认情况下这两个服务都有开启，但是因为 NetworkManager.service 当时的兼容性不好，有时会造成 IP 地址无法生效或网络不通问题，大部分人都会将其关闭 NM。</p>
+<p>但是在 RHEL 8/CentOS 8上已废弃 network.service（默认不安装），只能通过 NetworkManager 进行网络配置。</p>
+<p>NetworkManager 主要管理两个对象：Connection（网卡连接配置） 和 Device（网卡设备）。</p>
+<p>在 RHEL 8/CentOS 8有三种方法配置网络：</p>
+<ul>
+<li>通过 <code>nmcli connection add</code> 命令配置，会自动生成 ifcfg 文件；</li>
+<li>手动配置 ifcfg 文件，通过 <code>nmcli connection reload</code> 来加载生效；</li>
+<li>手动配置 ifcfg 文件，通过传统 network.service 来加载生效；</li>
+</ul>
+</blockquote>
+<h2 id="nmcli-安装">nmcli 安装</h2>
+<p>nmcli 实用工具是由 NetworkManager 包提供，有关详情，请参阅 NetworkManager(8)。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# man 8 NetworkManager</span><br></pre></td></tr></table></figure>
+<p>在 CentOS 7 / CentOS 8 中，默认已安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/redhat-release</span><br><span class="line">Rocky Linux release 8.6 (Green Obsidian)</span><br><span class="line">[root@localhost ~]# yum install -y NetworkManager</span><br><span class="line">Last metadata expiration check: 0:03:25 ago on Sun 30 Jul 2023 06:28:20 AM CST.</span><br><span class="line">Package NetworkManager-1:1.36.0-4.el8.x86_64 is already installed.</span><br><span class="line">...</span><br><span class="line">[root@localhost ~]# nmcli --version</span><br><span class="line">nmcli tool, version 1.40.16-3.el8_8</span><br></pre></td></tr></table></figure>
+<h2 id="nmcli-命令">nmcli 命令</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://networkmanager.dev/docs/api/latest/nmcli.html" class="uri">https://networkmanager.dev/docs/api/latest/nmcli.html</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli</span><br><span class="line">agent       connection  device      general     help        monitor     networking  radio</span><br></pre></td></tr></table></figure>
+<p>nmcli 有 8 个子命令，这里重点介绍 device、 connection。</p>
+<h3 id="选项options">选项（Options）</h3>
+<ul>
+<li><p><code>-f | --fields &#123; field1,field2... | all | common &#125;</code></p>
+<p>该选项用于指定应打印哪些字段（列名）。特定命令的有效字段名称有所不同。通过向 <code>--fields</code> 选项提供无效值来列出可用字段。all 用于打印命令的所有有效字段值。common 用于打印命令的公共字段值。</p>
+<p>如果省略，则默认为 common。</p></li>
+<li><p><code>-g | --get-values &#123; field1,field2... | all | common &#125;</code></p>
+<p>此选项用于打印特定字段中的值。它基本上是 <code>--mode tabular --terse --fields</code> 的快捷方式，是检索特定字段值的便捷方法。每行打印一个值，不带标题。</p>
+<p>如果指定了节（section）而不是字段，则将打印节名称，后跟属于该节的字段的冒号分隔值，所有这些都在同一行上。</p></li>
+<li><p><code>-m | --mode &#123; tabular | multiline &#125;</code></p>
+<p>在表格和多行输出之间切换：</p>
+<ul>
+<li>tabular：输出是一个表，其中每行描述一个条目。列定义条目的特定属性。</li>
+<li>multiline：每个条目由多行组成，每个属性独占一行。这些值以属性名称为前缀。</li>
+</ul>
+<p>如果省略，则大多数命令的默认值是 tabular 形式。 对于产生更多结构化信息的命令，无法在单行上显示，默认为 multiline。 目前，它们是：</p>
+<ul>
+<li><code>nmcli connection show ID</code></li>
+<li><code>nmcli device show</code></li>
+</ul></li>
+<li><p><code>-p | --pretty</code></p>
+<p>美化输出。这使得 nmcli 产生人类易于阅读的输出，即值对齐、打印标题等。</p></li>
+<li><p><code>-t | --terse</code></p>
+<p>简洁输出。该模式是为计算机（脚本）处理而设计的。</p></li>
+<li><p><code>-w | --wait seconds</code></p>
+<p>此选项设置 nmcli 将等待 NetworkManager 完成操作的超时时间。它对于可能需要较长时间才能完成的命令特别有用，例如 连接激活。</p>
+<p>指定值 0 指示 nmcli 不等待而是立即退出并显示成功状态。默认值取决于执行的命令。</p></li>
+</ul>
+<h3 id="通用命令general-commands">通用命令（General Commands）</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmcli general &#123; status | hostname | permissions | logging | reload &#125; [ARGUMENTS...]</span><br></pre></td></tr></table></figure>
+<p>使用此命令显示 NetworkManager 状态和权限。 您还可以获取和更改系统主机名以及 NetworkManager 日志记录级别和域。</p>
+<h4 id="status">status</h4>
+<p>显示 NetworkManager 的整体状态。当没有为 nmcli 常规提供其他命令时，这是默认操作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli general status</span><br><span class="line">STATE      CONNECTIVITY  WIFI-HW  WIFI     WWAN-HW  WWAN</span><br><span class="line">connected  full          missing  enabled  missing  enabled</span><br></pre></td></tr></table></figure>
+<h4 id="hostname">hostname</h4>
+<p><code>hostname [hostname]</code></p>
+<p>获取和更改系统主机名。如果没有参数，这将打印当前配置的主机名。当您传递主机名时，它将被移交给 NetworkManager 以设置为新的系统主机名。</p>
+<blockquote>
+<p>Note that the term "system" hostname may also be referred to as "persistent" or "static" by other programs or tools. The hostname is stored in <code>/etc/hostname</code> file in most distributions. For example, systemd-hostnamed service uses the term "static" hostname and it only reads the <code>/etc/hostname</code> file when it starts.</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看主机名</span></span><br><span class="line">[root@localhost ~]# nmcli general hostname</span><br><span class="line">localhost.localdomain</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改主机名</span></span><br><span class="line">[root@localhost ~]# nmcli general hostname rocky</span><br><span class="line">[root@localhost ~]# nmcli general hostname</span><br><span class="line">rocky</span><br></pre></td></tr></table></figure>
+<h4 id="permissions">permissions</h4>
+<p>显示调用者（当前用户）对 NetworkManager 提供的各种经过身份验证的操作拥有的权限，例如启用和禁用网络、更改 Wi-Fi 和 WWAN 状态、修改连接等。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli general permissions</span><br><span class="line">PERMISSION                                                        VALUE</span><br><span class="line">org.freedesktop.NetworkManager.checkpoint-rollback                yes</span><br><span class="line">org.freedesktop.NetworkManager.enable-disable-connectivity-check  yes</span><br><span class="line">org.freedesktop.NetworkManager.enable-disable-network             yes</span><br><span class="line">org.freedesktop.NetworkManager.enable-disable-statistics          yes</span><br><span class="line">org.freedesktop.NetworkManager.enable-disable-wifi                yes</span><br><span class="line">org.freedesktop.NetworkManager.enable-disable-wimax               yes</span><br><span class="line">org.freedesktop.NetworkManager.enable-disable-wwan                yes</span><br><span class="line">org.freedesktop.NetworkManager.network-control                    yes</span><br><span class="line">org.freedesktop.NetworkManager.reload                             yes</span><br><span class="line">org.freedesktop.NetworkManager.settings.modify.global-dns         yes</span><br><span class="line">org.freedesktop.NetworkManager.settings.modify.hostname           yes</span><br><span class="line">org.freedesktop.NetworkManager.settings.modify.own                yes</span><br><span class="line">org.freedesktop.NetworkManager.settings.modify.system             yes</span><br><span class="line">org.freedesktop.NetworkManager.sleep-wake                         yes</span><br><span class="line">org.freedesktop.NetworkManager.wifi.scan                          yes</span><br><span class="line">org.freedesktop.NetworkManager.wifi.share.open                    yes</span><br><span class="line">org.freedesktop.NetworkManager.wifi.share.protected               yes</span><br></pre></td></tr></table></figure>
+<h4 id="logging">logging</h4>
+<p><code>logging [level level] [domains domains...]</code></p>
+<p>获取和更改 NetworkManager 日志记录级别和域。如果没有任何参数，则会显示当前日志记录级别和域。为了更改日志记录状态，请提供 <code>level</code> 和/或 <code>domain</code> 参数。有关可用 level 和 domain 值，请参阅 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://networkmanager.dev/docs/api/latest/NetworkManager.conf.html">NetworkManager.conf(5)</a>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli general logging</span><br><span class="line">LEVEL  DOMAINS</span><br><span class="line">INFO   PLATFORM,RFKILL,ETHER,WIFI,BT,MB,DHCP4,DHCP6,PPP,IP4,IP6,AUTOIP4,DNS,VPN,SHARING,SUPPLICANT,AGENTS,SETTINGS,SUSPEND,CORE,DEVICE,OLPC,INFINIBAND,FIREWALL,ADSL,BOND,VLAN,BRIDGE,TEAM,CONCHECK,DCB,DISPATCH,AUDIT,SYSTEMD,PROXY</span><br></pre></td></tr></table></figure>
+<h4 id="reload">reload</h4>
+<p><code>reload [flags...]</code></p>
+<p>重新加载 NetworkManager 的配置并执行某些更新，例如刷新缓存或将外部状态重写到磁盘。这类似于向 NetworkManager 发送 SIGHUP，但它允许通过 <code>flags</code> 参数对重新加载的内容进行更细粒度的控制。它还允许通过 PolicyKit 进行非 root 访问，并且与信号相反，它是同步的。可用的 <code>flags</code> 有：</p>
+<ul>
+<li><code>conf</code>：从磁盘重新加载 NetworkManager.conf 配置。请注意，这不包括连接，可以通过 <strong>nmcli connection reload</strong> 来重新加载连接。</li>
+<li><code>dns-rc</code>：更新 DNS 配置，这通常涉及重新编写 /etc/resolv.conf。这相当于向 NetworkManager 进程发送 SIGUSR1 信号。</li>
+<li><code>dns-full</code>：重新启动 DNS 插件。例如，当使用 dnsmasq 插件时，这非常有用，该插件使用 /etc/NetworkManager/dnsmasq.d 中的附加配置。如果编辑这些文件，则可以重新启动 DNS 插件。此操作会很快中断名称解析。</li>
+</ul>
+<p>如果没有指定 <code>flags</code>，所有支持的内容都会重新加载，这与发送 SIGHUP 相同。 有关信号的更多详细信息，请参阅 NetworkManager(8)。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli general reload conf</span><br></pre></td></tr></table></figure>
+<h3 id="网络控制命令networking-control-commands">网络控制命令（Networking Control Commands）</h3>
+<p>查询 NetworkManager 网络状态，启用和禁用网络。</p>
+<h4 id="on-off">on, off</h4>
+<p>通过 NetworkManager 启用或禁用网络控制。当网络被禁用时，由 NetworkManager 管理的所有接口都将被停用。</p>
+<p>禁用网络控制：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE      CONNECTION</span><br><span class="line">ens32   ethernet  connected  ens32</span><br><span class="line">ens33   ethernet  connected  ens33</span><br><span class="line">ens34   ethernet  connected  ens34</span><br><span class="line">lo      loopback  unmanaged  --</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  84377dc9-3ec0-4573-925e-d3678801da6d  ethernet  ens34</span><br><span class="line">[root@localhost ~]# nmcli networking connectivity check</span><br><span class="line">full</span><br><span class="line">[root@localhost ~]# nmcli networking off</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  --</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  --</span><br><span class="line">ens34  84377dc9-3ec0-4573-925e-d3678801da6d  ethernet  --</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE      CONNECTION</span><br><span class="line">ens32   ethernet  unmanaged  --</span><br><span class="line">ens33   ethernet  unmanaged  --</span><br><span class="line">ens34   ethernet  unmanaged  --</span><br><span class="line">lo      loopback  unmanaged  --</span><br></pre></td></tr></table></figure>
+<p>启用网络控制：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli networking on</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  84377dc9-3ec0-4573-925e-d3678801da6d  ethernet  ens34</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE      CONNECTION</span><br><span class="line">ens32   ethernet  connected  ens32</span><br><span class="line">ens33   ethernet  connected  ens33</span><br><span class="line">ens34   ethernet  connected  ens34</span><br><span class="line">lo      loopback  unmanaged  --</span><br></pre></td></tr></table></figure>
+<h4 id="connectivity">connectivity</h4>
+<p><code>connectivity [check]</code></p>
+<p>获取网络连接状态。可选的 <code>check</code> 参数告诉 NetworkManager 重新检查连接，否则将显示最新的已知连接状态而不重新检查。</p>
+<p>可能的状态有：</p>
+<ul>
+<li><code>none</code>：主机未连接到任何网络。</li>
+<li><code>portal</code>：主机位于强制门户后面，无法访问完整的互联网。</li>
+<li><code>limited</code>：主机已连接到网络，但无法访问 Internet。</li>
+<li><code>full</code>：主机已连接到网络并具有对 Internet 的完全访问权限。</li>
+<li><code>unknown</code>：无法查到连接状态。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli networking connectivity</span><br><span class="line">full</span><br><span class="line">[root@localhost ~]# nmcli networking connectivity check</span><br><span class="line">full</span><br></pre></td></tr></table></figure>
+<h3 id="设备管理命令device-management-commands">设备管理命令（Device Management Commands）</h3>
+<p>显示和管理网络接口。</p>
+<p><code>nmcli device</code> 按 tab 两下可以获取 device 后面的参数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device</span><br><span class="line">checkpoint  delete      down        lldp        monitor     set         status      wifi</span><br><span class="line">connect     disconnect  help        modify      reapply     show        up</span><br></pre></td></tr></table></figure>
+<p>网卡属于物理硬件，NetworkManager 属于软件层面，如何通过软件层面给网卡绑定 IP 地址等信息？中间有一个核心：kernel。Linux 应用层 app 通过 kernel 来驱使底层物理硬件运行，同时必须要明确一点：软件应用没办法改变物理底层信息。</p>
+<p>例如我们给 eth0 配置 IP 地址为 192.168.1.1。实质上并不是用刀在 eth0 网卡上刻上 192.168.1.1，实际上是 kernel 获取 eth0 网卡总线，同时将该总线命名（方便人为区分），然后 NetworkManager 告诉 kernel 00:00.0（假设 eth0）的 IP 地址是 192.168.1.1/24，那么以后访问 192.168.1.1 就是在访问 00:00.0，kernel 在中间做了一次转换或者说是绑定。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lshw -class net -businfo</span><br><span class="line">Bus info          Device      Class      Description</span><br><span class="line">====================================================</span><br><span class="line">pci@0000:02:00.0  ens32       network    82545EM Gigabit Ethernet Controller (Copper)</span><br><span class="line">pci@0000:02:01.0  ens33       network    82545EM Gigabit Ethernet Controller (Copper)</span><br><span class="line">pci@0000:02:02.0  ens34       network    82545EM Gigabit Ethernet Controller (Copper)</span><br><span class="line">[root@localhost ~]# lspci</span><br><span class="line">00:00.0 Host bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX Host bridge (rev 01)</span><br><span class="line">00:01.0 PCI bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX AGP bridge (rev 01)</span><br><span class="line">00:07.0 ISA bridge: Intel Corporation 82371AB/EB/MB PIIX4 ISA (rev 08)</span><br><span class="line">00:07.1 IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 01)</span><br><span class="line">00:07.3 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 08)</span><br><span class="line">00:07.7 System peripheral: VMware Virtual Machine Communication Interface (rev 10)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>00:00.0 就是总线。</p>
+<h4 id="status-1">status</h4>
+<p>打印设备状态。如果未向 <code>nmcli device</code> 指定子命令，则这是默认操作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>DEVICE：表示网卡的名称（kernel 获取的标识）</p></li>
+<li><p>TYPE：表示网卡的类型</p></li>
+<li><p>STATE：表示网卡与配置文件的连接状态</p>
+<ul>
+<li>connected：表示 NetworkManager 接管</li>
+<li>disconnected：表示使用 NetworkManager 管理</li>
+<li>unmanaged：表示不使用 NetworkManager 管理</li>
+</ul></li>
+<li><p>CONNECTION：网卡对应的 connection 配置文件名称</p>
+<p>connection 配置文件名可以通过 "nmcli connection modify uuid xxxxxxxxx con-name xxx" 来修改：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改 connection 配置文件名</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">[root@localhost ~]<span class="comment"># nmcli connection modify ens32 con-name eth0</span></span></span><br><span class="line">[root@localhost ~]# nmcli connection modify uuid e1af3066-1f0e-44a5-a4a3-c0174cf77a7b con-name eth0</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">eth0   e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     eth0</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<p>这里演示的就是将网卡 ens32 的配置文件由 <code>nmcli device status</code> 看到的 "ens32" 名称修改成 "eth0"（网卡的配置文件通过 <code>nmcli connection</code> 来修改的）。</p>
+<p><code>nmcli connection show</code> 可以看到各个配置文件对应的唯一识别 uuid，<code>nmcli connection show</code> 输出中 NAME 是配置文件名，后面的 DEVICE 是配置文件对应的网卡名称，配置文件名 NAME 是可以修改的，而 DEVICE 是 kernel 标识的，但是也可以通过其他手段来修改。</p></li>
+</ul>
+<h4 id="show">show</h4>
+<p><code>show [ifname]</code></p>
+<p>（1）若不加任何参数，则会显示所有的网卡的信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<p>（2）若加上 DEVICE 名称，则显示 DEVICE 对应网卡的所有信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device show ens34</span><br><span class="line">GENERAL.DEVICE:                         ens34</span><br><span class="line">GENERAL.TYPE:                           ethernet</span><br><span class="line">GENERAL.HWADDR:                         00:0C:29:66:3F:D9</span><br><span class="line">GENERAL.MTU:                            1500</span><br><span class="line">GENERAL.STATE:                          30 (disconnected)</span><br><span class="line">GENERAL.CONNECTION:                     --</span><br><span class="line">GENERAL.CON-PATH:                       --</span><br><span class="line">WIRED-PROPERTIES.CARRIER:               on</span><br><span class="line">IP4.GATEWAY:                            --</span><br><span class="line">IP6.GATEWAY:                            --</span><br></pre></td></tr></table></figure>
+<p>因为网卡 ens34 没有关联 connection，所以显示的信息相对少。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device show ens32</span><br><span class="line">GENERAL.DEVICE:                         ens32</span><br><span class="line">GENERAL.TYPE:                           ethernet</span><br><span class="line">GENERAL.HWADDR:                         00:0C:29:66:3F:C5</span><br><span class="line">GENERAL.MTU:                            1500</span><br><span class="line">GENERAL.STATE:                          100 (connected)</span><br><span class="line">GENERAL.CONNECTION:                     ens32</span><br><span class="line">GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/4</span><br><span class="line">WIRED-PROPERTIES.CARRIER:               on</span><br><span class="line">IP4.ADDRESS[1]:                         192.168.0.25/24</span><br><span class="line">IP4.GATEWAY:                            192.168.0.1</span><br><span class="line">IP4.ROUTE[1]:                           dst = 192.168.0.0/24, nh = 0.0.0.0, mt = 100</span><br><span class="line">IP4.ROUTE[2]:                           dst = 0.0.0.0/0, nh = 192.168.0.1, mt = 100</span><br><span class="line">IP4.DNS[1]:                             114.114.114.114</span><br><span class="line">IP4.DNS[2]:                             8.8.8.8</span><br><span class="line">IP6.ADDRESS[1]:                         fe80::20c:29ff:fe66:3fc5/64</span><br><span class="line">IP6.GATEWAY:                            --</span><br><span class="line">IP6.ROUTE[1]:                           dst = fe80::/64, nh = ::, mt = 1024</span><br></pre></td></tr></table></figure>
+<p>因为网卡 ens32 关联了 connection 配置文件，可以看到 DEVICE 网卡名 ens32，TYPE 使用的网络类型为 ethernet， HWADDR 硬件地址 00:0C:29:66:3F:C5，还有 MTU、STATE（连接状态，connected）、CONNECTION ens32，这与 nmcli device status 看到的基本一致，接下来的 IP4.ADDRESS、IP4.GATEWAY 等等都是写到配置文件中的内容。</p>
+<h4 id="delete">delete</h4>
+<p><code>delete ifname...</code></p>
+<p>删除设备。该命令从系统中删除该接口。需要注意的是这仅适用于软件设备（如网桥、虚拟网卡），物理网卡等硬件设备是无法通过该命令删除的，不可能说 <code>nmcli device delete ens32</code> 就会物理地将网卡在计算机上拿走了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">尝试删除硬件设备</span></span><br><span class="line">[root@localhost ~]# nmcli device delete ens32</span><br><span class="line">Error: Device &#x27;ens32&#x27; (/org/freedesktop/NetworkManager/Devices/2) deletion failed: This device is not a software device or is not realized</span><br><span class="line">Error: not all devices deleted.</span><br></pre></td></tr></table></figure>
+<h4 id="disconnect">disconnect</h4>
+<p><code>disconnect ifname...</code></p>
+<p>down 命令的别名。1.34.0 版本之前不支持。</p>
+<p>断开网卡与 connection 配置文件之间的关联。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli device disconnect ens33</span><br><span class="line">Device &#x27;ens33&#x27; successfully disconnected.</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  disconnected  --</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<h4 id="connect">connect</h4>
+<p>将网卡与 connection 配置文件之间关联起来。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  disconnected  --</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli device connect ens33</span><br><span class="line">Device &#x27;ens33&#x27; successfully activated with &#x27;51b34523-8ea7-48f2-84c0-11d3f9aa828f&#x27;.</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<h4 id="monitor">monitor</h4>
+<p>监控设备活动。每当指定设备更改状态时，此命令都会打印一行。</p>
+<p>在未指定接口的情况下将监视所有设备。当所有指定的设备消失时，监视器终止。如果要监视添加的设备，请考虑使用带有 <code>nmcli monitor</code> 命令的全局监视器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device monitor ens32</span><br></pre></td></tr></table></figure>
+<h3 id="连接管理命令connection-management-commands">连接管理命令（Connection Management Commands）</h3>
+<p>NetworkManager 将所有网络配置存储为 "connections"，它们是描述如何创建或连接到网络的数据集合（第 2 层详细信息、IP 寻址等）。当设备使用该连接的配置来创建或连接到网络时，该连接处于 "active" 状态。一个设备可能有多个连接，但在任何给定时间，该设备上只能有一个处于活动状态。其余连接可用于允许在不同网络和配置之间快速切换。</p>
+<p>考虑一台通常连接到启用 DHCP 的网络，但有时连接到使用静态 IP 寻址的测试网络的计算机。 无需在每次网络更改时手动重新配置 eth0，这些设置可以保存为两个都适用于 eth0 的连接，一个用于 DHCP（称为 default），另一个具有静态寻址详细信息（称为 testing）。 当连接到启用 DHCP 的网络时，用户将运行 <strong>nmcli con up default</strong>，而当连接到静态网络时，用户将运行 <strong>nmcli con up testing</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli connection</span><br><span class="line">add      delete   edit     help     load     modify   reload   up</span><br><span class="line">clone    down     export   import   migrate  monitor  show</span><br></pre></td></tr></table></figure>
+<p>nmcli connection 主要用来处理 connection 配置文件信息。</p>
+<blockquote>
+<p>The connection is identified by its name, UUID or D-Bus path. If <em><code>ID</code></em> is ambiguous, a keyword <code>id</code>, <code>uuid</code>, <code>path</code> or <code>apath</code> can be used.</p>
+<p><code>id</code>, <code>uuid</code>, <code>path</code> and <code>apath</code> keywords can be used if <em><code>ID</code></em> is ambiguous. Optional <em><code>ID</code></em>-specifying keywords are:</p>
+<table>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 89%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>id</code></th>
+<th>the <em><code>ID</code></em> denotes a connection name.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>uuid</code></td>
+<td>the <em><code>ID</code></em> denotes a connection UUID.</td>
+</tr>
+<tr class="even">
+<td><code>path</code></td>
+<td>the <em><code>ID</code></em> denotes a D-Bus static connection path in the format of /org/freedesktop/NetworkManager/Settings/<em><code>num</code></em> or just <em><code>num</code></em>.</td>
+</tr>
+<tr class="odd">
+<td><code>apath</code></td>
+<td>the <em><code>ID</code></em> denotes a D-Bus active connection path in the format of /org/freedesktop/NetworkManager/ActiveConnection/<em><code>num</code></em> or just <em><code>num</code></em>.</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h4 id="show-1">show</h4>
+<p>show 有两种用法，分别是：</p>
+<p>（1）列出活动的连接，或进行排序（<code>+-</code>为升降序）</p>
+<p><code>show [--active] [ --order [+-]category:... ]</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">[root@localhost ~]# nmcli connection show --order +active</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">[root@localhost ~]# nmcli connection show --order -name</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NAME：配置文件的名称（可以重复）</li>
+<li>UUID：唯一识别</li>
+<li>TYPE：网络类型</li>
+<li>DEVICE：网卡名称（这里与 <code>nmcli device</code> 保持一致）</li>
+</ul>
+<p>（2）查看指定连接的详细信息</p>
+<p><code>show [--active] [ id | uuid | path | apath ] ID...</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli connection show ens32</span><br><span class="line">connection.id:                          ens32</span><br><span class="line">connection.uuid:                        e1af3066-1f0e-44a5-a4a3-c0174cf77a7b</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h4 id="add">add</h4>
+<p><code>add [save &#123; yes | no &#125;] &#123; option value | [+|-]setting.property value &#125; ...</code></p>
+<p>添加 connection 配置文件（注意网卡只有一个 connection 配置文件是活动的，但是可以存在多个 connection 配置文件，可以通过connection.autoconnect-priority 设置 connection 配置文件的优先级）。</p>
+<p>add 后面必须跟的三个参数：</p>
+<ul>
+<li><p><code>con-name</code>：配置文件的名称</p></li>
+<li><p><code>ifname</code>：网卡的名称</p></li>
+<li><p><code>type</code>：网卡类型一般是 ethernet</p></li>
+</ul>
+<p>add 还可以跟很多参数，比如：</p>
+<ul>
+<li><code>ipv4.address</code></li>
+<li><code>ipv4.gateway</code></li>
+<li><code>ipv4.dns</code></li>
+<li><code>ipv4.method</code>（设置自动连接还是手动连接 auto manual 等等）</li>
+<li><code>connection.autoconnect</code>（开机是否自动连接）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">[root@localhost ~]# nmcli connection add con-name ens34 ifname ens34 type ethernet ipv4.address 192.168.0.27/24 ipv4.gateway 192.168.0.1 ipv4.dns 114.114.114.114,8.8.8.8 ipv4.method manual connection.autoconnect yes</span><br><span class="line">Connection &#x27;ens34&#x27; (b713041f-bfb5-45ce-a8da-21ad02361e81) successfully added.</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  b713041f-bfb5-45ce-a8da-21ad02361e81  ethernet  ens34</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE      CONNECTION</span><br><span class="line">ens32   ethernet  connected  ens32</span><br><span class="line">ens33   ethernet  connected  ens33</span><br><span class="line">ens34   ethernet  connected  ens34</span><br><span class="line">lo      loopback  unmanaged  --</span><br></pre></td></tr></table></figure>
+<p>如果在 add 添加 connection 配置文件时没有指定 ipv4.method 则 Linux 会自动获取 IP 地址，即 DHCP。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ip address show ens34</span><br><span class="line">4: ens34: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 00:0c:29:66:3f:d9 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.0.27/24 brd 192.168.0.255 scope global noprefixroute ens34</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::2b44:f9e6:43f9:6c05/64 scope link noprefixroute</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@localhost ~]# nmcli connection show ens34 | grep &quot;ipv4.&quot;</span><br><span class="line">ipv4.method:                            manual</span><br><span class="line">ipv4.dns:                               114.114.114.114,8.8.8.8</span><br><span class="line">ipv4.dns-search:                        --</span><br><span class="line">ipv4.dns-options:                       --</span><br><span class="line">ipv4.dns-priority:                      0</span><br><span class="line">ipv4.addresses:                         192.168.0.27/24</span><br><span class="line">ipv4.gateway:                           192.168.0.1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h4 id="delete-1">delete</h4>
+<p><code>delete [ id | uuid | path ] ID...</code></p>
+<p>删除 connection 配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE      CONNECTION</span><br><span class="line">ens32   ethernet  connected  ens32</span><br><span class="line">ens33   ethernet  connected  ens33</span><br><span class="line">ens34   ethernet  connected  ens34</span><br><span class="line">lo      loopback  unmanaged  --</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  b713041f-bfb5-45ce-a8da-21ad02361e81  ethernet  ens34</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">[root@localhost ~]<span class="comment"># nmcli connection delete uuid b713041f-bfb5-45ce-a8da-21ad02361e81</span></span></span><br><span class="line">[root@localhost ~]# nmcli connection delete ens34</span><br><span class="line">Connection &#x27;ens34&#x27; (b713041f-bfb5-45ce-a8da-21ad02361e81) successfully deleted.</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<h4 id="down">down</h4>
+<p><code>down [ id | uuid | path | apath ] ID...</code></p>
+<p>down 不同于 delete，delete 是将 connection 配置文件删除，而 down 是将 connection 配置文件与网卡的关联断开，与 <code>nmcli device disconnect</code> 效果相同。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  connected     ens33</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">[root@localhost ~]# nmcli connection down ens33</span><br><span class="line">Connection &#x27;ens33&#x27; successfully deactivated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/7)</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  --</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens33   ethernet  disconnected  --</span><br><span class="line">ens34   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br></pre></td></tr></table></figure>
+<h4 id="modify">modify</h4>
+<p><code>modify [--temporary] [ id | uuid | path ] [ID] &#123; option value | [+|-]setting.property value &#125; ...</code></p>
+<p>修改 connection 配置文件信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  --</span><br><span class="line">[root@localhost ~]# nmcli connection add con-name ens34 ifname ens34 type ethernet ipv4.address 192.168.0.27/24 ipv4.gateway 192.168.0.1 ipv4.dns 114.114.114.114,8.8.8.8 ipv4.method manual connection.autoconnect yes</span><br><span class="line">Connection &#x27;ens34&#x27; (a0af5eea-3e83-4c13-8104-42857958e050) successfully added.</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens34  a0af5eea-3e83-4c13-8104-42857958e050  ethernet  ens34</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  --</span><br><span class="line">[root@localhost ~]# ip address show ens34</span><br><span class="line">4: ens34: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 00:0c:29:66:3f:d9 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.0.27/24 brd 192.168.0.255 scope global noprefixroute ens34</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::1e7c:8628:7c62:c15b/64 scope link noprefixroute</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">[root@localhost ~]# nmcli connection modify ens34 ifname ens34 ipv4.address 192.168.0.28/24</span><br><span class="line">[root@localhost ~]# ip address show ens34</span><br><span class="line">4: ens34: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 00:0c:29:66:3f:d9 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.0.27/24 brd 192.168.0.255 scope global noprefixroute ens34</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::1e7c:8628:7c62:c15b/64 scope link noprefixroute</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+<p>这里之所以没有变化是因为我们修改的是硬盘配置文件，加载在内存中 ens34 配置文件的地址还是 192.168.0.27，所以我们需要将修改后的硬盘配置文件 ens34 加载到内存中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli connection up ens34</span><br><span class="line">Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/12)</span><br><span class="line">[root@localhost ~]# ip address show ens34</span><br><span class="line">4: ens34: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 00:0c:29:66:3f:d9 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.0.28/24 brd 192.168.0.255 scope global noprefixroute ens34</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::7505:8bb3:79c2:b265/64 scope link noprefixroute</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+<p>有时候 up 无法改变网卡地址，这时候我们需要 reload 重新连接启动，重新加载到内存中。</p>
+<h4 id="up">up</h4>
+<p><code>up [ id | uuid | path ] ID [ifname ifname] [ap BSSID] [passwd-file file]</code></p>
+<p>激活 connection。将网卡与 connection 配置文件关联起来。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE         CONNECTION</span><br><span class="line">ens32   ethernet  connected     ens32</span><br><span class="line">ens34   ethernet  connected     ens34</span><br><span class="line">ens33   ethernet  disconnected  --</span><br><span class="line">lo      loopback  unmanaged     --</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens34  a0af5eea-3e83-4c13-8104-42857958e050  ethernet  ens34</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  --</span><br><span class="line">[root@localhost ~]# nmcli connection up ens33</span><br><span class="line">Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/10)</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  a0af5eea-3e83-4c13-8104-42857958e050  ethernet  ens34</span><br><span class="line">[root@localhost ~]# nmcli device status</span><br><span class="line">DEVICE  TYPE      STATE      CONNECTION</span><br><span class="line">ens32   ethernet  connected  ens32</span><br><span class="line">ens33   ethernet  connected  ens33</span><br><span class="line">ens34   ethernet  connected  ens34</span><br><span class="line">lo      loopback  unmanaged  --</span><br></pre></td></tr></table></figure>
+<h4 id="clone">clone</h4>
+<p><code>clone [--temporary] [ id | uuid | path ] ID new_name</code></p>
+<p>克隆 connection 配置文件，除了连接名称和 uuid 是新生成的，其他都是一样的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  a0af5eea-3e83-4c13-8104-42857958e050  ethernet  ens34</span><br><span class="line">[root@localhost ~]# nmcli connection clone ens34 ens35</span><br><span class="line">ens34 (a0af5eea-3e83-4c13-8104-42857958e050) cloned as ens35 (0ff07cb2-a9a8-4d68-8ad8-46096657cb41).</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  51b34523-8ea7-48f2-84c0-11d3f9aa828f  ethernet  ens33</span><br><span class="line">ens34  a0af5eea-3e83-4c13-8104-42857958e050  ethernet  ens34</span><br><span class="line">ens35  0ff07cb2-a9a8-4d68-8ad8-46096657cb41  ethernet  --</span><br></pre></td></tr></table></figure>
+<h4 id="load">load</h4>
+<p><code>load filename...</code></p>
+<p>从磁盘加载/重新加载一个或多个 connection 配置文件。手动编辑连接文件后使用此命令可确保 NetworkManager 了解其最新状态。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ls /etc/sysconfig/network-scripts/</span><br><span class="line">ifcfg-ens32  ifcfg-ens33</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">[root@localhost ~]# nmcli connection load /etc/sysconfig/network-scripts/ifcfg-ens33</span><br><span class="line">[root@localhost ~]# nmcli connection show</span><br><span class="line">NAME   UUID                                  TYPE      DEVICE</span><br><span class="line">ens32  e1af3066-1f0e-44a5-a4a3-c0174cf77a7b  ethernet  ens32</span><br><span class="line">ens33  84f8195b-1a23-44a7-b9a2-2a5a25fd777b  ethernet  --</span><br></pre></td></tr></table></figure>
+<h3 id="无线传输控制命令radio-transmission-control-commands">无线传输控制命令（Radio Transmission Control Commands）</h3>
+<p>显示无线开关状态，或启用和禁用开关。</p>
+<p><code>nmcli radio &#123; all | wifi | wwan &#125; [ARGUMENTS...]</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# nmcli radio all</span><br><span class="line">WIFI-HW  WIFI     WWAN-HW  WWAN</span><br><span class="line">missing  enabled  missing  enabled</span><br><span class="line">[root@localhost ~]# nmcli radio all off</span><br><span class="line">[root@localhost ~]# nmcli radio all</span><br><span class="line">WIFI-HW  WIFI      WWAN-HW  WWAN</span><br><span class="line">missing  disabled  missing  disabled</span><br><span class="line">[root@localhost ~]# nmcli radio wifi on</span><br><span class="line">[root@localhost ~]# nmcli radio all</span><br><span class="line">WIFI-HW  WIFI     WWAN-HW  WWAN</span><br><span class="line">missing  enabled  missing  disabled</span><br><span class="line">[root@localhost ~]# nmcli radio wwan on</span><br><span class="line">[root@localhost ~]# nmcli radio all</span><br><span class="line">WIFI-HW  WIFI     WWAN-HW  WWAN</span><br><span class="line">missing  enabled  missing  enabled</span><br></pre></td></tr></table></figure>
+<h3 id="活动监视器activity-monitor">活动监视器（Activity Monitor）</h3>
+<p>观察 NetworkManager 活动。 监视连接状态、设备或连接配置文件的变化。</p>
+<p>另请参阅 <strong>nmcli connection monitor</strong> 和 <strong>nmcli device monitor</strong> 以监视某些设备或连接的变化。</p>
+<h3 id="退出状态码">退出状态码</h3>
+<p>nmcli 如果成功退出状态值为 0，如果发生错误则返回大于 0 的值。</p>
+<ul>
+<li><strong>0</strong>: 成功-指示操作已成功</li>
+<li><strong>1</strong>: 位置或指定的错误</li>
+<li><strong>2</strong>: 无效的用户输入，错误的nmcli调用</li>
+<li><strong>3</strong>: 超时了（请参阅 --wait 选项）</li>
+<li><strong>4</strong>: 连接激活失败</li>
+<li><strong>5</strong>: 连接停用失败</li>
+<li><strong>6</strong>: 断开设备失败</li>
+<li><strong>7</strong>: 连接删除失败</li>
+<li><strong>8</strong>: 网络管理器没有运行</li>
+<li><strong>10</strong>: 连接、设备或接入点不存在</li>
+<li><strong>65</strong>: 当使用 <code>--complete-args</code> 选项，文件名应遵循。</li>
+</ul>
+<h2 id="nmcli-示例">nmcli 示例</h2>
+<p>本节介绍 <strong>nmcli</strong> 用法的各种示例。 如果您想要更多信息，请参阅 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://networkmanager.dev/docs/api/latest/nmcli-examples.html">nmcli-examples(7)</a> 手册页。</p>
+<ul>
+<li><p><code>nmcli -t -f RUNNING general</code></p>
+<p>告诉你 NetworkManager 是否正在运行。</p></li>
+<li><p><code>nmcli -t -f STATE general</code></p>
+<p>显示 NetworkManager 的整体状态。</p></li>
+<li><p><code>nmcli radio wifi off</code></p>
+<p>关闭 Wi-Fi。</p></li>
+<li><p><code>nmcli connection show</code></p>
+<p>列出 NetworkManager 拥有的所有连接。</p></li>
+<li><p><code>nmcli -p -m multiline -f all con show</code></p>
+<p>以多行模式显示所有已配置的连接。</p></li>
+<li><p><code>nmcli connection show --active</code></p>
+<p>列出所有当前活动的连接。</p></li>
+<li><p><code>nmcli -f name,autoconnect c s</code></p>
+<p>显示所有连接配置文件名称及其自动连接属性。</p></li>
+<li><p><code>nmcli -p connection show "My default em1"</code></p>
+<p>显示 "My default em1" 连接配置文件的详细信息。</p></li>
+<li><p><code>nmcli --show-secrets connection show "My Home Wi-Fi"</code></p>
+<p>显示 "My Home Wi-Fi" 连接配置文件的详细信息以及所有密码。 如果没有 <code>--show-secrets</code> 选项，则不会显示 secrets。</p></li>
+<li><p><code>nmcli -f active connection show "My default em1"</code></p>
+<p>显示 "My default em1" 活动连接的详细信息，例如 IP、DHCP 信息等。</p></li>
+<li><p><code>nmcli -f profile con s "My wired connection"</code></p>
+<p>显示名称为 "My wired connection" 的连接配置文件的静态配置详细信息。</p></li>
+<li><p><code>nmcli -p con up "My wired connection" ifname eth0</code></p>
+<p>激活接口 eth0 上名为 "My wired connection" 的连接配置文件。 <code>-p</code> 选项使 nmcli 显示激活进度。</p></li>
+<li><p><code>nmcli con up 6b028a27-6dc9-4411-9886-e9ad1dd43761 ap 00:3A:98:7C:42:D3</code></p>
+<p>将 UUID 6b028a27-6dc9-4411-9886-e9ad1dd43761 的 Wi-Fi 连接连接到 BSSID 00:3A:98:7C:42:D3 的 AP。</p></li>
+<li><p><code>nmcli device status</code></p>
+<p>显示所有设备的状态。</p></li>
+<li><p><code>nmcli dev down em2</code></p>
+<p>断开 em2 接口上的连接并将设备标记为不可自动连接。因此，在设备的 "autoconnect" 设置为 TRUE 或用户手动激活连接之前，设备上不会自动激活任何连接。</p></li>
+<li><p><code>nmcli -f GENERAL,WIFI-PROPERTIES dev show wlan0</code></p>
+<p>显示 wlan0 接口的详细信息；仅显示 GENERAL 和 WIFI-PROPERTIES 部分。</p></li>
+<li><p><code>nmcli -f CONNECTIONS device show wlp3s0</code></p>
+<p>显示 Wi-Fi 接口 wlp3s0 的所有可用连接配置文件。</p></li>
+<li><p><code>nmcli dev wifi</code></p>
+<p>列出 NetworkManager 已知的可用 Wi-Fi 接入点。</p></li>
+<li><p><code>nmcli dev wifi con "Cafe Hotspot 1" password caffeine name "My cafe"</code></p>
+<p>创建一个名为 "My cafe" 的新连接，然后使用密码 "caffeine" 将其连接到 "Cafe Hotspot 1" SSID。这主要在第一次连接到 "Cafe Hotspot 1" 时有用。下次，最好使用 <strong>nmcli con up id "My cafe"</strong>，以便可以使用现有的连接配置文件，而不会创建额外的连接配置文件。</p></li>
+<li><p><code>nmcli -s dev wifi hotspot con-name QuickHotspot</code></p>
+<p>创建热点配置文件并连接它。打印用户从其他设备连接到热点时应使用的热点密码。</p></li>
+<li><p><code>nmcli dev modify em1 ipv4.method shared</code></p>
+<p>使用 em1 设备启动 IPv4 连接共享。共享将一直有效，直到设备断开连接。</p></li>
+<li><p><code>nmcli dev modify em1 ipv6.address 2001:db8::a:bad:c0de</code></p>
+<p>临时向设备添加 IP 地址。当再次激活同一连接时，该地址将被删除。</p></li>
+<li><p><code>nmcli connection add type ethernet autoconnect no ifname eth0</code></p>
+<p>以非交互方式添加与具有自动 IP 配置 (DHCP) 的 eth0 接口绑定的以太网连接，并禁用该连接的 "autoconnect" 标志。</p></li>
+<li><p><code>nmcli c a ifname Maxipes-fik type vlan dev eth0 id 55</code></p>
+<p>以非交互方式添加 ID 为 55 的 VLAN 连接。该连接将使用 eth0，VLAN 接口将命名为 Maxipes-fik。</p></li>
+<li><p><code>nmcli c a ifname eth0 type ethernet ipv4.method disabled ipv6.method link-local</code></p>
+<p>以非交互方式添加将使用 eth0 以太网接口且仅配置了 IPv6 链路本地地址的连接。</p></li>
+<li><p><code>nmcli connection edit ethernet-em1-2</code></p>
+<p>在交互式编辑器中编辑现有的 "ethernet-em1-2" 连接。</p></li>
+<li><p><code>nmcli connection edit type ethernet con-name "yet another Ethernet connection"</code></p>
+<p>在交互式编辑器中添加新的以太网连接。</p></li>
+<li><p><code>nmcli con mod ethernet-2 connection.autoconnect no</code></p>
+<p>修改 "ethernet-2" 连接的 "connection" 设置中的 "autoconnect" 属性。</p></li>
+<li><p><code>nmcli con mod "Home Wi-Fi" wifi.mtu 1350</code></p>
+<p>修改 "Home Wi-Fi" 连接 "wifi" 的设置中的 "mtu" 属性。</p></li>
+<li><p><code>nmcli con mod em1-1 ipv4.method manual ipv4.addr "192.168.1.23/24 192.168.1.1, 10.10.1.5/8, 10.0.0.11"</code></p>
+<p>设置手动寻址和 em1-1 配置文件中的地址。</p></li>
+<li><p><code>nmcli con modify ABC +ipv4.dns 8.8.8.8</code></p>
+<p>将 Google 公共 DNS 服务器附加到 ABC 配置文件中的 DNS 服务器。</p></li>
+<li><p><code>nmcli con modify ABC -ipv4.addresses "192.168.100.25/24 192.168.1.1"</code></p>
+<p>从（静态）配置文件 ABC 中删除指定的 IP 地址。</p></li>
+<li><p><code>nmcli con import type openvpn file ~/Downloads/frootvpn.ovpn</code></p>
+<p>将 OpenVPN 配置导入 NetworkManager。</p></li>
+<li><p><code>nmcli con export corp-vpnc /home/joe/corpvpn.conf</code></p>
+<p>将 NetworkManager VPN 配置文件 corp-vpnc 导出为标准 Cisco (vpnc) 配置。</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lu wenye
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.wylu.me/posts/697568dc/" title="nmcli 网络管理工具">https://www.wylu.me/posts/697568dc/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noopener noreferrer" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/centos/" rel="tag"><i class="fa fa-tag"></i> centos</a>
+              <a href="/tags/nmcli/" rel="tag"><i class="fa fa-tag"></i> nmcli</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/ef509ce2/" rel="prev" title="kafka 安装部署与安全认证">
+                  <i class="fa fa-chevron-left"></i> kafka 安装部署与安全认证
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-changyan">changyan</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane changyan" id="comment-changyan">
+              <div class="comments" id="SOHUCS" sid="ade6e76f5801cd352088a7de2f1b8ed4"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">wylu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">142k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:36</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wylu" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="external nofollow noopener noreferrer" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="changyan" type="application/json">{"enable":true,"appid":"cywofsGy5","appkey":"81e9ec55ee07f76c5500fc2df8517c62","count":false}</script>
+<script src="/js/third-party/comments/changyan.js"></script>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wylu","count":false,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
