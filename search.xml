@@ -8,6 +8,295 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Rocky Linux 部署 etcd 集群</title>
+    <url>/posts/aff5958d/</url>
+    <content><![CDATA[<p>本文介绍了在 Rocky Linux 系统上部署 etcd 集群的步骤。首先介绍了环境准备，包括三个节点的操作系统、IP地址和版本等信息。接下来，安装必要软件，包括 etcd、证书工具 cfssl 等，并创建 etcd 所需的证书。然后配置 etcd，包括主节点和启动配置，以及其余节点的配置。启动 etcd 服务并验证其状态，包括检查集群健康状态、查看集群节点列表、验证集群数据存储服务和监测数据变化等。此外，还介绍了数据备份与恢复、节点宕机与恢复、ETCD 故障节点修复和身份验证等内容。最后，介绍了如何安装 etcdkeeper。</p>
+<span id="more"></span>
+<h1 id="rocky-linux-部署-etcd-集群">Rocky Linux 部署 etcd 集群</h1>
+<h2 id="环境准备">1. 环境准备</h2>
+<table>
+<thead>
+<tr class="header">
+<th>主机名</th>
+<th>操作系统</th>
+<th>IP地址</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>node1</td>
+<td>Rocky Linux release 8.6 (Green Obsidian)</td>
+<td>10.128.170.131</td>
+<td>etcd-v3.5.6</td>
+</tr>
+<tr class="even">
+<td>node2</td>
+<td>Rocky Linux release 8.6 (Green Obsidian)</td>
+<td>10.128.170.132</td>
+<td>etcd-v3.5.6</td>
+</tr>
+<tr class="odd">
+<td>node3</td>
+<td>Rocky Linux release 8.6 (Green Obsidian)</td>
+<td>10.128.170.133</td>
+<td>etcd-v3.5.6</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>/etc/hosts 配置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">10.128.170.131 node1 node1.local</span><br><span class="line">10.128.170.132 node2 node2.local</span><br><span class="line">10.128.170.133 node3 node3.local</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="安装必要软件">2. 安装必要软件</h2>
+<p><strong>以下必要软件安装操作需要在全部节点执行。</strong></p>
+<p>etcd 集群部署过程中需要用到以下组件：</p>
+<ul>
+<li>cfssl</li>
+<li>cfssljson</li>
+<li>cfssl_certinfo</li>
+<li>etcd</li>
+<li>etcdctl</li>
+</ul>
+<h3 id="创建数据目录">2.1. 创建数据目录</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p /data/etcd/&#123;default,cfg,ssl&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>default 存放 etcd 数据</li>
+<li>cfg 存放 etcd 配置文件</li>
+<li>ssl 存放证书、私钥</li>
+</ul>
+<h3 id="下载安装-etcd">2.2. 下载安装 etcd</h3>
+<p>到 <a href="https://github.com/etcd-io/etcd/releases/tag/v3.5.6" class="uri">https://github.com/etcd-io/etcd/releases/tag/v3.5.6</a> 下载以下文件：</p>
+<ul>
+<li>etcd-v3.5.6-linux-amd64.tar.gz</li>
+</ul>
+<p>解压安装：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf etcd-v3.5.6-linux-amd64.tar.gz -C /opt</span><br></pre></td></tr></table></figure>
+<p>创建 bin 目录，并将可执行程序移动到 bin 目录下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /opt/etcd-v3.5.6-linux-amd64</span><br><span class="line">mkdir bin</span><br><span class="line">mv etcd etcdctl etcdutl bin</span><br></pre></td></tr></table></figure>
+<h3 id="下载安装证书工具-cfssl">2.3. 下载安装证书工具 cfssl</h3>
+<p>到 <a href="https://github.com/cloudflare/cfssl/releases/tag/v1.6.3" class="uri">https://github.com/cloudflare/cfssl/releases/tag/v1.6.3</a> 下载以下文件：</p>
+<ul>
+<li>cfssl_1.6.3_linux_amd64</li>
+<li>cfssljson_1.6.3_linux_amd64</li>
+<li>cfssl-certinfo_1.6.3_linux_amd64</li>
+</ul>
+<p>下载证书工具 cfssl 后，移动到 /opt/etcd-v3.5.6-linux-amd64/bin 目录下，并授予可执行权限：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod +x cfssl_1.6.3_linux_amd64</span><br><span class="line">cp cfssl_1.6.3_linux_amd64 /opt/etcd-v3.5.6-linux-amd64/bin/cfssl</span><br><span class="line"></span><br><span class="line">chmod +x cfssljson_1.6.3_linux_amd64</span><br><span class="line">cp cfssljson_1.6.3_linux_amd64 /opt/etcd-v3.5.6-linux-amd64/bin/cfssljson</span><br><span class="line"></span><br><span class="line">chmod +x cfssl-certinfo_1.6.3_linux_amd64</span><br><span class="line">cp cfssl-certinfo_1.6.3_linux_amd64 /opt/etcd-v3.5.6-linux-amd64/bin/cfssl-certinfo</span><br></pre></td></tr></table></figure>
+<p>方便起见，以上工具分别重命名为：</p>
+<ul>
+<li>cfssl</li>
+<li>cfssljson</li>
+<li>cfssl-certinfo</li>
+</ul>
+<h3 id="配置环境变量">2.4. 配置环境变量</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>添加如下内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Etcd Environment</span></span><br><span class="line">export ETCD_HOME=/opt/etcd-v3.5.6-linux-amd64</span><br><span class="line"></span><br><span class="line">export PATH=$PATH:$ETCD_HOME/bin</span><br></pre></td></tr></table></figure>
+<p>使配置立即生效：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+<h2 id="创建-tls-证书">3. 创建 TLS 证书</h2>
+<p><strong>以下创建 TLS 证书操作在任意一个节点执行即可。</strong></p>
+<h3 id="新建-ca-签名请求文件">3.1. 新建 CA 签名请求文件</h3>
+<p>创建 CA 签名请求文件 ca-csr.json，存放在 /data/etcd/ssl 中，文件内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /data/etcd/ssl/ca-csr.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;etcd&quot;,</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;Shenzhen&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;GuangDong&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>术语介绍：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">C: Country， 国家</span><br><span class="line">L: Locality，地区，城市</span><br><span class="line">O: Organization Name，组织名称，公司名称</span><br><span class="line">OU: Organization Unit Name，组织单位名称，公司部门</span><br><span class="line">ST: State，州，省</span><br></pre></td></tr></table></figure>
+<h3 id="生成-ca-凭证私钥和证书签名请求">3.2. 生成 CA 凭证、私钥和证书签名请求</h3>
+<p>在 /data/etcd/ssl 目录下执行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cfssl gencert -initca ca-csr.json | cfssljson -bare ca</span><br></pre></td></tr></table></figure>
+<p>生成以下三个文件：</p>
+<ul>
+<li>ca-key.pem（CA 私钥）</li>
+<li>ca.pem（CA 证书）</li>
+<li>ca.csr（CA 证书签名请求）</li>
+</ul>
+<h3 id="ca-配置">3.3. CA 配置</h3>
+<p>创建 CA 配置文件 ca-config.json，存放在 /data/etcd/ssl 中，文件内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /data/etcd/ssl/ca-config.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;signing&quot;: &#123;</span><br><span class="line">        &quot;default&quot;: &#123;</span><br><span class="line">            &quot;expiry&quot;: &quot;87600h&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;profiles&quot;: &#123;</span><br><span class="line">            &quot;etcd&quot;: &#123;</span><br><span class="line">                &quot;expiry&quot;: &quot;87600h&quot;,</span><br><span class="line">                &quot;usages&quot;: [</span><br><span class="line">                    &quot;signing&quot;,</span><br><span class="line">                    &quot;key encipherment&quot;,</span><br><span class="line">                    &quot;server auth&quot;,</span><br><span class="line">                    &quot;client auth&quot;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>术语介绍：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">profiles：可以设置多个 profile，这里的 profile 是 etcd</span><br><span class="line">expiry：指定了证书的有效期是 10 年(87600h)</span><br><span class="line">signing：表示该证书可用于签名其它证书，生成的 ca.pem 证书中 CA=TRUE</span><br><span class="line">server auth：表示 client 可以用该 CA 对 server 提供的证书进行验证</span><br><span class="line">client auth：表示 server 可以用该 CA 对 client 提供的证书进行验证</span><br></pre></td></tr></table></figure>
+<h3 id="新建-etcd-证书请求文件">3.4. 新建 etcd 证书请求文件</h3>
+<p>新建 etcd 证书请求文件 server-csr.json，存放在 /data/etcd/ssl 中，文件内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /data/etcd/ssl/server-csr.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">    &quot;CN&quot;: &quot;server&quot;,</span><br><span class="line">    &quot;hosts&quot;: [</span><br><span class="line">        &quot;127.0.0.1&quot;,</span><br><span class="line">        &quot;10.128.170.131&quot;,</span><br><span class="line">        &quot;10.128.170.132&quot;,</span><br><span class="line">        &quot;10.128.170.133&quot;,</span><br><span class="line">        &quot;node1&quot;,</span><br><span class="line">        &quot;node2&quot;,</span><br><span class="line">        &quot;node3&quot;,</span><br><span class="line">        &quot;node1.local&quot;,</span><br><span class="line">        &quot;node2.local&quot;,</span><br><span class="line">        &quot;node3.local&quot;</span><br><span class="line">    ],</span><br><span class="line">    &quot;key&quot;: &#123;</span><br><span class="line">        &quot;algo&quot;: &quot;rsa&quot;,</span><br><span class="line">        &quot;size&quot;: 2048</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;names&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;C&quot;: &quot;CN&quot;,</span><br><span class="line">            &quot;L&quot;: &quot;Shenzhen&quot;,</span><br><span class="line">            &quot;ST&quot;: &quot;GuangDong&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>hosts 字段指定授权使用该证书的 etcd 节点 IP 或域名列表，需要将 etcd 集群的三个节点 IP 都列在其中。</p>
+<h3 id="生成-server-证书">3.5. 生成 server 证书</h3>
+<p>在 /data/etcd/ssl 目录下执行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=etcd server-csr.json | cfssljson -bare server</span><br></pre></td></tr></table></figure>
+<p>生成以下三个文件：</p>
+<ul>
+<li>server-key.pem（server 私钥）</li>
+<li>server.pem（server 证书）</li>
+<li>server.csr（server 证书签名请求）</li>
+</ul>
+<h3 id="拷贝证书到其它节点">3.6. 拷贝证书到其它节点</h3>
+<p>根据需要拷贝 /data/etcd/ssl 目录下的证书文件到其他节点：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /data/etcd/ssl</span><br><span class="line">scp ca.pem server.pem server-key.pem root@node2:/data/etcd/ssl</span><br><span class="line">scp ca.pem server.pem server-key.pem root@node3:/data/etcd/ssl</span><br></pre></td></tr></table></figure>
+<h2 id="etcd-配置">4. etcd 配置</h2>
+<h3 id="etcd-主节点配置">4.1. etcd 主节点配置</h3>
+<p>创建 etcd 主节点配置文件 etcd.conf，存放在 /data/etcd/cfg 中，文件内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /data/etcd/cfg/etcd.conf &lt;&lt; &quot;EOF&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">[Member]</span></span><br><span class="line">ETCD_NAME=&quot;etcd01&quot;</span><br><span class="line">ETCD_DATA_DIR=&quot;/data/etcd/default&quot;</span><br><span class="line">ETCD_LISTEN_PEER_URLS=&quot;https://10.128.170.131:2380&quot;</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS=&quot;https://10.128.170.131:2379,https://127.0.0.1:2379&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">[Clustering]</span></span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;https://10.128.170.131:2380&quot;</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;https://10.128.170.131:2379&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;etcd01=https://10.128.170.131:2380,etcd02=https://10.128.170.132:2380,etcd03=https://10.128.170.133:2380&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;etcd-cluster&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;new&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">[Security]</span></span><br><span class="line">ETCD_CERT_FILE=&quot;/data/etcd/ssl/server.pem&quot;</span><br><span class="line">ETCD_KEY_FILE=&quot;/data/etcd/ssl/server-key.pem&quot;</span><br><span class="line">ETCD_TRUSTED_CA_FILE=&quot;/data/etcd/ssl/ca.pem&quot;</span><br><span class="line">ETCD_CLIENT_CERT_AUTH=&quot;false&quot;</span><br><span class="line">ETCD_PEER_CERT_FILE=&quot;/data/etcd/ssl/server.pem&quot;</span><br><span class="line">ETCD_PEER_KEY_FILE=&quot;/data/etcd/ssl/server-key.pem&quot;</span><br><span class="line">ETCD_PEER_TRUSTED_CA_FILE=&quot;/data/etcd/ssl/ca.pem&quot;</span><br><span class="line">ETCD_PEER_CLIENT_CERT_AUTH=&quot;true&quot;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="etcd-启动配置">4.2. etcd 启动配置</h3>
+<p>创建 etcd 启动配置文件 etcd.service，存放在 /usr/lib/systemd/system 目录下，文件内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /usr/lib/systemd/system/etcd.service &lt;&lt; &quot;EOF&quot;</span><br><span class="line">[Unit]</span><br><span class="line">Description=Etcd Server</span><br><span class="line">After=network.target</span><br><span class="line">After=network-online.target</span><br><span class="line">Wants=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line">EnvironmentFile=/data/etcd/cfg/etcd.conf</span><br><span class="line">ExecStart=/opt/etcd-v3.5.6-linux-amd64/bin/etcd</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ExecStart=/opt/etcd-v3.5.6-linux-amd64/bin/etcd \</span></span><br><span class="line"><span class="language-bash"><span class="comment">#--name=$&#123;ETCD_NAME&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--data-dir=$&#123;ETCD_DATA_DIR&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--listen-peer-urls=$&#123;ETCD_LISTEN_PEER_URLS&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--listen-client-urls=$&#123;ETCD_LISTEN_CLIENT_URLS&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--advertise-client-urls=$&#123;ETCD_ADVERTISE_CLIENT_URLS&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--initial-advertise-peer-urls=$&#123;ETCD_INITIAL_ADVERTISE_PEER_URLS&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--initial-cluster=$&#123;ETCD_INITIAL_CLUSTER&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--initial-cluster-token=$&#123;ETCD_INITIAL_CLUSTER_TOKEN&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--initial-cluster-state=$&#123;ETCD_INITIAL_CLUSTER_STATE&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--cert-file=$&#123;ETCD_CERT_FILE&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--key-file=$&#123;ETCD_KEY_FILE&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--peer-cert-file=$&#123;ETCD_PEER_CERT_FILE&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--peer-key-file=$&#123;ETCD_PEER_KEY_FILE&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--trusted-ca-file=$&#123;ETCD_TRUSTED_CA_FILE&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--client-cert-auth=$&#123;ETCD_CLIENT_CERT_AUTH&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--peer-client-cert-auth=$&#123;ETCD_PEER_CLIENT_CERT_AUTH&#125; \</span></span></span><br><span class="line"><span class="language-bash"><span class="comment">#--peer-trusted-ca-file=$&#123;ETCD_PEER_TRUSTED_CA_FILE&#125;</span></span></span><br><span class="line">Restart=on-failure</span><br><span class="line">LimitNOFILE=65536</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>字段解释：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">--WorkingDirectory、--data-dir：指定工作目录和数据目录为 $&#123;ETCD_DATA_DIR&#125;，需在启动服务前创建这个目录；</span><br><span class="line">--wal-dir：指定 wal 目录，为了提高性能，一般使用 SSD 或者和 --data-dir 不同的磁盘；</span><br><span class="line">--name：指定节点名称，当 --initial-cluster-state 值为 new 时，--name 的参数值必须位于 --initial-cluster 列表中；</span><br><span class="line">--cert-file、--key-file：etcd server 与 client 通信时使用的证书和私钥；</span><br><span class="line">--trusted-ca-file：签名 client 证书的 CA 证书，用于验证 client 证书；</span><br><span class="line">--peer-cert-file、--peer-key-file：etcd 与 peer 通信使用的证书和私钥；</span><br><span class="line">--peer-trusted-ca-file：签名 peer 证书的 CA 证书，用于验证 peer 证书；</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>启动异常：conflicting environment variable "ETCD_NAME" is shadowed by corresponding command-line flag (either unset environment variable or disable flag)</p>
+<p>原因分析：ETCD3.4 版本会自动读取环境变量的参数，所以 EnvironmentFile 文件中有的参数，不需要再次在 ExecStart 启动参数中添加，二选一，如同时配置，会触发以上报错。</p>
+<p>解决方法：剔除 ExecStart 中和配置文件重复的内容即可。</p>
+</blockquote>
+<h2 id="配置其余节点">5. 配置其余节点</h2>
+<p>同样操作配置其余节点，但需要修改 etcd.conf 文件中的节点名字以及服务器 IP 地址。</p>
+<h2 id="启动-etcd-服务">6. 启动 etcd 服务</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start etcd.service</span><br></pre></td></tr></table></figure>
+<h2 id="验证-etcd-服务">7. 验证 etcd 服务</h2>
+<p>在此之前，我们需要设置 etcd 的 API 版本，目前有 v2 与 v3 两个版本，两个版本的 API 存储方式不同，命令工具也不同。我们统一约定使用 v3 版本（默认是 v2 版本），把 v3 加入环境变量中：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export ETCDCTL_API=3&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+<h3 id="检查集群健康状态">7.1. 检查集群健康状态</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; endpoint health</span><br></pre></td></tr></table></figure>
+<p>集群健康则显示：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://node3.local:2379 is healthy: successfully committed proposal: took = 23.967506ms</span><br><span class="line">https://node1.local:2379 is healthy: successfully committed proposal: took = 36.438089ms</span><br><span class="line">https://node2.local:2379 is healthy: successfully committed proposal: took = 36.013216ms</span><br></pre></td></tr></table></figure>
+<h3 id="查看集群节点列表">7.2. 查看集群节点列表</h3>
+<p>true 代表 leader，由其负责处理客户端请求信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; endpoint status</span><br></pre></td></tr></table></figure>
+<p>服务正常则显示：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://node1.local:2379, 2cc5cd20ac23bb53, 3.5.6, 20 kB, true, false, 2, 11, 11,</span><br><span class="line">https://node2.local:2379, 60084d96d6d6e98a, 3.5.6, 20 kB, false, false, 2, 11, 11,</span><br><span class="line">https://node3.local:2379, 57107ffa28aa353e, 3.5.6, 20 kB, false, false, 2, 11, 11,</span><br></pre></td></tr></table></figure>
+<h3 id="验证集群数据存储服务">7.3. 验证集群数据存储服务</h3>
+<p>任选一个节点，客户端 etcdctl 存储一个数据，其他节点查看数据：</p>
+<p>etcd01 客户端存储数据:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; put /hello &quot;world&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>etcd02 或 etcd03 查看数据：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; get /hello</span><br><span class="line">/hello</span><br><span class="line">world</span><br></pre></td></tr></table></figure>
+<h3 id="监测数据变化">7.4. 监测数据变化</h3>
+<p>使用 watch 命令后，如果一切正常则会进入阻塞，监测一个键值的变化，一旦键值发生更新，就会输出最新的值，直到用户按 CTRL+C 退出 。</p>
+<p>在 10.128.170.133 上一直监控：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; watch /name</span><br></pre></td></tr></table></figure>
+<p>在10.128.170.132 上修改两次 /name 的值：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node2 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; put /name &quot;first&quot;</span><br><span class="line">OK</span><br><span class="line">[root@node2 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; put /name &quot;second&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>10.128.170.133 监控界面便打印出修改记录：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; watch /name</span><br><span class="line">PUT</span><br><span class="line">/name</span><br><span class="line">first</span><br><span class="line">PUT</span><br><span class="line">/name</span><br><span class="line">second</span><br></pre></td></tr></table></figure>
+<h2 id="数据备份与恢复">8. 数据备份与恢复</h2>
+<h3 id="数据备份">8.1. 数据备份</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379&quot; snapshot save mysnapshot.db</span><br><span class="line">&#123;&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2023-01-06T01:01:59.039+0800&quot;,&quot;caller&quot;:&quot;snapshot/v3_snapshot.go:65&quot;,&quot;msg&quot;:&quot;created temporary db file&quot;,&quot;path&quot;:&quot;mysnapshot.db.part&quot;&#125;</span><br><span class="line">&#123;&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2023-01-06T01:01:59.053+0800&quot;,&quot;logger&quot;:&quot;client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/maintenance.go:212&quot;,&quot;msg&quot;:&quot;opened snapshot stream; downloading&quot;&#125;</span><br><span class="line">&#123;&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2023-01-06T01:01:59.053+0800&quot;,&quot;caller&quot;:&quot;snapshot/v3_snapshot.go:73&quot;,&quot;msg&quot;:&quot;fetching snapshot&quot;,&quot;endpoint&quot;:&quot;https://node1.local:2379&quot;&#125;</span><br><span class="line">&#123;&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2023-01-06T01:01:59.082+0800&quot;,&quot;logger&quot;:&quot;client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/maintenance.go:220&quot;,&quot;msg&quot;:&quot;completed snapshot read; closing&quot;&#125;</span><br><span class="line">&#123;&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2023-01-06T01:01:59.146+0800&quot;,&quot;caller&quot;:&quot;snapshot/v3_snapshot.go:88&quot;,&quot;msg&quot;:&quot;fetched snapshot&quot;,&quot;endpoint&quot;:&quot;https://node1.local:2379&quot;,&quot;size&quot;:&quot;20 kB&quot;,&quot;took&quot;:&quot;now&quot;&#125;</span><br><span class="line">&#123;&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2023-01-06T01:01:59.146+0800&quot;,&quot;caller&quot;:&quot;snapshot/v3_snapshot.go:97&quot;,&quot;msg&quot;:&quot;saved&quot;,&quot;path&quot;:&quot;mysnapshot.db&quot;&#125;</span><br><span class="line">Snapshot saved at mysnapshot.db</span><br></pre></td></tr></table></figure>
+<h3 id="数据恢复">8.2. 数据恢复</h3>
+<p><a href="https://etcd.io/docs/v3.5/op-guide/recovery/" class="uri">https://etcd.io/docs/v3.5/op-guide/recovery/</a></p>
+<h2 id="节点宕机与恢复">9. 节点宕机与恢复</h2>
+<h3 id="查看集群各节点状态">9.1. 查看集群各节点状态</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; endpoint status --write-out=table</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br><span class="line">|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br><span class="line">| https://node1.local:2379 | 2cc5cd20ac23bb53 |   3.5.6 |   20 kB |      true |      false |         2 |         14 |                 14 |        |</span><br><span class="line">| https://node2.local:2379 | 60084d96d6d6e98a |   3.5.6 |   20 kB |     false |      false |         2 |         14 |                 14 |        |</span><br><span class="line">| https://node3.local:2379 | 57107ffa28aa353e |   3.5.6 |   20 kB |     false |      false |         2 |         14 |                 14 |        |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br></pre></td></tr></table></figure>
+<h3 id="模拟主节点-node1-宕机">9.2. 模拟主节点 node1 宕机</h3>
+<p>使用命令 systemctl stop etcd 停掉 leader 节点，再次查看集群状况，可见重新选举出了 leader，集群可正常使用：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# systemctl stop etcd.service</span><br><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; endpoint status --write-out=table</span><br><span class="line">&#123;&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2023-01-06T12:39:07.738+0800&quot;,&quot;logger&quot;:&quot;etcd-client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/retry_interceptor.go:62&quot;,&quot;msg&quot;:&quot;retrying of unary invoker failed&quot;,&quot;target&quot;:&quot;etcd-endpoints://0xc0000b8c40/node1.local:2379&quot;,&quot;attempt&quot;:0,&quot;error&quot;:&quot;rpc error: code = DeadlineExceeded desc = latest balancer error: last connection error: connection error: desc = \&quot;transport: Error while dialing dial tcp 10.128.170.131:2379: connect: connection refused\&quot;&quot;&#125;</span><br><span class="line">Failed to get the status of endpoint https://node1.local:2379 (context deadline exceeded)</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br><span class="line">|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br><span class="line">| https://node2.local:2379 | 60084d96d6d6e98a |   3.5.6 |   20 kB |      true |      false |         3 |         15 |                 15 |        |</span><br><span class="line">| https://node3.local:2379 | 57107ffa28aa353e |   3.5.6 |   20 kB |     false |      false |         3 |         15 |                 15 |        |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br></pre></td></tr></table></figure>
+<h3 id="模拟从节点-node2-宕机">9.3. 模拟从节点 node2 宕机</h3>
+<p>继续使用命令 systemctl stop etcd 停掉节点 node2，查看集群状况，集群已经无法正常使用，说明 3 节点的 etcd 集群容错为 1。根据官方说明，集群可用性为 (N-1)/2，假设集群数量 N 是 3 台设备，可最多可故障 1 台设备，而不影响集群使用。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node2 ~]# systemctl stop etcd.service</span><br><span class="line">[root@node2 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; endpoint status --write-out=table</span><br><span class="line">&#123;&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2023-01-06T12:39:58.307+0800&quot;,&quot;logger&quot;:&quot;etcd-client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/retry_interceptor.go:62&quot;,&quot;msg&quot;:&quot;retrying of unary invoker failed&quot;,&quot;target&quot;:&quot;etcd-endpoints://0xc00035aa80/node1.local:2379&quot;,&quot;attempt&quot;:0,&quot;error&quot;:&quot;rpc error: code = DeadlineExceeded desc = latest balancer error: last connection error: connection error: desc = \&quot;transport: Error while dialing dial tcp 10.128.170.131:2379: connect: connection refused\&quot;&quot;&#125;</span><br><span class="line">Failed to get the status of endpoint https://node1.local:2379 (context deadline exceeded)</span><br><span class="line">&#123;&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2023-01-06T12:40:03.308+0800&quot;,&quot;logger&quot;:&quot;etcd-client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/retry_interceptor.go:62&quot;,&quot;msg&quot;:&quot;retrying of unary invoker failed&quot;,&quot;target&quot;:&quot;etcd-endpoints://0xc00035aa80/node1.local:2379&quot;,&quot;attempt&quot;:0,&quot;error&quot;:&quot;rpc error: code = DeadlineExceeded desc = latest balancer error: last connection error: connection error: desc = \&quot;transport: Error while dialing dial tcp 10.128.170.132:2379: connect: connection refused\&quot;&quot;&#125;</span><br><span class="line">Failed to get the status of endpoint https://node2.local:2379 (context deadline exceeded)</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+-----------------------+</span><br><span class="line">|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX |        ERRORS         |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+-----------------------+</span><br><span class="line">| https://node3.local:2379 | 57107ffa28aa353e |   3.5.6 |   20 kB |     false |      false |         4 |         16 |                 16 | etcdserver: no leader |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+-----------------------+</span><br></pre></td></tr></table></figure>
+<h3 id="模拟-node2-节点恢复">9.4. 模拟 node2 节点恢复</h3>
+<p>使用命令 systemctl start etcd.service 启动节点 node2，查看集群状况，可见重新选举出 leader 节点，集群恢复正常使用：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node2 ~]# systemctl start etcd.service</span><br><span class="line">[root@node2 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; endpoint status --write-out=table</span><br><span class="line">&#123;&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2023-01-06T12:41:13.714+0800&quot;,&quot;logger&quot;:&quot;etcd-client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/retry_interceptor.go:62&quot;,&quot;msg&quot;:&quot;retrying of unary invoker failed&quot;,&quot;target&quot;:&quot;etcd-endpoints://0xc000332c40/node1.local:2379&quot;,&quot;attempt&quot;:0,&quot;error&quot;:&quot;rpc error: code = DeadlineExceeded desc = latest balancer error: last connection error: connection error: desc = \&quot;transport: Error while dialing dial tcp 10.128.170.131:2379: connect: connection refused\&quot;&quot;&#125;</span><br><span class="line">Failed to get the status of endpoint https://node1.local:2379 (context deadline exceeded)</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br><span class="line">|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br><span class="line">| https://node2.local:2379 | 60084d96d6d6e98a |   3.5.6 |   20 kB |     false |      false |         5 |         18 |                 18 |        |</span><br><span class="line">| https://node3.local:2379 | 57107ffa28aa353e |   3.5.6 |   20 kB |      true |      false |         5 |         18 |                 18 |        |</span><br><span class="line">+--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+</span><br></pre></td></tr></table></figure>
+<h2 id="etcd-故障节点修复">10. ETCD 故障节点修复</h2>
+<h3 id="从集群中删除故障节点">10.1. 从集群中删除故障节点</h3>
+<p><strong>（正常节点上操作）</strong></p>
+<p>查看集群，获取坏掉节点的 ID，比如为 2cc5cd20ac23bb53</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; member list</span><br><span class="line">2cc5cd20ac23bb53, started, etcd01, https://10.128.170.131:2380, https://10.128.170.131:2379, false</span><br><span class="line">57107ffa28aa353e, started, etcd03, https://10.128.170.133:2380, https://10.128.170.133:2379, false</span><br><span class="line">60084d96d6d6e98a, started, etcd02, https://10.128.170.132:2380, https://10.128.170.132:2379, false</span><br></pre></td></tr></table></figure>
+<p>删除坏掉的节点</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; member remove 2cc5cd20ac23bb53</span><br><span class="line">Member 2cc5cd20ac23bb53 removed from cluster 6fe4c34617a995fa</span><br></pre></td></tr></table></figure>
+<h3 id="修复故障节点">10.2. 修复故障节点</h3>
+<p><strong>（故障节点上操作）</strong></p>
+<p>修改配置文件</p>
+<p>把 ETCD_INITIAL_CLUSTER_STATE="new" 修改为 ETCD_INITIAL_CLUSTER_STATE="existing"</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# sed -i &#x27;s/ETCD_INITIAL_CLUSTER_STATE=&quot;new&quot;/ETCD_INITIAL_CLUSTER_STATE=&quot;existing&quot;/&#x27; /data/etcd/cfg/etcd.conf</span><br></pre></td></tr></table></figure>
+<p>清理节点数据</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# rm -rf /data/etcd/default/member/</span><br></pre></td></tr></table></figure>
+<h3 id="重新添加节点">10.3. 重新添加节点</h3>
+<p><strong>（正常节点上操作）</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; member add etcd01 --peer-urls=https://10.128.170.131:2380</span><br><span class="line">Member cda884b84bce7043 added to cluster 6fe4c34617a995fa</span><br><span class="line"></span><br><span class="line">ETCD_NAME=&quot;etcd01&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER=&quot;etcd03=https://10.128.170.133:2380,etcd02=https://10.128.170.132:2380,etcd01=https://10.128.170.131:2380&quot;</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;https://10.128.170.131:2380&quot;</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;existing&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="重启故障节点">10.4. 重启故障节点</h3>
+<p><strong>（故障节点上操作）</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# systemctl start etcd.service</span><br></pre></td></tr></table></figure>
+<h2 id="身份验证">11. 身份验证</h2>
+<h3 id="创建-root-用户">11.1. 创建 root 用户</h3>
+<p>先创建 root 用户，提示输入密码，这里我密码设置为 cluster</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; user add root</span><br><span class="line">Password of root:</span><br><span class="line">Type password of root again for confirmation:</span><br><span class="line">User root created</span><br></pre></td></tr></table></figure>
+<p>赋予 root 用户 root 角色</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; user grant-role root root</span><br><span class="line">Role root is granted to user root</span><br></pre></td></tr></table></figure>
+<h3 id="查看-root-用户详情">11.2. 查看 root 用户详情</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; user get root</span><br><span class="line">User: root</span><br><span class="line">Roles: root</span><br></pre></td></tr></table></figure>
+<p><strong>确定 root 用户具有 root 角色拥有所有权限后再进行下一步</strong></p>
+<h3 id="开启身份验证">11.3. 开启身份验证</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; auth enable</span><br><span class="line">Authentication Enabled</span><br></pre></td></tr></table></figure>
+<h3 id="创建新用户">11.4. 创建新用户</h3>
+<p>创建新用户 server，密码同样设为 cluster（可任意设置）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster user add server</span><br><span class="line">Password of server:</span><br><span class="line">Type password of server again for confirmation:</span><br><span class="line">User server created</span><br></pre></td></tr></table></figure>
+<p>查看用户列表和 server 用户详情</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster user list</span><br><span class="line">root</span><br><span class="line">server</span><br><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster user get server</span><br><span class="line">User: server</span><br><span class="line">Roles:</span><br></pre></td></tr></table></figure>
+<h3 id="创建角色">11.5. 创建角色</h3>
+<p><strong>（内置的 root 角色无法通过 role list 查看，我们可以创建名字同样为 root 的角色，但是后续为 user 赋予 root 角色时，将使用自定义的 root 角色，而不是内置的 root 角色）</strong></p>
+<p>创建 server 角色</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role add server</span><br><span class="line">Role server created</span><br></pre></td></tr></table></figure>
+<p>查看角色列表和 server 角色详情（新创建的角色没有任何权限）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role list</span><br><span class="line">server</span><br><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role get server</span><br><span class="line">Role server</span><br><span class="line">KV Read:</span><br><span class="line">KV Write:</span><br></pre></td></tr></table></figure>
+<h3 id="角色授权">11.6. 角色授权</h3>
+<p>角色没有密码，仅仅是定义的一组访问权限，角色的访问权限可以被赋予 read（读），write（写），readwrite（读和写）权限。</p>
+<p>给 server 角色赋予键 /hello 读写操作权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role grant-permission server readwrite /hello --prefix=true</span><br><span class="line">Role server updated</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role get server</span><br><span class="line">Role server</span><br><span class="line">KV Read:</span><br><span class="line">        [/hello, /hellp) (prefix /hello)</span><br><span class="line">KV Write:</span><br><span class="line">        [/hello, /hellp) (prefix /hello)</span><br></pre></td></tr></table></figure>
+<p>给 server 角色赋予键 /hello 目录读写操作权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role grant-permission server readwrite /hello/* --prefix=true</span><br><span class="line">Role server updated</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster role get server</span><br><span class="line">Role server</span><br><span class="line">KV Read:</span><br><span class="line">        [/hello, /hellp) (prefix /hello)</span><br><span class="line">        [/hello/*, /hello/+) (prefix /hello/*)</span><br><span class="line">KV Write:</span><br><span class="line">        [/hello, /hellp) (prefix /hello)</span><br><span class="line">        [/hello/*, /hello/+) (prefix /hello/*)</span><br></pre></td></tr></table></figure>
+<h3 id="赋予用户角色">11.7. 赋予用户角色</h3>
+<p>赋予 server 用户 server 角色</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster user grant-role server server</span><br><span class="line">Role server is granted to user server</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster user get server</span><br><span class="line">User: server</span><br><span class="line">Roles: server</span><br></pre></td></tr></table></figure>
+<h3 id="测试-server-用户权限">11.8. 测试 server 用户权限</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster put /hello world</span><br><span class="line">OK</span><br><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=root:cluster put /name wylu</span><br><span class="line">OK</span><br><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=server:cluster get /hello</span><br><span class="line">/hello</span><br><span class="line">world</span><br><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=server:cluster get /wylu</span><br><span class="line">&#123;&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2023-01-06T14:31:02.431+0800&quot;,&quot;logger&quot;:&quot;etcd-client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/retry_interceptor.go:62&quot;,&quot;msg&quot;:&quot;retrying of unary invoker failed&quot;,&quot;target&quot;:&quot;etcd-endpoints://0xc000558540/node1.local:2379&quot;,&quot;attempt&quot;:0,&quot;error&quot;:&quot;rpc error: code = PermissionDenied desc = etcdserver: permission denied&quot;&#125;</span><br><span class="line">Error: etcdserver: permission denied</span><br></pre></td></tr></table></figure>
+<h4 id="不添加用户密码参数">11.8.1. 不添加用户密码参数</h4>
+<p>提示错误：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; get /hello</span><br><span class="line">&#123;&quot;level&quot;:&quot;warn&quot;,&quot;ts&quot;:&quot;2023-01-06T14:32:37.153+0800&quot;,&quot;logger&quot;:&quot;etcd-client&quot;,&quot;caller&quot;:&quot;v3@v3.5.6/retry_interceptor.go:62&quot;,&quot;msg&quot;:&quot;retrying of unary invoker failed&quot;,&quot;target&quot;:&quot;etcd-endpoints://0xc00034a380/node1.local:2379&quot;,&quot;attempt&quot;:0,&quot;error&quot;:&quot;rpc error: code = InvalidArgument desc = etcdserver: user name is empty&quot;&#125;</span><br><span class="line">Error: etcdserver: user name is empty</span><br></pre></td></tr></table></figure>
+<h4 id="添加用户密码参数">11.8.2. 添加用户密码参数</h4>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# /opt/etcd-v3.5.6-linux-amd64/bin/etcdctl --cacert=/data/etcd/ssl/ca.pem --cert=/data/etcd/ssl/server.pem --key=/data/etcd/ssl/server-key.pem --endpoints=&quot;https://node1.local:2379,https://node2.local:2379,https://node3.local:2379&quot; --user=server:cluster get /hello</span><br><span class="line">/hello</span><br><span class="line">world</span><br></pre></td></tr></table></figure>
+<h3 id="常用命令附录">11.9. 常用命令附录</h3>
+<h4 id="root-用户与-root-角色">11.9.1. root 用户与 root 角色</h4>
+<p>root 是 etcd 的超级管理员，拥有 etcd 的所有权限，在开启角色认证之前为们必须要先建立好 root 用户。还需要注意的是 root 用户必须拥有 root 的角色，允许在 etcd 的所有操作。</p>
+<p>root 角色可以赋予任何用户，拥有 root 角色的用户有全局读写权限和集群身份验证配置权限，此外，还具有修改集群成员身份，碎片整理，建立快照等权限。</p>
+<h4 id="用户操作">11.9.2. 用户操作</h4>
+<p>user：可以为 etcd 创建多个用户并设置密码，子命令有：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1）add 添加用户</span><br><span class="line">2）delete 删除用户</span><br><span class="line">3）get 取得用户详情</span><br><span class="line">4）list 列出所有用户</span><br><span class="line">5）passwd 修改用户密码</span><br><span class="line">6）grant-role 给用户分配角色</span><br><span class="line">7）revoke-role 给用户移除角色</span><br></pre></td></tr></table></figure>
+<h4 id="角色操作">11.9.3. 角色操作</h4>
+<p>role：可以为 etcd 创建多个角色并设置权限，子命令有：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1）add 添加角色</span><br><span class="line">2）delete 删除角色</span><br><span class="line">3）get 取得角色信息</span><br><span class="line">4）list 列出所有角色</span><br><span class="line">5）grant-permission 为角色设置某个key的权限</span><br><span class="line">6）revoke-permission 为角色移除某个key的权限</span><br></pre></td></tr></table></figure>
+<h4 id="身份验证-1">11.9.4. 身份验证</h4>
+<p>启动：auth enable</p>
+<p>关闭：auth disable</p>
+<h4 id="命令参考链接">11.9.5. 命令参考链接</h4>
+<p><a href="https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/authentication.md" class="uri">https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/authentication.md</a></p>
+<p><a href="https://juejin.im/post/5b986abff265da0ad947b52f" class="uri">https://juejin.im/post/5b986abff265da0ad947b52f</a></p>
+<h2 id="安装-etcdkeeper">12. 安装 etcdkeeper</h2>
+<p>etcdkeeper 可提供 web 页面来管理 etcd 数据库中的数据</p>
+<h3 id="安装-etcdkeeper-1">12.1. 安装 etcdkeeper</h3>
+<p>到 <a href="https://github.com/evildecay/etcdkeeper/releases/tag/v0.7.6" class="uri">https://github.com/evildecay/etcdkeeper/releases/tag/v0.7.6</a> 下载以下文件：</p>
+<ul>
+<li>etcdkeeper-v0.7.6-linux_x86_64.zip</li>
+</ul>
+<p>解压安装：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">unzip etcdkeeper-v0.7.6-linux_x86_64.zip -d /opt</span><br><span class="line">chmod +x /opt/etcdkeeper/etcdkeeper</span><br></pre></td></tr></table></figure>
+<h3 id="创建-system-服务">12.2. 创建 system 服务</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /usr/lib/systemd/system/etcdkeeper.service &lt;&lt; &quot;EOF&quot;</span><br><span class="line">[Unit]</span><br><span class="line">Description=etcdkeeper service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/opt/etcdkeeper/etcdkeeper \</span><br><span class="line">-h 0.0.0.0 \</span><br><span class="line">-p 8800 \</span><br><span class="line">-cacert=/data/etcd/ssl/ca.pem \</span><br><span class="line">-cert=/data/etcd/ssl/server.pem \</span><br><span class="line">-key=/data/etcd/ssl/server-key.pem \</span><br><span class="line">-auth \</span><br><span class="line">-usetls</span><br><span class="line">ExecReload=/bin/kill -HUP $MAINPID</span><br><span class="line">KillMode=process</span><br><span class="line">Restart=on-failure</span><br><span class="line">PrivateTmp=true</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="修改-index.html">12.3. 修改 index.html</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@node1 Downloads]# dos2unix /opt/etcdkeeper/assets/etcdkeeper/index.html</span><br><span class="line">dos2unix: converting file /opt/etcdkeeper/assets/etcdkeeper/index.html to Unix format ...</span><br><span class="line">[root@node1 Downloads]# sed -i &quot;154s/etcdBase = &#x27;127.0.0.1:2379&#x27;/etcdBase = &#x27;10.128.170.131:2379&#x27;/&quot; /opt/etcdkeeper/assets/etcdkeeper/index.html</span><br></pre></td></tr></table></figure>
+<h3 id="服务控制">12.4. 服务控制</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl enable etcdkeeper.service # 设置开机自启动</span><br><span class="line">systemctl disable etcdkeeper.service # 停止开机自启动</span><br><span class="line">systemctl start etcdkeeper # 启动 etcdkeeper 服务</span><br><span class="line">systemctl stop etcdkeeper # 停止 etcdkeeper 服务</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>middleware</category>
+        <category>distributed coordination</category>
+        <category>etcd</category>
+      </categories>
+      <tags>
+        <tag>etcd</tag>
+        <tag>RockyLinux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows11 WSL2 深度学习环境配置</title>
     <url>/posts/f88ecff5/</url>
     <content><![CDATA[<p>本文介绍了在 Windows 11 上使用 WSL2 配置深度学习环境的方法。首先需要安装 NVIDIA 显卡驱动程序以获得 GPU 支持，推荐使用官方工具 GeForce Experience 进行安装或更新。然后安装 WSL2，并在其中安装 CUDA 和 cuDNN。在测试中，使用 CPU 运算和 GPU 运算分别运行了小规模和大规模神经网络，并打印了运行时间。结果表明，使用 GPU 运算可以显著提高运行速度。</p>
