@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.wylu.me/posts/4d3c18db/</loc>
+    
+    <lastmod>2023-08-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.wylu.me/posts/f5d33b91/</loc>
     
     <lastmod>2023-08-07</lastmod>
@@ -848,7 +857,7 @@
   </url>
   
   <url>
-    <loc>https://www.wylu.me/guestbook/index.html</loc>
+    <loc>https://www.wylu.me/sitelog/index.html</loc>
     
     <lastmod>2022-11-22</lastmod>
     
@@ -857,7 +866,7 @@
   </url>
   
   <url>
-    <loc>https://www.wylu.me/sitelog/index.html</loc>
+    <loc>https://www.wylu.me/guestbook/index.html</loc>
     
     <lastmod>2022-11-22</lastmod>
     
@@ -1096,6 +1105,13 @@
   </url>
   
   <url>
+    <loc>https://www.wylu.me/tags/FastDFS/</loc>
+    <lastmod>2023-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.wylu.me/tags/arch-linux/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -1124,14 +1140,14 @@
   </url>
   
   <url>
-    <loc>https://www.wylu.me/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</loc>
+    <loc>https://www.wylu.me/tags/nmcli/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.wylu.me/tags/nmcli/</loc>
+    <loc>https://www.wylu.me/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1306,6 +1322,20 @@
   </url>
   
   <url>
+    <loc>https://www.wylu.me/tags/hexo/</loc>
+    <lastmod>2023-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wylu.me/tags/next/</loc>
+    <lastmod>2023-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.wylu.me/tags/jsDelivr/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -1321,20 +1351,6 @@
   
   <url>
     <loc>https://www.wylu.me/tags/PicGo/</loc>
-    <lastmod>2023-08-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wylu.me/tags/hexo/</loc>
-    <lastmod>2023-08-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wylu.me/tags/next/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1532,6 +1548,13 @@
   </url>
   
   <url>
+    <loc>https://www.wylu.me/categories/middleware/</loc>
+    <lastmod>2023-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.wylu.me/categories/os/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -1553,14 +1576,14 @@
   </url>
   
   <url>
-    <loc>https://www.wylu.me/categories/web/</loc>
+    <loc>https://www.wylu.me/categories/cloud/docker/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.wylu.me/categories/cloud/docker/</loc>
+    <loc>https://www.wylu.me/categories/web/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1574,7 +1597,7 @@
   </url>
   
   <url>
-    <loc>https://www.wylu.me/categories/middleware/</loc>
+    <loc>https://www.wylu.me/categories/cs/software-engineering/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1596,6 +1619,13 @@
   
   <url>
     <loc>https://www.wylu.me/categories/cs/parallel-programming/</loc>
+    <lastmod>2023-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wylu.me/categories/middleware/distributed-storage/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1707,7 +1737,7 @@
   </url>
   
   <url>
-    <loc>https://www.wylu.me/categories/cs/software-engineering/</loc>
+    <loc>https://www.wylu.me/categories/cs/software-engineering/design-pattern/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1722,13 +1752,6 @@
   
   <url>
     <loc>https://www.wylu.me/categories/middleware/mq/</loc>
-    <lastmod>2023-08-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wylu.me/categories/cs/software-engineering/design-pattern/</loc>
     <lastmod>2023-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

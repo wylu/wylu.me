@@ -8,6 +8,110 @@
 ]]></content>
   </entry>
   <entry>
+    <title>FastDFS 安装部署</title>
+    <url>/posts/4d3c18db/</url>
+    <content><![CDATA[<p>本文介绍了 FastDFS 的安装部署过程。首先，需要准备好设备环境，并安装相关依赖。接着，按照以下步骤进行安装：下载 FastDFS，解压安装，编辑配置文件，创建 system 服务，启动服务，并查看状态。最后，进行 Client 测试，测试上传文件，返回 ID 表示成功。</p>
+<span id="more"></span>
+<h1 id="fastdfs-安装部署">FastDFS 安装部署</h1>
+<h2 id="设备环境">1. 设备环境</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Host</th>
+<th>IP</th>
+<th>Port</th>
+<th>OS</th>
+<th>Software</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>cnode1</td>
+<td>10.128.170.30</td>
+<td>22122</td>
+<td>CentOS 7.9.2009</td>
+<td>fastfds 6.06 trackerd</td>
+</tr>
+<tr class="even">
+<td>cnode1</td>
+<td>10.128.170.30</td>
+<td>23000</td>
+<td>CentOS 7.9.2009</td>
+<td>fastfds 6.06 storaged</td>
+</tr>
+<tr class="odd">
+<td>cnode2</td>
+<td>10.128.170.31</td>
+<td>22122</td>
+<td>CentOS 7.9.2009</td>
+<td>fastfds 6.06 trackerd</td>
+</tr>
+<tr class="even">
+<td>cnode2</td>
+<td>10.128.170.31</td>
+<td>23000</td>
+<td>CentOS 7.9.2009</td>
+<td>fastfds 6.06 storaged</td>
+</tr>
+</tbody>
+</table>
+<p>编辑 hosts 文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /etc/hosts</span><br></pre></td></tr></table></figure>
+<p>添加如下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">10.128.170.30 cnode1</span><br><span class="line">10.128.170.31 cnode2</span><br></pre></td></tr></table></figure>
+<h2 id="安装依赖">2. 安装依赖</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install gcc gcc+ gcc-c++ openssl openssl-devel pcre pcre-deve</span><br><span class="line">yum -y install pcre-devel openssl openssl-develyum -y install zlib zlib-deve</span><br><span class="line">yum -y install perl</span><br><span class="line">yum -y install unzip</span><br></pre></td></tr></table></figure>
+<h2 id="安装步骤">3. 安装步骤</h2>
+<h3 id="下载-fastfds">3.1 下载 fastfds</h3>
+<p><a href="https://github.com/happyfish100/fastdfs/wiki/">fastdfs wiki</a></p>
+<p>根据 wiki 下载以下软件包：</p>
+<ul>
+<li>libfastcommon-master.zip</li>
+<li>fastdfs-6.06.tar.gz</li>
+</ul>
+<h3 id="解压安装">3.2 解压安装</h3>
+<p>创建安装目录和数据目录</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir /opt/fastdfs</span><br><span class="line">mkdir -p /data/fastdfs/&#123;fastdfs_tracker,fastdfs_storage,fastdfs_storage_data1,fastdfs_storage_data2&#125;</span><br></pre></td></tr></table></figure>
+<p>解压</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">unzip -d /opt/fastdfs/ /saasdata/soft/libfastcommon-master.zip</span><br><span class="line">tar -zxvf /saasdata/soft/fastdfs-6.06.tar.gz -C /opt/fastdfs/</span><br></pre></td></tr></table></figure>
+<p>修改安装路径</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sed -i &#x27;3c TARGET_PREFIX=/opt/fastdfs/fastdfs-6.06&#x27; /opt/fastdfs/fastdfs-6.06/make.sh</span><br><span class="line">sed -i &#x27;4c TARGET_CONF_PATH=/opt/fastdfs/fastdfs-6.06/conf&#x27; /opt/fastdfs/fastdfs-6.06/make.sh</span><br><span class="line">sed -i &#x27;5c TARGET_INIT_PATH=/opt/fastdfs/fastdfs-6.06/init.d&#x27; /opt/fastdfs/fastdfs-6.06/make.sh</span><br></pre></td></tr></table></figure>
+<p>编译安装</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /opt/fastdfs/libfastcommon-master &amp;&amp; ./make.sh &amp;&amp; ./make.sh install &gt; /dev/null</span><br><span class="line">cd /opt/fastdfs/fastdfs-6.06 &amp;&amp; ./make.sh &amp;&amp; ./make.sh install &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<p><strong>在 cnode1，cnode2 上进行同样的操作。</strong></p>
+<h3 id="编辑配置文件">3.3 编辑配置文件</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sed -i  &#x27;23c  base_path=/data/fastdfs/fastdfs_tracker&#x27; /opt/fastdfs/fastdfs-6.06/conf/tracker.conf</span><br><span class="line">sed -i  &#x27;11c  group_name=group1&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;24c  port = 23000&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;49c  base_path = /data/fastdfs/fastdfs_storage&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;119c  store_path_count = 2&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;129c  store_path0 = /data/fastdfs/fastdfs_storage_data1&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;130c  store_path1 = /data/fastdfs/fastdfs_storage_data2&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;145c  tracker_server = cnode1:22122&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;146c  tracker_server = cnode2:22122&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;180c  file_distribute_path_mode = 0&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br><span class="line">sed -i  &#x27;352c  http.server_port = 8888&#x27; /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br></pre></td></tr></table></figure>
+<p><strong>在 cnode1，cnode2 上进行同样的操作。</strong></p>
+<h3 id="创建-system-服务">3.4 创建 system 服务</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; /usr/lib/systemd/system/fdfs_trackerd.service &lt;&lt; EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=fdfs_trackerd Server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/opt/fastdfs/fastdfs-6.06/bin/fdfs_trackerd /opt/fastdfs/fastdfs-6.06/conf/tracker.conf start</span><br><span class="line">ExecStop=/opt/fastdfs/fastdfs-6.06/bin/fdfs_trackerd /opt/fastdfs/fastdfs-6.06/conf/tracker.conf stop</span><br><span class="line">PrivateTmp=true</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=1</span><br><span class="line">StartLimitInterval=0</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt; /usr/lib/systemd/system/fdfs_storaged.service &lt;&lt; EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=fdfs_storaged</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/opt/fastdfs/fastdfs-6.06/bin/fdfs_storaged /opt/fastdfs/fastdfs-6.06/conf/storage.conf start</span><br><span class="line">ExecStop=/opt/fastdfs/fastdfs-6.06/bin/fdfs_storaged /opt/fastdfs/fastdfs-6.06/conf/storage.conf stop</span><br><span class="line">PrivateTmp=true</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=1</span><br><span class="line">StartLimitInterval=0</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p><strong>在 cnode1，cnode2 上进行同样的操作。</strong></p>
+<h3 id="启动服务">3.5 启动服务</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start fdfs_trackerd.service</span><br><span class="line">systemctl start fdfs_storaged.service</span><br></pre></td></tr></table></figure>
+<p><strong>在 cnode1，cnode2 上进行同样的操作。</strong></p>
+<p>查看状态</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/opt/fastdfs/fastdfs-6.06/bin/fdfs_monitor /opt/fastdfs/fastdfs-6.06/conf/storage.conf</span><br></pre></td></tr></table></figure>
+<h2 id="client-测试">4. Client 测试</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /opt/fastdfs/fastdfs-6.06/conf/client.conf</span><br></pre></td></tr></table></figure>
+<p>修改如下配置</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">base_path</span> = /opt/fastdfs/fastdfs-<span class="number">6.06</span></span><br><span class="line"><span class="attr">tracker_server</span> = cnode1:<span class="number">22122</span></span><br><span class="line"><span class="attr">tracker_server</span> = cnode2:<span class="number">22122</span></span><br></pre></td></tr></table></figure>
+<p>测试上传文件，返回 ID 表示成功，如：group1/M00/00/00/xx.tar.gz</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@cnode1 bin]# ./fdfs_upload_file /opt/fastdfs/fastdfs-6.06/conf/client.conf /root/Downloads/fastdfs-6.06.tar.gz</span><br><span class="line">group1/M00/00/00/CoCqFWIUhZeATgjaAAxZcPR00vw.tar.gz</span><br><span class="line">[root@cnode1 bin]# ./fdfs_upload_file /opt/fastdfs/fastdfs-6.06/conf/client.conf /root/Downloads/libfastcommon-master.zip</span><br><span class="line">group1/M00/00/00/CoCqFmIUhZyAImx7AAPZehNXZm0384.zip</span><br></pre></td></tr></table></figure>
+<h2 id="references">References</h2>
+<p><a href="https://github.com/happyfish100/fastdfs/wiki/">https://github.com/happyfish100/fastdfs/wiki/</a></p>
+<p><a href="https://www.cnblogs.com/cnmenglang/p/6731209.html">FastDFS集群部署</a></p>
+<p><a href="https://www.jianshu.com/p/1c71ae024e5e">FASTDFS</a></p>
+<p><a href="https://www.jianshu.com/p/a842358b451b">Centos7下FastDFS集群搭建</a></p>
+<p><a href="https://www.psvmc.cn/article/2020-09-18-hdfs-fastdfs.html">分布式文件系统（HDFS和FastDFS）</a></p>
+]]></content>
+      <categories>
+        <category>middleware</category>
+        <category>distributed storage</category>
+      </categories>
+      <tags>
+        <tag>FastDFS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>二进制部署 k8s 集群 1.27.3 版本</title>
     <url>/posts/f5d33b91/</url>
     <content><![CDATA[<p>通过本文的指导，读者可以了解如何通过二进制的方式部署 Kubernetes 1.27.3 版本集群。二进制部署可以加深对 Kubernetes 各组件的理解，可以灵活地将各个组件部署到不同的机器，以满足自身的要求。但是需要注意的是，二进制部署需要手动配置各个组件，需要一定的技术水平和经验。</p>
